@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import Image from "next/image";
 
 const navItems = [
   { label: "Habitaciones", href: "#habitaciones" },
@@ -16,13 +17,16 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-surface/90 backdrop-blur-md">
+    <header className="sticky top-0 pt-3 z-50 w-full border-b bg-surface/90 backdrop-blur-lg">
       <div className="mx-auto flex h-20 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link
-          href="/"
-          className="shrink-0 text-xl font-semibold tracking-tight text-primary"
-        >
-          Casa Paraiso
+        <Link href="/" className="">
+          <Image
+            src="/images/logo.png"
+            alt="Logo"
+            width={220}
+            height={220}
+            className="cursor-pointer my-10"
+          />
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex">
