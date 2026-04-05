@@ -9,7 +9,7 @@ const navItems = [
   { label: "Ubicaciones", href: "#ubicaciones" },
   { label: "Experiencias", href: "#experiencias" },
   { label: "Servicios", href: "#servicios" },
-  { label: "Contacto", href: "#contacto" },
+  { label: "Reservar", href: "#reservar" },
 ];
 
 export default function Navbar() {
@@ -22,7 +22,7 @@ export default function Navbar() {
           href="/"
           className="shrink-0 text-xl font-semibold tracking-tight text-primary"
         >
-          Casa Pariako
+          Casa Paraiso
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex">
@@ -40,7 +40,7 @@ export default function Navbar() {
         <div className="hidden md:block">
           <Link
             href="#reservar"
-            className="inline-flex items-center justify-center rounded-md border border-primary bg-primary px-5 py-2.5 text-sm font-medium text-white transition-all duration-200 hover:opacity-90"
+            className="inline-flex items-center justify-center rounded-md border border-primary bg-primary px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-all duration-200 hover:bg-primary/95 hover:shadow-md active:scale-95"
           >
             Reservar
           </Link>
@@ -74,7 +74,7 @@ export default function Navbar() {
             <Link
               href="#reservar"
               onClick={() => setIsOpen(false)}
-              className="mt-3 inline-flex items-center justify-center rounded-md border border-primary bg-primary px-5 py-3 text-sm font-medium text-white transition-all duration-200 hover:opacity-90"
+              className="mt-3 inline-flex items-center justify-center rounded-md border border-primary bg-primary px-5 py-3 text-sm font-medium text-white shadow-sm transition-all duration-200 hover:bg-primary/95 hover:shadow-md active:scale-[0.98]"
             >
               Reservar
             </Link>

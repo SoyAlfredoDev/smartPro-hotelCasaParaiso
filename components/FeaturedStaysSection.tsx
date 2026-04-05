@@ -45,7 +45,7 @@ export default function FeaturedStaysSection() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-10 flex flex-col gap-4 sm:mb-12 lg:mb-14 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl">
-            <span className="inline-flex rounded-full border border-secondary/30 bg-surface px-4 py-1.5 text-sm font-medium text-primary">
+            <span className="inline-flex rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-sm font-medium text-primary">
               Espacios destacados
             </span>
 
@@ -62,7 +62,7 @@ export default function FeaturedStaysSection() {
 
           <Link
             href="#reservar"
-            className="inline-flex items-center justify-center rounded-lg border border-primary bg-primary px-5 py-3 text-sm font-medium text-white transition-opacity duration-200 hover:opacity-90"
+            className="inline-flex items-center justify-center rounded-lg border border-primary bg-primary px-5 py-3 text-sm font-medium text-white shadow-sm transition-all duration-200 hover:bg-primary/95 hover:shadow-md active:scale-95"
           >
             Ver disponibilidad
           </Link>
@@ -112,16 +112,17 @@ export default function FeaturedStaysSection() {
                 <div className="mt-6 flex items-center justify-between">
                   <Link
                     href="#reservar"
-                    className="inline-flex items-center justify-center rounded-lg bg-accent px-4 py-2.5 text-sm font-medium text-white transition-opacity duration-200 hover:opacity-90"
+                    className="inline-flex items-center justify-center rounded-lg bg-accent px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-all duration-200 hover:bg-accent/90 hover:shadow-md active:scale-[0.97]"
                   >
                     Reservar
                   </Link>
 
                   <Link
                     href="#contacto"
-                    className="text-sm font-medium text-primary transition-opacity duration-200 hover:opacity-80"
+                    className="group flex items-center text-sm font-medium text-primary transition-all duration-200 hover:text-primary/80"
                   >
                     Ver detalles
+                    <span className="ml-1 inline-block transition-transform duration-200 group-hover:translate-x-1">→</span>
                   </Link>
                 </div>
               </div>

@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Instagram, Facebook, Mail, Phone, MapPin } from "lucide-react";
+import { Mail, Phone, MapPin } from "lucide-react";
+import { FaInstagram, FaFacebook } from "react-icons/fa";
 
 const footerLinks = {
   alojamientos: [
@@ -37,18 +38,18 @@ export default function Footer() {
             <div className="mt-6 flex items-center gap-3">
               <Link
                 href="#"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-default bg-background text-primary transition-colors duration-200 hover:bg-primary hover:text-white"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-default bg-background text-primary shadow-sm transition-all duration-200 hover:bg-primary hover:text-white hover:shadow-md active:scale-95"
                 aria-label="Instagram"
               >
-                <Instagram size={18} />
+                <FaInstagram size={18} />
               </Link>
 
               <Link
                 href="#"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-default bg-background text-primary transition-colors duration-200 hover:bg-primary hover:text-white"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-default bg-background text-primary shadow-sm transition-all duration-200 hover:bg-primary hover:text-white hover:shadow-md active:scale-95"
                 aria-label="Facebook"
               >
-                <Facebook size={18} />
+                <FaFacebook size={18} />
               </Link>
             </div>
           </div>
