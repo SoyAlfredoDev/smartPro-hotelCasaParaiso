@@ -1,10 +1,10 @@
 import Image from "next/image";
 import Navbar from "@/components/NavBar";
-import HeroSection from "@/components/HeroSection";
-import LocationsSection from "@/components/LocationsSection";
-import FeaturedStaysSection from "@/components/FeaturedStaysSection";
-import ExperiencesSection from "@/components/ExperiencesSection";
-import BookingFormSection from "@/components/BookingFormSection";
+import HeroSection from "@/section/HeroSection";
+import LocationsSection from "@/section/LocationsSection";
+import FeaturedStaysSection from "@/section/FeaturedStaysSection";
+import ExperiencesSection from "@/section/ExperiencesSection";
+import BookingFormSection from "@/section/BookingFormSection";
 import Footer from "@/components/Footer";
 
 export default function Home() {

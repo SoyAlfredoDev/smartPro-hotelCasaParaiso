@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
 
@@ -15,11 +15,42 @@ const navItems = [
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      // Ocultar si hacemos scroll hacia abajo y pasamos los primeros 80px
+      if (currentScrollY > lastScrollY && currentScrollY > 80) {
+        setIsVisible(false);
+        setIsOpen(false); // Buena práctica: cerrar el menú móvil si hacen scroll
+      } else {
+        // Mostrar si hacemos scroll hacia arriba
+        setIsVisible(true);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    // Usamos passive: true para no bloquear el rendimiento del scroll
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [lastScrollY]);
 
   return (
-    <header className="sticky top-0 pt-3 z-50 w-full border-b bg-surface/90 backdrop-blur-lg">
+    // Cambiamos 'sticky' por 'fixed' para que la traslación funcione perfectamente en toda la página
+    <header
+      className={`fixed top-0 z-50 w-full border-b bg-surface/90 backdrop-blur-lg transition-transform duration-300 ease-in-out ${
+        isVisible ? "translate-y-0" : "-translate-y-full"
+      }`}
+    >
       <div className="mx-auto flex h-20 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link href="/" className="">
+        <Link href="/">
           <Image
             src="/images/logo.png"
             alt="Logo"
@@ -34,7 +65,7 @@ export default function Navbar() {
             <Link
               key={item.label}
               href={item.href}
-              className="text-md font-medium text-secondary transition-colors duration-200 hover:text-primary"
+              className="text-md font-medium text-text-secondary transition-colors duration-200 hover:text-primary"
             >
               {item.label}
             </Link>

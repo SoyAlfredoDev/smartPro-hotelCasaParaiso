@@ -29,7 +29,7 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts",
-    "components/BookingFormSection.jsx"
+    "section/BookingFormSection.jsx"
   ],
   "exclude": ["node_modules"]
 }
