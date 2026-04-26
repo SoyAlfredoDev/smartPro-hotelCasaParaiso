@@ -3,6 +3,7 @@
 :root {
   --background: #f5f5f3;
   --foreground: #2b2b2b;
+  --background-gray: #e5e5e5;
 
   --primary: #2f5d50;
   --secondary: #8fa89e;
@@ -29,16 +30,20 @@ body {
   background-color: var(--secondary);
 }
 
+.bg-dark {
+  background-color: var(--foreground);
+}
+
+.bg-gray {
+  background-color: var(--background-gray);
+}
+
 .bg-accent {
   background-color: var(--accent);
 }
 
 .bg-surface {
   background-color: var(--surface);
-}
-
-.bg-background {
-  background-color: var(--background);
 }
 
 /* Text */

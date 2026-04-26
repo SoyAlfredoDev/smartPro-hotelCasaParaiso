@@ -3,29 +3,14 @@ import categories from "./categories";
 
 //services : breakfast, wifi, parking, petFriendly, mini bar, tv,
 
-interface Room {
-  id: string;
-  roomName: string;
-  hotelId: string;
-  category: string;
-  capacity: number;
-  name: string;
-  description: string;
-  price: number;
-  images: string[];
-  amenities: string[];
-}
-
 export default [
   {
     id: "room1",
-    roomName: "Habitacion Standard",
-    rooomDescription: "Habitacion Standard  ideal para  2 personas",
+    name: "Habitacion Standard",
+    description: "Habitacion Standard  ideal para  2 personas",
     hotelId: "hotel-san-miguel",
     category: categories[0].id, //its a reference to category
     capacity: 2,
-    name: "Habitacion Standard",
-    description: "Habitacion Standard",
     price: 80000,
     images: [
       "/images/Portada_habitación.jpg",

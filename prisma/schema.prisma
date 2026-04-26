@@ -1,0 +1,27 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+// To push the schema to the database: npx prisma db push
+// To seed the database: npx prisma db seed
+
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Room {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  hotelId     String
+  category    String
+  capacity    Int
+  price       Int
+  images      String[]
+  amenities   String[]
+}
