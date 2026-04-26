@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Room } from "@/models/RoomType"; // Asegúrate de que la ruta sea correcta
+import { RoomType } from "@/models/RoomType"; // Asegúrate de que la ruta sea correcta
 
 // Componente Input Reutilizable
 const InputField = ({
@@ -57,7 +57,7 @@ export default function NewRoomButton() {
   const [imagesStr, setImagesStr] = useState("");
   const [amenitiesStr, setAmenitiesStr] = useState("");
 
-  const [roomData, setRoomData] = useState<Room>({
+  const [roomData, setRoomData] = useState<RoomType>({
     id: "",
     name: "",
     description: "",
@@ -83,7 +83,7 @@ export default function NewRoomButton() {
     e.preventDefault();
 
     // Convertir los strings separados por comas a arrays limpios
-    const finalData: Room = {
+    const finalData: RoomType = {
       ...roomData,
       images: imagesStr
         .split(",")
