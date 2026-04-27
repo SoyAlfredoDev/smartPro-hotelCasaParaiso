@@ -13,7 +13,7 @@ export default function NavBarAdmin() {
     }
   };
   return (
-    <nav className="border-b border-surface/10 border-b-2 border-b-white">
+    <nav className="border-b bg-surface/10 border-b-2 border-b-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">

@@ -45,18 +45,18 @@ export default function Navbar() {
   return (
     // Cambiamos 'sticky' por 'fixed' para que la traslación funcione perfectamente en toda la página
     <header
-      className={`fixed top-0 z-50 w-full border-b bg-surface/90 backdrop-blur-lg transition-transform duration-300 ease-in-out ${
+      className={`fixed top-0 z-50 w-full border-b bg-gray backdrop-blur-lg transition-transform duration-300 ease-in-out ${
         isVisible ? "translate-y-0" : "-translate-y-full"
       }`}
     >
       <div className="mx-auto flex h-20 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link href="/">
+        <Link href="/" className="flex justify-center items-center">
           <Image
-            src="/images/logo.png"
+            src="/images/logo-hotel-casa-paraiso.png"
             alt="Logo"
-            width={220}
-            height={220}
-            className="cursor-pointer my-10"
+            width={100}
+            height={100}
+            className="cursor-pointer h-full"
           />
         </Link>
 

@@ -44,6 +44,7 @@ export default function Footer() {
     rut: "77.010.418-1",
     name: "ATLANTIC GROUP SPA",
     address: "Avenida República #19, Santiago, RM",
+    address2: "Salesiano #1130, San Miguel, RM",
     email: "contacto@hotelcasaparaiso.cl",
     phone: "+56 9 3584 1793",
     whatsapp: "56935841793",
@@ -147,15 +148,23 @@ export default function Footer() {
                     {company.address}
                   </span>
                 </li>
+                <li className="flex items-start gap-3">
+                  <MapPin className="mt-0.5 shrink-0 opacity-80" size={18} />
+                  <span className="opacity-90 text-xs sm:text-sm">
+                    {company.address2}
+                  </span>
+                </li>
 
                 <li className="flex items-center gap-3">
                   <Phone className="shrink-0 opacity-80" size={18} />
-                  <Link
+                  <a
                     href={`https://wa.me/${company.whatsapp}`}
                     className="opacity-90 hover:opacity-100 transition"
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
                     {company.phone}
-                  </Link>
+                  </a>
                 </li>
 
                 <li className="flex items-center gap-3">

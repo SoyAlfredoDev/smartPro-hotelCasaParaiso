@@ -1,6 +1,11 @@
+"use client";
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { RoomType } from "@/models/RoomType"; // Asegúrate de que la ruta sea correcta
+import { useEffect } from "react";
+import hotels from "@/public/assets/hotels";
+import categories from "@/public/assets/categories";
+import amenities from "@/public/assets/amenities";
 
 // Componente Input Reutilizable
 const InputField = ({
@@ -50,12 +55,69 @@ const InputField = ({
   </div>
 );
 
+const SelectField = ({
+  label,
+  name,
+  value,
+  onChange,
+  options,
+  multiple = false,
+}: {
+  label: string;
+  name: string;
+  value: string;
+  multiple?: boolean;
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  options: { id: string; name: string; icon?: React.ElementType | string }[];
+}) => (
+  <div className="mb-4 flex-1">
+    <label className="block text-sm font-medium text-gray-700 mb-1">
+      {label}
+    </label>
+    <select
+      name={name}
+      value={value}
+      onChange={onChange}
+      multiple={multiple}
+      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+    >
+      <option value={""} disabled>
+        Seleccione una opción
+      </option>
+      {options.map((option) => (
+        <option key={option.id} value={option.id}>
+          {option.name}
+        </option>
+      ))}
+    </select>
+  </div>
+);
+
 export default function NewRoomButton() {
   const [isOpen, setIsOpen] = useState(false);
-
-  // Estados intermedios para los arrays (se manejan como strings en el input)
+  const [idExist, setIdExist] = useState(false);
   const [imagesStr, setImagesStr] = useState("");
   const [amenitiesStr, setAmenitiesStr] = useState("");
+  const [allRooms, setAllRooms] = useState<RoomType[]>([]);
+
+  //Validamos que id no se repita
+  useEffect(() => {
+    const fetchRooms = async () => {
+      const response = await fetch("/api/rooms");
+      const data = await response.json();
+      setAllRooms(data.map((room: RoomType) => room.id));
+    };
+    fetchRooms();
+  }, []);
+
+  const checkIdExist = (_id: string) => {
+    try {
+      return allRooms.includes(_id);
+    } catch (error) {
+      console.error("Error al verificar el ID:", error);
+      return false;
+    }
+  };
 
   const [roomData, setRoomData] = useState<RoomType>({
     id: "",
@@ -79,6 +141,32 @@ export default function NewRoomButton() {
     }));
   };
 
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setRoomData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+  const handleSelectMultipleChange = (
+    e: React.ChangeEvent<HTMLSelectElement>,
+  ) => {
+    const { name, value } = e.target;
+    if (value === "") return;
+    if (roomData.amenities.includes(value)) {
+      setRoomData((prev) => ({
+        ...prev,
+        amenities: prev.amenities.filter((item) => item !== value),
+      }));
+    } else {
+      setRoomData((prev) => ({
+        ...prev,
+        amenities: [...prev.amenities, value],
+      }));
+    }
+    console.log(roomData.amenities);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -94,6 +182,12 @@ export default function NewRoomButton() {
         .map((item) => item.trim())
         .filter(Boolean),
     };
+
+    if (checkIdExist(finalData.id)) {
+      setIdExist(true);
+      alert("El ID de la habitación ya existe");
+      return;
+    }
 
     console.log("Datos enviados:", finalData);
     // Aquí iría tu lógica para enviar a la API
@@ -151,11 +245,13 @@ export default function NewRoomButton() {
                     onChange={handleChange}
                     placeholder="Ej: ROOM-001"
                   />
-                  <InputField
-                    label="ID del Hotel"
+
+                  <SelectField
+                    label="Hotel"
                     name="hotelId"
                     value={roomData.hotelId}
-                    onChange={handleChange}
+                    onChange={handleSelectChange}
+                    options={hotels}
                   />
 
                   <InputField
@@ -165,12 +261,12 @@ export default function NewRoomButton() {
                     onChange={handleChange}
                     placeholder="Ej: Suite Presidencial"
                   />
-                  <InputField
+                  <SelectField
                     label="Categoría"
                     name="category"
                     value={roomData.category}
-                    onChange={handleChange}
-                    placeholder="Ej: VIP, Standard"
+                    onChange={handleSelectChange}
+                    options={categories}
                   />
 
                   <InputField
@@ -207,12 +303,13 @@ export default function NewRoomButton() {
                     onChange={(e) => setImagesStr(e.target.value)}
                     placeholder="url1.jpg, url2.jpg"
                   />
-                  <InputField
+                  <SelectField
                     label="Comodidades (Separadas por coma)"
                     name="amenities"
-                    value={amenitiesStr}
-                    onChange={(e) => setAmenitiesStr(e.target.value)}
-                    placeholder="Wifi, TV, Jacuzzi"
+                    value={roomData.amenities}
+                    onChange={handleSelectMultipleChange}
+                    multiple={true}
+                    options={amenities}
                   />
                 </div>
                 <div className="mt-6 flex justify-center gap-3 pt-4 border-t border-gray-100">
