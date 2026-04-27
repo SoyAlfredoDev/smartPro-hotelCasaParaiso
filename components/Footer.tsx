@@ -5,6 +5,7 @@ import { Mail, Phone, MapPin } from "lucide-react";
 import { FaInstagram, FaFacebook } from "react-icons/fa";
 import { motion, Variants } from "framer-motion";
 import { div } from "framer-motion/client";
+import Image from "next/image";
 
 const footerLinks = {
   alojamientos: [
@@ -95,46 +96,6 @@ export default function Footer() {
               </div>
             </motion.div>
 
-            {/* ALOJAMIENTOS */}
-            <motion.div variants={itemVariants}>
-              <h3 className="text-xs sm:text-sm font-semibold uppercase opacity-80">
-                Alojamientos
-              </h3>
-
-              <ul className="mt-3 space-y-2">
-                {footerLinks.alojamientos.map((item) => (
-                  <li key={item.label}>
-                    <Link
-                      href={item.href}
-                      className="text-sm opacity-90 transition hover:opacity-100"
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-
-            {/* EMPRESA */}
-            <motion.div variants={itemVariants}>
-              <h3 className="text-xs sm:text-sm font-semibold uppercase opacity-80">
-                Empresa
-              </h3>
-
-              <ul className="mt-3 space-y-2">
-                {footerLinks.empresa.map((item) => (
-                  <li key={item.label}>
-                    <Link
-                      href={item.href}
-                      className="text-sm opacity-90 transition hover:opacity-100"
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-
             {/* CONTACTO */}
             <motion.div variants={itemVariants}>
               <h3 className="text-xs sm:text-sm font-semibold uppercase opacity-80">
@@ -177,6 +138,42 @@ export default function Footer() {
                   </Link>
                 </li>
               </ul>
+            </motion.div>
+
+            {/* EMPRESA */}
+            <motion.div variants={itemVariants}>
+              <h3 className="text-xs sm:text-sm font-semibold uppercase opacity-80">
+                Empresa
+              </h3>
+
+              <ul className="mt-3 space-y-2">
+                {footerLinks.empresa.map((item) => (
+                  <li key={item.label}>
+                    <Link
+                      href={item.href}
+                      className="text-sm opacity-90 transition hover:opacity-100"
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+
+            {/*Methods of payment */}
+            <motion.div variants={itemVariants} className="relative">
+              <h3 className="text-xs sm:text-sm font-semibold uppercase opacity-80">
+                Métodos de pago
+              </h3>
+              <div className="flex justify-center items-center w-full h-full">
+                <Image
+                  src="/images/webpay-2048x979.png"
+                  alt="Métodos de pago"
+                  width={100}
+                  height={100}
+                  className="w-full h-auto max-w-[250px]"
+                />
+              </div>
             </motion.div>
           </motion.div>
 

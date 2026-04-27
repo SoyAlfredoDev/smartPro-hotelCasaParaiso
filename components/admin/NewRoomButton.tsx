@@ -16,6 +16,7 @@ const InputField = ({
   onChange,
   placeholder = "",
   required = true,
+  disabled = false,
 }: {
   label: string;
   name: string;
@@ -26,6 +27,7 @@ const InputField = ({
   ) => void;
   placeholder?: string;
   required?: boolean;
+  disabled?: boolean;
 }) => (
   <div className="mb-4 flex-1">
     <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -38,7 +40,8 @@ const InputField = ({
         onChange={onChange}
         required={required}
         placeholder={placeholder}
-        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+        disabled={disabled}
+        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed"
         rows={3}
       />
     ) : (
@@ -49,7 +52,8 @@ const InputField = ({
         onChange={onChange}
         required={required}
         placeholder={placeholder}
-        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+        disabled={disabled}
+        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed"
       />
     )}
   </div>
@@ -93,33 +97,59 @@ const SelectField = ({
   </div>
 );
 
-export default function NewRoomButton() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [idExist, setIdExist] = useState(false);
+interface RoomModalProps {
+  onRoomCreated?: () => void;
+  roomToEdit?: RoomType | null;
+  isOpen?: boolean;
+  onClose?: () => void;
+}
+
+export default function NewRoomButton({
+  onRoomCreated,
+  roomToEdit = null,
+  isOpen: externalIsOpen,
+  onClose,
+}: RoomModalProps) {
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
   const [imagesStr, setImagesStr] = useState("");
-  const [amenitiesStr, setAmenitiesStr] = useState("");
-  const [allRooms, setAllRooms] = useState<RoomType[]>([]);
+  const [allRoomIds, setAllRoomIds] = useState<string[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+
+  // Modo edición: controlado externamente via props
+  const isEditMode = !!roomToEdit;
+  const modalIsOpen = isEditMode ? (externalIsOpen ?? false) : internalIsOpen;
+
+  const setModalOpen = (open: boolean) => {
+    if (isEditMode) {
+      if (!open) onClose?.();
+    } else {
+      setInternalIsOpen(open);
+    }
+  };
 
   //Validamos que id no se repita
   useEffect(() => {
     const fetchRooms = async () => {
-      const response = await fetch("/api/rooms");
-      const data = await response.json();
-      setAllRooms(data.map((room: RoomType) => room.id));
+      try {
+        const response = await fetch("/api/rooms");
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          setAllRoomIds(data.map((room: RoomType) => room.id));
+        }
+      } catch (error) {
+        console.error("Error al obtener habitaciones:", error);
+      }
     };
     fetchRooms();
   }, []);
 
-  const checkIdExist = (id: any) => {
-    try {
-      return allRooms.includes(id);
-    } catch (error) {
-      console.error("Error al verificar el ID:", error);
-      return false;
-    }
+  const checkIdExist = (id: string) => {
+    return allRoomIds.includes(id);
   };
 
-  const [roomData, setRoomData] = useState<RoomType>({
+  const emptyRoom: RoomType = {
     id: "",
     name: "",
     description: "",
@@ -129,7 +159,19 @@ export default function NewRoomButton() {
     price: 0,
     images: [],
     amenities: [],
-  });
+  };
+
+  const [roomData, setRoomData] = useState<RoomType>(emptyRoom);
+
+  // Pre-fill form cuando se recibe roomToEdit
+  useEffect(() => {
+    if (roomToEdit && externalIsOpen) {
+      setRoomData(roomToEdit);
+      setImagesStr(roomToEdit.images.join(", "));
+      setSubmitError(null);
+      setSubmitSuccess(false);
+    }
+  }, [roomToEdit, externalIsOpen]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -167,47 +209,99 @@ export default function NewRoomButton() {
     console.log(roomData.amenities);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const resetForm = () => {
+    setRoomData(emptyRoom);
+    setImagesStr("");
+    setSubmitError(null);
+    setSubmitSuccess(false);
+  };
 
-    // Convertir los strings separados por comas a arrays limpios
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitError(null);
+    setSubmitSuccess(false);
+
+    // Convertir las imágenes de string a array
     const finalData: RoomType = {
       ...roomData,
       images: imagesStr
         .split(",")
         .map((img) => img.trim())
         .filter(Boolean),
-      amenities: amenitiesStr
-        .split(",")
-        .map((item) => item.trim())
-        .filter(Boolean),
+      // amenities ya se maneja correctamente via roomData.amenities
     };
 
-    if (checkIdExist(finalData.id)) {
-      setIdExist(true);
-      alert("El ID de la habitación ya existe");
+    // Solo verificar ID duplicado en modo creación
+    if (!isEditMode && checkIdExist(finalData.id)) {
+      setSubmitError("El ID de la habitación ya existe. Usa otro ID.");
       return;
     }
 
-    console.log("Datos enviados:", finalData);
-    // Aquí iría tu lógica para enviar a la API
+    setIsSubmitting(true);
 
-    setIsOpen(false); // Cerrar modal al guardar exitosamente
+    try {
+      const method = isEditMode ? "PUT" : "POST";
+      const response = await fetch("/api/rooms", {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ roomData: finalData }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          errorData.error ||
+            (isEditMode
+              ? "Error al actualizar la habitación"
+              : "Error al crear la habitación"),
+        );
+      }
+
+      setSubmitSuccess(true);
+
+      // En modo creación, actualizar la lista de IDs existentes
+      if (!isEditMode) {
+        setAllRoomIds((prev) => [...prev, finalData.id]);
+      }
+
+      // Notificar al componente padre para refrescar la tabla
+      onRoomCreated?.();
+
+      // Cerrar modal y resetear formulario tras un breve delay
+      setTimeout(() => {
+        setModalOpen(false);
+        resetForm();
+      }, 1200);
+    } catch (error) {
+      console.error(
+        isEditMode
+          ? "Error al actualizar habitación:"
+          : "Error al crear habitación:",
+        error,
+      );
+      setSubmitError(
+        error instanceof Error ? error.message : "Error inesperado al guardar",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <>
-      {/* Botón que dispara el modal */}
-      <button
-        onClick={() => setIsOpen(true)}
-        className="px-6 py-2 bg-primary text-white font-semibold rounded-lg shadow-md hover:bg-primary/80 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition-colors cursor-pointer"
-      >
-        Agregar
-      </button>
+      {/* Botón que dispara el modal — solo en modo creación */}
+      {!isEditMode && (
+        <button
+          onClick={() => setModalOpen(true)}
+          className="px-6 py-2 bg-primary text-white font-semibold rounded-lg shadow-md hover:bg-primary/80 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-75 transition-colors cursor-pointer"
+        >
+          Agregar
+        </button>
+      )}
 
       {/* Modal con Framer Motion */}
       <AnimatePresence>
-        {isOpen && (
+        {modalIsOpen && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -222,10 +316,13 @@ export default function NewRoomButton() {
             >
               <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
                 <h2 className="text-xl font-bold text-gray-800">
-                  Nueva Habitación
+                  {isEditMode ? "Editar Habitación" : "Nueva Habitación"}
                 </h2>
                 <button
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => {
+                    setModalOpen(false);
+                    resetForm();
+                  }}
                   className="text-gray-400 hover:text-gray-600 transition"
                   type="button"
                 >
@@ -244,7 +341,14 @@ export default function NewRoomButton() {
                     value={roomData.id}
                     onChange={handleChange}
                     placeholder="Ej: ROOM-001"
+                    required={!isEditMode}
+                    disabled={isEditMode}
                   />
+                  {isEditMode && (
+                    <p className="text-xs text-gray-400 -mt-3 mb-2 ml-1">
+                      El ID no se puede modificar
+                    </p>
+                  )}
 
                   <SelectField
                     label="Hotel"
@@ -312,19 +416,43 @@ export default function NewRoomButton() {
                     options={amenities}
                   />
                 </div>
+                {/* Mensajes de estado */}
+                {submitError && (
+                  <div className="mt-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
+                    ⚠️ {submitError}
+                  </div>
+                )}
+                {submitSuccess && (
+                  <div className="mt-4 p-3 bg-green-50 border border-green-200 text-green-700 rounded-lg text-sm">
+                    ✅
+                    {isEditMode
+                      ? " Habitación actualizada exitosamente"
+                      : " Habitación creada exitosamente"}
+                  </div>
+                )}
+
                 <div className="mt-6 flex justify-center gap-3 pt-4 border-t border-gray-100">
                   <button
                     type="button"
-                    onClick={() => setIsOpen(false)}
-                    className="px-5 py-2 text-sm font-medium text-white bg-gray-600 rounded-lg hover:bg-gray-700 transition-colors cursor-pointer w-45"
+                    onClick={() => {
+                      setModalOpen(false);
+                      resetForm();
+                    }}
+                    disabled={isSubmitting}
+                    className="px-5 py-2 text-sm font-medium text-white bg-gray-600 rounded-lg hover:bg-gray-700 transition-colors cursor-pointer w-45 disabled:opacity-50"
                   >
                     Cancelar
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-primary/80 shadow-sm transition-colors cursor-pointer w-45  "
+                    disabled={isSubmitting || submitSuccess}
+                    className="px-5 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-primary/80 shadow-sm transition-colors cursor-pointer w-45 disabled:opacity-50"
                   >
-                    Guardar Habitación
+                    {isSubmitting
+                      ? "Guardando..."
+                      : isEditMode
+                        ? "Actualizar Habitación"
+                        : "Guardar Habitación"}
                   </button>
                 </div>
               </form>

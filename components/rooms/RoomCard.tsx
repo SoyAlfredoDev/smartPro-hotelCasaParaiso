@@ -14,13 +14,13 @@ import Link from "next/link";
 
 // 1. Tipado correcto para autocompletado y evitar errores
 interface RoomProps {
-  id?: string;
+  id: string;
   name: string;
   description: string;
-  price: number | string;
+  price: number;
   capacity: number;
-  amenities: string[] | string; // Soporta array o string simple
-  images: string;
+  amenities: string[];
+  images: string[];
 }
 
 // 2. Función auxiliar para mapear el nombre del servicio a su ícono correspondiente

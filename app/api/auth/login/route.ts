@@ -1,14 +1,14 @@
 import { NextResponse } from "next/server";
-import bcrypt from "bcryptjs";
+import { createSession } from "@/lib/session";
 
 export async function POST(request: Request) {
   try {
-    // 1. Cargar variables de entorno (El ADMIN_PASS debe ser tu HASH generado previamente)
+    // 1. Load environment variables
     const adminUser = process.env.ADMIN_USER;
-    const adminPasswordHash = process.env.ADMIN_PASS;
+    const adminPass = process.env.ADMIN_PASS;
 
-    // 2. VALIDACIÓN INICIAL: ¿Están las variables cargadas?
-    if (!adminUser || !adminPasswordHash) {
+    // 2. Validate that env vars are loaded
+    if (!adminUser || !adminPass) {
       console.error(
         "❌ ERROR: ADMIN_USER o ADMIN_PASS no definidos en el .env",
       );
@@ -18,11 +18,11 @@ export async function POST(request: Request) {
       );
     }
 
-    // 3. Leer datos del cuerpo de la petición (Viene en texto plano desde el Frontend)
+    // 3. Read request body
     const body = await request.json();
     const { user, password } = body;
 
-    // 4. Validación de Usuario
+    // 4. Validate user
     if (user !== adminUser) {
       return NextResponse.json(
         { message: "Usuario o contraseña incorrectos" },
@@ -30,19 +30,18 @@ export async function POST(request: Request) {
       );
     }
 
-    // 5. Validación de Contraseña Segura
-    // Aquí el servidor toma el texto plano, lo procesa matemáticamente y lo compara con el Hash del .env
-    const hashPassworddd = bcrypt.hashSync(adminPasswordHash, 10);
-    const isPasswordValid = bcrypt.compareSync(password, hashPassworddd);
-
-    if (!isPasswordValid) {
+    // 5. Validate password (direct comparison since ADMIN_PASS is stored as plaintext in .env)
+    if (password !== adminPass) {
       return NextResponse.json(
-        { message: "Usuario o contraseña incorrectos" }, // Sin el "v1" para no dar pistas
+        { message: "Usuario o contraseña incorrectos" },
         { status: 401 },
       );
     }
 
-    // 6. Éxito
+    // 6. Create persistent session with httpOnly cookie
+    await createSession(adminUser);
+
+    // 7. Success response
     return NextResponse.json(
       { message: "Login exitoso", user: adminUser },
       { status: 200 },

@@ -1,13 +1,25 @@
 "use client";
 
 import Navbar from "@/components/NavBar";
-import rooms from "@/public/assets/rooms";
+
 import HeroSection from "@/section/HeroSection";
 import RoomCard from "@/components/rooms/RoomCard";
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect, Suspense } from "react";
 import Footer from "@/components/Footer";
 import FeaturedStaysSection from "@/section/FeaturedStaysSection";
+ 
+interface Room {
+  id: string;
+  name: string;
+  description: string;
+  hotelId: string;
+  category: string;
+  capacity: number;
+  price: number;
+  images: string[];
+  amenities: string[];
+}
 
 const getNumber = (value: string | null) => {
   if (!value) return 0;
@@ -19,30 +31,41 @@ const getNumber = (value: string | null) => {
 function SearchResults() {
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(true);
-  const [roomsAvailable, setRoomsAvailable] = useState<any[]>([]);
+  const [roomsAvailable, setRoomsAvailable] = useState<Room[]>([]);
 
+  const fetchRooms = async () => {
+    try {
+      const res = await fetch("/api/rooms");
+      const rooms = await res.json();
+
+      const hotelParam = searchParams.get("hotel") ?? "";
+      const adultsParam = getNumber(searchParams.get("adults"));
+      const childrenParam = getNumber(searchParams.get("children"));
+
+      // Filtro por hotel (manejando el caso en que el parámetro esté vacío o sea 'all')
+      let filteredRooms = rooms;
+      if (hotelParam !== "all" && hotelParam !== "") {
+        filteredRooms = rooms.filter((room: Room) => room.hotelId === hotelParam);
+      }
+
+      // Filtro por capacidad
+      const totalPeople = adultsParam + childrenParam;
+      filteredRooms = filteredRooms.filter(
+        (room: Room) => room.capacity >= totalPeople,
+      );
+
+      setRoomsAvailable(filteredRooms);
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Error al obtener habitaciones:", error);
+      setIsLoading(false);
+      return;
+    }
+  };
   useEffect(() => {
     // Activamos el loading cada vez que cambian los parámetros
     setIsLoading(true);
-
-    const hotelParam = searchParams.get("hotel") ?? "";
-    const adultsParam = getNumber(searchParams.get("adults"));
-    const childrenParam = getNumber(searchParams.get("children"));
-
-    // Filtro por hotel (manejando el caso en que el parámetro esté vacío o sea 'all')
-    let filteredRooms = rooms;
-    if (hotelParam !== "all" && hotelParam !== "") {
-      filteredRooms = rooms.filter((room) => room.hotelId === hotelParam);
-    }
-
-    // Filtro por capacidad
-    const totalPeople = adultsParam + childrenParam;
-    filteredRooms = filteredRooms.filter(
-      (room) => room.capacity >= totalPeople,
-    );
-
-    setRoomsAvailable(filteredRooms);
-    setIsLoading(false);
+    fetchRooms();
   }, [searchParams]); // Dependencia clave para que reaccione a los cambios de URL
 
   return (
@@ -65,7 +88,7 @@ function SearchResults() {
             </h2>
             {/* Uso de Grid para ordenar las tarjetas perfectamente */}
             <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-              {roomsAvailable.map((room) => (
+              {roomsAvailable.map((room: Room) => (
                 <RoomCard key={room.id} room={room} />
               ))}
             </div>

@@ -15,7 +15,7 @@ datasource db {
 }
 
 model Room {
-  id          String   @id @default(uuid())
+  id          String    @id
   name        String
   description String
   hotelId     String
@@ -24,4 +24,22 @@ model Room {
   price       Int
   images      String[]
   amenities   String[]
+  bookings    Booking[]
+}
+
+model Booking {
+  id            String   @id @default(uuid())
+  guestName     String
+  guestEmail    String
+  guestPhone    String
+  checkIn       DateTime
+  checkOut      DateTime
+  guests        Int
+  totalPrice    Int
+  status        String   @default("pendiente") // pendiente, confirmada, finalizada, cancelada
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  roomId        String
+  room          Room     @relation(fields: [roomId], references: [id])
 }
