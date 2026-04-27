@@ -65,7 +65,7 @@ const SelectField = ({
 }: {
   label: string;
   name: string;
-  value: string;
+  value: any;
   multiple?: boolean;
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   options: { id: string; name: string; icon?: React.ElementType | string }[];
@@ -110,9 +110,9 @@ export default function NewRoomButton() {
     fetchRooms();
   }, []);
 
-  const checkIdExist = (_id: string) => {
+  const checkIdExist = (id: any) => {
     try {
-      return allRooms.includes(_id);
+      return allRooms.includes(id);
     } catch (error) {
       console.error("Error al verificar el ID:", error);
       return false;

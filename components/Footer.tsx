@@ -43,8 +43,8 @@ export default function Footer() {
   const company = {
     rut: "77.010.418-1",
     name: "ATLANTIC GROUP SPA",
-    address: "Avenida República #19, Santiago, RM",
-    address2: "Salesiano #1130, San Miguel, RM",
+    address: "Avenida República #19, Santiago, RM, codigo postal 8320000",
+    address2: "Salesiano #1130, San Miguel, RM, codigo postal 8900000 ",
     email: "contacto@hotelcasaparaiso.cl",
     phone: "+56 9 3584 1793",
     whatsapp: "56935841793",
