@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import SearcherComponent from "@/components/SearcherComponent";
+//import SearcherComponent from "@/components/SearcherComponent";
 import { Suspense } from "react";
 
 export default function HeroSection() {
@@ -60,7 +60,7 @@ export default function HeroSection() {
               </div>
             }
           >
-            <SearcherComponent />
+            {/*<SearcherComponent />*/}
           </Suspense>
         </div>
       </div>

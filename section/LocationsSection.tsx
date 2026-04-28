@@ -1,149 +1,390 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, Variants } from "framer-motion";
+import { motion, Variants, AnimatePresence } from "framer-motion";
 
-const locations = [
+const hotels = [
   {
-    title: "San Miguel",
+    id: "republica",
+    title: "Hotel República",
+    address: "Avenida República 19, Santiago Centro",
     description:
-      "Un entorno residencial tranquilo con excelente conectividad, ideal para descansar sin alejarse de la ciudad.",
-    image:
+      "Ubicación estratégica y diseño vanguardista en el corazón de la ciudad. Habitaciones equipadas con tecnología moderna y cercanía a los principales puntos culturales.",
+    images: [
+      "https://images.unsplash.com/photo-1560067174-c5a3a8f37060?auto=format&fit=crop&w=1200&q=80",
       "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80",
-  },
-  {
-    title: "Restobar San Miguel",
-    description:
-      "Vive una experiencia única combinando alojamiento y vida nocturna en un mismo lugar con ambiente moderno.",
-    image:
       "https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=1200&q=80",
+    ],
+    amenities: [
+      "Cafetería de Autor",
+      "Minibar Premium",
+      "Atención Personalizada",
+    ],
+    accent: "#c8a97e",
   },
   {
-    title: "República",
+    id: "san-miguel",
+    title: "Hotel San Miguel",
+    address: "Salesianos 1130, San Miguel",
     description:
-      "Ubicación estratégica cercana a universidades, metro y puntos clave de la ciudad para una estadía práctica.",
-    image:
+      "El equilibrio perfecto entre un entorno residencial tranquilo y la modernidad. Disfruta de un servicio al cliente excepcional y espacios diseñados para tu máximo confort.",
+    images: [
       "https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1542314831-c6a4d14d8373?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1505691938895-1758d7def511?auto=format&fit=crop&w=1200&q=80",
+    ],
+    amenities: [
+      "Cafetería de Autor",
+      "Minibar Premium",
+      "Atención Personalizada",
+    ],
+    accent: "#2f5d50",
   },
 ];
 
-// Variantes de animación para la cascada (stagger)
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.15,
-    },
-  },
-};
-
-const cardVariants: Variants = {
+/* ── Variants ── */
+const sectionHeaderVariants: Variants = {
   hidden: { opacity: 0, y: 30 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: "easeOut" },
+    transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
   },
 };
 
+const cardWrapperVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.3 },
+  },
+};
+
+const cardRevealVariants: Variants = {
+  hidden: { opacity: 0, y: 60, rotateX: 4 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    rotateX: 0,
+    transition: {
+      type: "spring",
+      stiffness: 40,
+      damping: 18,
+      mass: 1.2,
+    },
+  },
+};
+
+const sliderVariants = {
+  enter: (direction: number) => ({
+    x: direction > 0 ? 60 : -60,
+    opacity: 0,
+    scale: 1.02,
+  }),
+  center: {
+    zIndex: 1,
+    x: 0,
+    opacity: 1,
+    scale: 1,
+  },
+  exit: (direction: number) => ({
+    zIndex: 0,
+    x: direction < 0 ? 60 : -60,
+    opacity: 0,
+    scale: 0.98,
+  }),
+};
+
+const lineVariants: Variants = {
+  hidden: { scaleX: 0 },
+  visible: {
+    scaleX: 1,
+    transition: { duration: 1.2, ease: [0.22, 1, 0.36, 1], delay: 0.3 },
+  },
+};
+
+/* ── Hotel Card Component ── */
+function HotelCard({
+  hotel,
+  index,
+}: {
+  hotel: (typeof hotels)[0];
+  index: number;
+}) {
+  const [currentImg, setCurrentImg] = useState(0);
+  const [direction, setDirection] = useState(0);
+  const isReversed = index % 2 !== 0;
+
+  const paginate = (newDirection: number) => {
+    setDirection(newDirection);
+    setCurrentImg((prev) => {
+      let nextIndex = prev + newDirection;
+      if (nextIndex < 0) nextIndex = hotel.images.length - 1;
+      if (nextIndex >= hotel.images.length) nextIndex = 0;
+      return nextIndex;
+    });
+  };
+
+  return (
+    <motion.article
+      variants={cardRevealVariants}
+      className={`group grid grid-cols-1 gap-0 overflow-hidden rounded-[2rem] bg-white shadow-[0_8px_40px_rgba(0,0,0,0.06)] transition-shadow duration-700 hover:shadow-[0_20px_60px_rgba(47,93,80,0.12)] lg:grid-cols-2 ${
+        isReversed ? "lg:direction-rtl" : ""
+      }`}
+      style={{ perspective: "1200px" }}
+    >
+      {/* Image Gallery Side */}
+      <div
+        className={`relative h-[340px] overflow-hidden lg:h-auto lg:min-h-[480px] ${
+          isReversed ? "lg:order-2" : "lg:order-1"
+        }`}
+      >
+        <AnimatePresence initial={false} custom={direction}>
+          <motion.div
+            key={currentImg}
+            custom={direction}
+            variants={sliderVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{
+              x: { type: "spring", stiffness: 250, damping: 28 },
+              opacity: { duration: 0.35 },
+              scale: { duration: 0.4 },
+            }}
+            className="absolute inset-0"
+          >
+            <Image
+              src={hotel.images[currentImg]}
+              alt={`Vista de ${hotel.title}`}
+              fill
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              className="object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.03]"
+            />
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Cinematic gradient overlay */}
+        <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
+        <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-r from-black/20 to-transparent" />
+
+        {/* Navigation Arrows */}
+        <div className="absolute inset-0 z-20 flex items-center justify-between px-4 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              paginate(-1);
+            }}
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-white/20 text-white backdrop-blur-md transition-all duration-300 hover:bg-white/40 active:scale-90"
+            aria-label="Imagen anterior"
+          >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              paginate(1);
+            }}
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-white/20 text-white backdrop-blur-md transition-all duration-300 hover:bg-white/40 active:scale-90"
+            aria-label="Siguiente imagen"
+          >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Slide Indicators */}
+        <div className="absolute bottom-6 left-0 right-0 z-20 flex justify-center gap-2">
+          {hotel.images.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => {
+                setDirection(idx > currentImg ? 1 : -1);
+                setCurrentImg(idx);
+              }}
+              className={`h-1 rounded-full transition-all duration-400 ${
+                idx === currentImg
+                  ? "w-8 bg-white"
+                  : "w-2 bg-white/40 hover:bg-white/70"
+              }`}
+            />
+          ))}
+        </div>
+
+        {/* Floating Location Badge */}
+        <motion.div
+          initial={{ y: 10, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+          className="absolute left-4 top-4 z-20 flex items-center gap-2 rounded-xl border border-white/20 bg-white/15 px-3.5 py-2 backdrop-blur-xl"
+        >
+          <div className="flex h-5 w-5 items-center justify-center rounded-full bg-white/25">
+            <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </div>
+          <span className="font-inter text-[11px] font-semibold tracking-wide text-white">
+            {hotel.address}
+          </span>
+        </motion.div>
+      </div>
+
+      {/* Content Side */}
+      <div
+        className={`relative flex flex-col justify-center p-8 sm:p-10 lg:p-12 ${
+          isReversed ? "lg:order-1" : "lg:order-2"
+        }`}
+      >
+        {/* Decorative accent corner */}
+        <div
+          className="absolute right-0 top-0 h-32 w-32 opacity-[0.04]"
+          style={{
+            background: `radial-gradient(circle at top right, ${hotel.accent}, transparent 70%)`,
+          }}
+        />
+
+        {/* Number index */}
+        <span className="font-chillax text-[80px] font-bold leading-none text-[#e5e5e5]/60 select-none">
+          0{index + 1}
+        </span>
+
+        <h3 className="mt-2 font-chillax text-3xl font-bold tracking-tight text-[#2b2b2b] transition-colors duration-500 group-hover:text-[#2f5d50] sm:text-4xl">
+          {hotel.title}
+        </h3>
+
+        {/* Gold decorative line */}
+        <motion.div
+          variants={lineVariants}
+          className="mt-4 h-[2px] w-12 origin-left rounded-full bg-gradient-to-r from-[#c8a97e] to-[#c8a97e]/30"
+        />
+
+        <p className="mt-5 font-inter text-[15px] leading-[1.8] text-[#6f6f6f]">
+          {hotel.description}
+        </p>
+
+        {/* Amenities as elegant inline list */}
+        <div className="mt-6 flex flex-wrap gap-3">
+          {hotel.amenities.map((amenity, i) => (
+            <span
+              key={i}
+              className="inline-flex items-center gap-2 rounded-full border border-[#e5e5e5] bg-[#f5f5f3]/80 px-3.5 py-1.5 font-inter text-[11px] font-semibold uppercase tracking-wider text-[#2f5d50] transition-all duration-300 hover:border-[#c8a97e]/40 hover:bg-[#c8a97e]/8"
+            >
+              <span className="h-1 w-1 rounded-full bg-[#c8a97e]" />
+              {amenity}
+            </span>
+          ))}
+        </div>
+
+        {/* Actions */}
+        <div className="mt-8 flex items-center gap-4 pt-2">
+          <Link
+            href={`#reservar-${hotel.id}`}
+            className="btn-primary gap-2 rounded-xl px-7 py-3 font-inter text-[13px]"
+          >
+            Reservar ahora
+            <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </Link>
+
+          <Link
+            href={`#detalles-${hotel.id}`}
+            className="group/link flex items-center gap-1.5 font-inter text-[13px] font-semibold text-[#8fa89e] transition-colors duration-300 hover:text-[#2f5d50]"
+          >
+            Ver detalles
+            <svg
+              className="h-4 w-4 transition-transform duration-300 group-hover/link:translate-x-1"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </Link>
+        </div>
+      </div>
+    </motion.article>
+  );
+}
+
+/* ── Section Component ── */
 export default function LocationsSection() {
   return (
     <section
       id="ubicaciones"
-      className="bg-background py-20 mt-[130px] sm:mt-[380px] md:mt-[180px] lg:mt-[80px] lg:py-28"
+      className="relative mt-[130px] overflow-hidden bg-[#f5f5f3] py-24 sm:mt-[380px] md:mt-[180px] lg:mt-[80px] lg:py-32"
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Header de la sección */}
+      {/* Animated ambient glows */}
+      <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6 }}
-          className="mx-auto max-w-2xl text-center"
-        >
-          <span className="inline-flex rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-primary">
-            Ubicaciones
-          </span>
+          className="absolute -left-[8%] top-[5%] h-[450px] w-[450px] rounded-full bg-[#8fa89e] opacity-[0.12] blur-[150px]"
+          animate={{ x: [0, 50, 0], y: [0, 30, 0], scale: [1, 1.15, 1] }}
+          transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute -right-[8%] bottom-[5%] h-[550px] w-[550px] rounded-full bg-[#c8a97e] opacity-[0.08] blur-[160px]"
+          animate={{ x: [0, -40, 0], y: [0, -40, 0], scale: [1, 1.2, 1] }}
+          transition={{ duration: 22, repeat: Infinity, ease: "easeInOut", delay: 3 }}
+        />
+        <motion.div
+          className="absolute left-[40%] top-[60%] h-[300px] w-[300px] rounded-full bg-[#2f5d50] opacity-[0.06] blur-[120px]"
+          animate={{ scale: [1, 1.3, 1] }}
+          transition={{ duration: 16, repeat: Infinity, ease: "easeInOut", delay: 5 }}
+        />
+      </div>
 
-          <h2 className="mt-5 font-chillax text-4xl font-bold tracking-tight text-text-primary sm:text-5xl">
-            Elige dónde quieres vivir tu experiencia
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* Editorial Section Header */}
+        <motion.div
+          variants={sectionHeaderVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: false, margin: "-80px" }}
+          className="mb-20 flex flex-col items-center text-center"
+        >
+          <motion.span
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: false }}
+            transition={{ duration: 0.5 }}
+            className="inline-flex items-center gap-2 rounded-full border border-[#c8a97e]/25 bg-[#c8a97e]/8 px-5 py-2 font-inter text-[11px] font-bold uppercase tracking-[0.2em] text-[#c8a97e]"
+          >
+            <span className="h-1.5 w-1.5 rounded-full bg-[#c8a97e] animate-pulse-soft" />
+            Nuestras Ubicaciones
+          </motion.span>
+
+          <h2 className="mt-6 font-chillax text-4xl font-bold tracking-tight text-[#2b2b2b] sm:text-5xl lg:text-6xl">
+            Modernidad y{" "}
+            <span className="bg-gradient-to-r from-[#2f5d50] to-[#8fa89e] bg-clip-text text-transparent">
+              confort
+            </span>
           </h2>
 
-          <p className="mt-5 font-inter text-base leading-relaxed text-text-secondary sm:text-lg">
-            Contamos con distintas ubicaciones pensadas para adaptarse a tu
-            estilo de viaje, ya sea descanso, vida urbana o cercanía a puntos
-            clave.
+          <div className="mx-auto mt-4 h-[2px] w-16 rounded-full bg-gradient-to-r from-transparent via-[#c8a97e] to-transparent" />
+
+          <p className="mt-6 max-w-xl font-inter text-[16px] leading-[1.8] text-[#6f6f6f]">
+            Descubre nuestras sucursales diseñadas para ofrecerte la mejor
+            atención, servicios de primera y una excelente ubicación en la
+            ciudad.
           </p>
         </motion.div>
 
-        {/* Grid de Tarjetas Animadas */}
+        {/* Stacked editorial cards */}
         <motion.div
-          variants={containerVariants}
+          variants={cardWrapperVariants}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
+          viewport={{ once: false, margin: "-50px" }}
+          className="flex flex-col gap-10 lg:gap-14"
         >
-          {locations.map((loc) => (
-            <motion.article
-              key={loc.title}
-              variants={cardVariants}
-              className="group flex flex-col overflow-hidden rounded-3xl border border-default bg-surface shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-primary/5"
-            >
-              {/* Contenedor de Imagen con Overlay */}
-              <div className="relative h-[280px] w-full overflow-hidden">
-                <div className="absolute inset-0 z-10 bg-gradient-to-t from-surface via-surface/10 to-transparent opacity-80" />
-                <Image
-                  src={loc.image}
-                  alt={`Vista de ${loc.title}`}
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-110"
-                />
-              </div>
-
-              {/* Contenido de la Tarjeta */}
-              <div className="relative z-20 flex flex-1 flex-col p-6 pt-2 sm:p-8 sm:pt-4">
-                <h3 className="font-chillax text-2xl font-bold text-text-primary">
-                  {loc.title}
-                </h3>
-
-                <p className="mt-3 flex-1 font-inter text-sm leading-relaxed text-text-secondary">
-                  {loc.description}
-                </p>
-
-                <div className="mt-8 flex items-center justify-between border-t border-default/50 pt-6">
-                  <Link
-                    href="#reservar"
-                    className="inline-flex h-11 items-center justify-center rounded-xl bg-primary px-6 text-sm font-semibold text-white shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-primary/30 active:scale-95"
-                  >
-                    Reservar
-                  </Link>
-
-                  <Link
-                    href="#contacto"
-                    className="group/link flex items-center gap-2 text-sm font-semibold text-primary transition-colors hover:text-primary/80"
-                  >
-                    Ver más
-                    <svg
-                      className="h-4 w-4 transition-transform duration-300 group-hover/link:translate-x-1"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M14 5l7 7m0 0l-7 7m7-7H3"
-                      />
-                    </svg>
-                  </Link>
-                </div>
-              </div>
-            </motion.article>
+          {hotels.map((hotel, index) => (
+            <HotelCard key={hotel.id} hotel={hotel} index={index} />
           ))}
         </motion.div>
       </div>

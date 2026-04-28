@@ -1,0 +1,10 @@
+#sbw_widget_1 {
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  top: 550px;
+  z-index: 100;
+  width: 100%;
+  max-width: 1700px !important;
+}
