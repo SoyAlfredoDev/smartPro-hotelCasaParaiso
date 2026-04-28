@@ -1,4 +1,4 @@
-/* import {
+import {
   Users,
   Coffee,
   Wifi,
@@ -8,7 +8,7 @@
   Tv,
   Eye,
   CheckCircle2,
-} from "lucide-react";*/
+} from "lucide-react";
 
 export default [
   { id: "desayuno", name: "desayuno", icon: Coffee },
