@@ -6,16 +6,21 @@ import { useState, useEffect } from "react";
 import ButtonCheck from "@/components/ui/buttonCheck";
 import GuestsSearcherBar from "@/components/GuestsSearcherBar";
 import { Users, ChevronDown } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useBookingStore } from "@/store/useBookingStore";
+import { calculateNights } from "@/utils/calculateNights";
+import { calculateDate } from "@/utils/calculateDate";
 
 interface Reservation {
-  hotel: string;
+  hotelId: string;
   adults: number;
   children: number;
   pets: number;
   rooms: number;
   dateCheckIn: string | null;
   dateCheckOut: string | null;
+  numberNights: number | null;
+  totalPrice: number | null;
 }
 
 const getNumber = (value: string | null) => {
@@ -26,50 +31,92 @@ const getNumber = (value: string | null) => {
 
 export default function SearcherComponent() {
   const [showGuests, setShowGuests] = useState(false);
-  const today = new Date().toISOString().split("T")[0];
-  const tomorrowDate = new Date();
-  tomorrowDate.setDate(tomorrowDate.getDate() + 1);
-  const tomorrow = tomorrowDate.toISOString().split("T")[0];
   const router = useRouter();
-  const searchParams = useSearchParams();
-  let hotelParam = "all";
-  let adultsParam = 2;
-  let childrenParam = 0;
-  let roomsParam = 1;
-  let dateCheckInParam = today;
-  let dateCheckOutParam = tomorrow;
-  if (searchParams) {
-    hotelParam = searchParams.get("hotel") ?? "";
-    adultsParam = getNumber(searchParams.get("adults"));
-    childrenParam = getNumber(searchParams.get("children"));
-    roomsParam = getNumber(searchParams.get("rooms"));
-    dateCheckInParam = searchParams.get("dateCheckIn") ?? today;
-    dateCheckOutParam = searchParams.get("dateCheckOut") ?? tomorrow;
-  }
 
+  // funciones store
+  const setReservetionHotelId = useBookingStore(
+    (state) => state.setReservetionHotelId,
+  );
+  const setReservationCheckIn = useBookingStore(
+    (state) => state.setReservationCheckIn,
+  );
+  const setReservationCheckOut = useBookingStore(
+    (state) => state.setReservationCheckOut,
+  );
+  const setReservetionAdults = useBookingStore(
+    (state) => state.setReservetionAdults,
+  );
+  const setReservetionChildren = useBookingStore(
+    (state) => state.setReservetionChildren,
+  );
+  const setReservetionPets = useBookingStore(
+    (state) => state.setReservetionPets,
+  );
+  const setReservationNights = useBookingStore(
+    (state) => state.setReservationNights,
+  );
+  const setReservetionPeopleQuantity = useBookingStore(
+    (state) => state.setReservetionPeopleQuantity,
+  );
+  const setReservationRooms = useBookingStore(
+    (state) => state.setReservationRooms,
+  );
+
+  const nights = useBookingStore((state) => state.nights);
+  const hotelId = useBookingStore((state) => state.hotelId);
+  const checkIn = useBookingStore((state) => state.checkIn);
+  const checkOut = useBookingStore((state) => state.checkOut);
+  const adultsQuantity = useBookingStore((state) => state.adults);
+  const childrenQuantity = useBookingStore((state) => state.children);
+  const petsQuantity = useBookingStore((state) => state.pets);
+  const roomsQuantity = useBookingStore((state) => state.roomsQuantity);
+  const roomsSelected = useBookingStore((state) => state.roomsSelected);
+  const totalPrice = useBookingStore((state) => state.totalPrice);
+
+  // fechas
+  const dateRange = calculateDate();
+  const today = dateRange.today;
+  const tomorrow = dateRange.tomorrow;
   const [reservation, setReservation] = useState<Reservation>({
-    hotel: hotelParam,
-    adults: adultsParam,
-    children: childrenParam,
+    hotelId: "all",
+    adults: 2,
+    children: 0,
     pets: 0,
-    rooms: roomsParam,
-    dateCheckIn: dateCheckInParam,
-    dateCheckOut: dateCheckOutParam,
+    rooms: 1,
+    dateCheckIn: today,
+    dateCheckOut: tomorrow,
+    numberNights: calculateNights(today, tomorrow),
+    totalPrice: 0,
   });
+
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    if (nights > 0 || hotelId) {
+      setReservation((prev) => ({
+        ...prev,
+        hotelId: hotelId || prev.hotelId,
+        adults: adultsQuantity || prev.adults,
+        children: childrenQuantity || prev.children,
+        pets: petsQuantity || prev.pets,
+        rooms: roomsQuantity || prev.rooms,
+        dateCheckIn: checkIn || prev.dateCheckIn,
+        dateCheckOut: checkOut || prev.dateCheckOut,
+        numberNights: nights || prev.numberNights,
+      }));
+    }
+  }, [hotelId, adultsQuantity, childrenQuantity, petsQuantity, roomsQuantity, checkIn, checkOut, nights]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
-    const { name, value, type } = e.target;
+    const { name, type, value } = e.target;
 
-    const finalValue = type === "number" ? Number(value) : value;
+    const finalValue = type === "number" ? getNumber(value) : value;
 
-    if (name === "dateCheckIn" && value < today) {
-      return;
-    }
-    if (name === "dateCheckOut" && value < today) {
-      return;
-    }
+    if (name === "dateCheckIn" && value < today) return;
+    if (name === "dateCheckOut" && value < today) return;
 
     if (
       name === "dateCheckOut" &&
@@ -80,14 +127,22 @@ export default function SearcherComponent() {
       return;
     }
 
-    setReservation((prev) => ({
-      ...prev,
-      [name]: finalValue,
-    }));
+    setReservation((prev) => {
+      const updated = { ...prev, [name]: finalValue };
+      if (name === "dateCheckIn" || name === "dateCheckOut") {
+        if (updated.dateCheckIn && updated.dateCheckOut) {
+          updated.numberNights = calculateNights(updated.dateCheckIn, updated.dateCheckOut);
+        } else {
+          updated.numberNights = 0;
+        }
+      }
+      return updated;
+    });
   };
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
+
     if (
       reservation.dateCheckOut &&
       reservation.dateCheckIn &&
@@ -96,8 +151,18 @@ export default function SearcherComponent() {
       alert("La fecha de salida debe ser mayor a la fecha de entrada");
       return;
     }
-    const params = new URLSearchParams(reservation as any);
-    router.push(`/search?${params.toString()}#search`);
+
+    setReservetionHotelId(reservation.hotelId);
+    setReservationNights(reservation.numberNights);
+    setReservationCheckIn(reservation.dateCheckIn);
+    setReservationCheckOut(reservation.dateCheckOut);
+    setReservetionAdults(reservation.adults);
+    setReservetionChildren(reservation.children);
+    setReservetionPets(reservation.pets);
+    setReservationRooms(reservation.rooms);
+    setReservetionPeopleQuantity(reservation.adults + reservation.children);
+
+    router.push(`/search`);
   };
 
   return (
@@ -105,36 +170,33 @@ export default function SearcherComponent() {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 0.4 }}
-      className="relative p-4 w-full "
+      className="relative p-4 w-full"
       id="search"
     >
-      <div className="z-10 rounded-2xl border border-default shadow-md bg-surface p-4 backdrop-blur-xl md:rounded-3xl md:p-6 lg:p-8 ">
-        <form
-          onSubmit={handleSubmit}
-          // Ajusté el grid para que soporte los 5 elementos (Destino, In, Out, Huéspedes, Botón)
-        >
-          <div className="w-full grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_1.2fr_auto] lg:gap-6 items-end ">
-            {/* Destino */}
+      <div className="z-10 rounded-2xl border border-default shadow-md bg-surface p-4 backdrop-blur-xl md:rounded-3xl md:p-6 lg:p-8">
+        <form onSubmit={handleSubmit}>
+          <div className="w-full grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_1.2fr_auto] lg:gap-6 items-end">
+            {/* HOTEL */}
             <div className="group h-full flex flex-col justify-center rounded-xl border border-default bg-background/50 px-4 py-3 transition-colors focus-within:border-primary focus-within:ring-1 focus-within:ring-primary">
               <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-text-secondary">
                 Hotel
               </label>
               <select
-                name="hotel"
-                value={reservation.hotel}
+                name="hotelId"
+                value={reservation.hotelId}
                 onChange={handleChange}
                 className="w-full appearance-none cursor-pointer bg-transparent text-sm font-medium text-text-primary outline-none transition-colors group-hover:text-primary"
               >
                 <option value="all">Todos</option>
                 {hotels?.map((hotel: any) => (
-                  <option key={hotel.id} value={hotel.id}>
-                    {hotel.name + " - " + hotel.id}
+                  <option key={hotel.id} value={String(hotel.id)}>
+                    {hotel.name}
                   </option>
                 ))}
               </select>
             </div>
 
-            {/* Date Check In/Out */}
+            {/* CHECK IN */}
             <ButtonCheck
               label="Check In"
               placeholder="fecha de entrada"
@@ -143,6 +205,7 @@ export default function SearcherComponent() {
               onChange={handleChange}
             />
 
+            {/* CHECK OUT */}
             <ButtonCheck
               label="Check Out"
               placeholder="fecha de salida"
@@ -151,9 +214,8 @@ export default function SearcherComponent() {
               onChange={handleChange}
             />
 
-            {/* Wrapper Relativo para Huéspedes + Dropdown */}
+            {/* GUESTS */}
             <div className="relative h-full flex flex-col justify-center">
-              {/* Botón que abre el modal, ahora muestra el resumen */}
               <button
                 type="button"
                 className="group h-full w-full text-left rounded-xl border border-default bg-background/50 px-4 py-3 transition-colors focus-within:border-primary focus-within:ring-1 focus-within:ring-primary"
@@ -165,7 +227,7 @@ export default function SearcherComponent() {
                 <div className="flex w-full items-center justify-between text-sm font-medium text-text-primary">
                   <div className="flex items-center gap-2">
                     <Users size={16} className="text-primary" />
-                    <span className="line-clamp-1">
+                    <span>
                       {reservation.adults + reservation.children} pax,{" "}
                       {reservation.rooms} hab
                     </span>
@@ -179,7 +241,6 @@ export default function SearcherComponent() {
                 </div>
               </button>
 
-              {/* Overlay invisible para cerrar al hacer clic afuera */}
               {showGuests && (
                 <div
                   className="fixed inset-0 z-30"
@@ -187,7 +248,6 @@ export default function SearcherComponent() {
                 />
               )}
 
-              {/* Popover / Modal Flotante con Framer Motion */}
               <AnimatePresence>
                 {showGuests && (
                   <motion.div
@@ -195,7 +255,7 @@ export default function SearcherComponent() {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
                     transition={{ duration: 0.2 }}
-                    className="absolute bg-red-500 left-0 top-full mt-3 w-full min-w-[280px] z-50 rounded-2xl border-2 border-gray-400 bg-surface p-4 shadow-2xl md:w-80 shadow-[0_0_10px_0_rgba(0,0,0,0.5)] "
+                    className="absolute left-0 top-full mt-3 w-full min-w-[280px] z-50 rounded-2xl border-2 border-gray-400 bg-surface p-4 shadow-2xl md:w-80"
                   >
                     <GuestsSearcherBar
                       adults={reservation.adults}
@@ -210,23 +270,15 @@ export default function SearcherComponent() {
               </AnimatePresence>
             </div>
 
-            {/* Botón Consultar */}
+            {/* BOTÓN */}
             <div className="w-full">
               <button
                 type="submit"
-                className="inline-flex h-full min-h-[56px] w-full items-center justify-center rounded-xl bg-primary px-8 text-base font-semibold text-white shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-primary/30 active:scale-95 bg-yellow-500 md:hidden lg:block"
+                className="inline-flex h-full min-h-[56px] w-full items-center justify-center rounded-xl bg-primary px-8 text-base font-semibold text-white shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary/90 active:scale-95 md:hidden lg:block"
               >
                 Consultar
               </button>
             </div>
-          </div>
-          <div className="relative hidden w-full flex-col items-end justify-end md:flex lg:hidden">
-            <button
-              type="button"
-              className="inline-flex min-h-[56px] w-[300px] items-center justify-center rounded-xl bg-primary px-8 text-base font-semibold text-white shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-primary/30 active:scale-95"
-            >
-              Consultar
-            </button>
           </div>
         </form>
       </div>

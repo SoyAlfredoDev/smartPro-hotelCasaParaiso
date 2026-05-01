@@ -6,8 +6,9 @@ import { Suspense } from "react";
 
 export default function HeroSection() {
   return (
-    <section className="w-full">
-      <div className="relative min-h-[70vh] flex w-full flex-col overflow-hidden md:justify-center">
+    <section className="w-full" id="hero">
+      <div className="relative min-h-[600px] md:min-h-[70vh] flex w-full flex-col overflow-hidden md:justify-center">
+        <div className="h-[40px] md:hidden"></div>
         {/* Imagen de fondo con sutil animación de zoom inicial */}
         <motion.div
           initial={{ scale: 1.05 }}

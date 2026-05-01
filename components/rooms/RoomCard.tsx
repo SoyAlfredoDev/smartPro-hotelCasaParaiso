@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Users,
   Coffee,
@@ -6,12 +8,12 @@ import {
   Dog,
   Wine,
   Tv,
-  Eye,
+  Calendar,
   CheckCircle2,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import Link from "next/link";
-
+import { useRouter } from "next/navigation";
+import { useBookingStore } from "@/store/useBookingStore";
 // 1. Tipado correcto para autocompletado y evitar errores
 interface RoomProps {
   id: string;
@@ -21,6 +23,7 @@ interface RoomProps {
   capacity: number;
   amenities: string[];
   images: string[];
+  night: number;
 }
 
 // 2. Función auxiliar para mapear el nombre del servicio a su ícono correspondiente
@@ -54,6 +57,19 @@ const getAmenityIcon = (amenityName: string) => {
 };
 
 export default function RoomCard({ room }: { room: RoomProps }) {
+  const setReservationRoomSelected = useBookingStore(
+    (state) => state.setReservationRoomSelected,
+  );
+  const setReservationTotalPrice = useBookingStore(
+    (state) => state.setReservationTotalPrice,
+  );
+  const nights = useBookingStore((state) => state.nights);
+  const router = useRouter();
+  const handleReserveRoom = (room: RoomProps) => {
+    setReservationRoomSelected(room);
+    setReservationTotalPrice(room.price * (nights || 1));
+    router.push("/checkout");
+  };
   return (
     <motion.div
       // Animación de entrada fluida al aparecer en pantalla
@@ -122,13 +138,13 @@ export default function RoomCard({ room }: { room: RoomProps }) {
           </div>
         </div>
         <div className="mt-6 flex w-full items-center justify-between border-t border-default pt-4">
-          <Link
-            href={`/room/${room.id}`}
+          <button
+            onClick={() => handleReserveRoom(room)}
             className="flex items-center gap-2 text-sm font-medium whitespace-nowrap border border-default rounded-lg px-2.5 py-1 bg-primary text-white px-4 py-2 cursor-pointer"
           >
-            <Eye size={16} />
-            ver habitación
-          </Link>
+            <Calendar size={16} />
+            Reservar habitación
+          </button>
         </div>
       </div>
 

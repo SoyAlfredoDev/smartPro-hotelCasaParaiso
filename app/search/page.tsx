@@ -4,11 +4,15 @@ import Navbar from "@/components/NavBar";
 
 import HeroSection from "@/section/HeroSection";
 import RoomCard from "@/components/rooms/RoomCard";
-import { useSearchParams } from "next/navigation";
-import { useState, useEffect, Suspense } from "react";
+
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import Footer from "@/components/Footer";
 import FeaturedStaysSection from "@/section/FeaturedStaysSection";
- 
+
+import { useBookingStore } from "@/store/useBookingStore";
+
 interface Room {
   id: string;
   name: string;
@@ -19,43 +23,47 @@ interface Room {
   price: number;
   images: string[];
   amenities: string[];
+  night: number;
 }
-
-const getNumber = (value: string | null) => {
-  if (!value) return 0;
-  const num = parseInt(value, 10);
-  return isNaN(num) ? 0 : num;
-};
 
 // 1. Separamos la lógica que usa 'useSearchParams' en su propio componente
 function SearchResults() {
-  const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(true);
   const [roomsAvailable, setRoomsAvailable] = useState<Room[]>([]);
+
+  const reservetionHotelId = useBookingStore((state) => state.hotelId);
+  const reservetionAdults = useBookingStore((state) => state.adultsQuantity);
+  const reservetionChildren = useBookingStore(
+    (state) => state.childrenQuantity,
+  );
+  const reservetionPets = useBookingStore((state) => state.petsQuantity);
+  const reservetionRooms = useBookingStore((state) => state.roomsQuantity);
 
   const fetchRooms = async () => {
     try {
       const res = await fetch("/api/rooms");
       const rooms = await res.json();
-
-      const hotelParam = searchParams.get("hotel") ?? "";
-      const adultsParam = getNumber(searchParams.get("adults"));
-      const childrenParam = getNumber(searchParams.get("children"));
-
       // Filtro por hotel (manejando el caso en que el parámetro esté vacío o sea 'all')
-      let filteredRooms = rooms;
-      if (hotelParam !== "all" && hotelParam !== "") {
-        filteredRooms = rooms.filter((room: Room) => room.hotelId === hotelParam);
+      let filteredRooms;
+      if (reservetionHotelId !== "all") {
+        filteredRooms = rooms.filter(
+          (room: Room) => room.hotelId === reservetionHotelId,
+        );
+      } else {
+        filteredRooms = rooms;
       }
-
       // Filtro por capacidad
-      const totalPeople = adultsParam + childrenParam;
-      filteredRooms = filteredRooms.filter(
-        (room: Room) => room.capacity >= totalPeople,
-      );
+      const totalPeople = reservetionAdults + reservetionChildren;
+      const filteredRoomsByCapacity = filteredRooms.filter((room: Room) => {
+        return room.capacity >= totalPeople;
+      });
 
-      setRoomsAvailable(filteredRooms);
-      setIsLoading(false);
+      console.log("filteredRoomsByCapacity", filteredRoomsByCapacity);
+
+      setRoomsAvailable(filteredRoomsByCapacity);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
     } catch (error) {
       console.error("Error al obtener habitaciones:", error);
       setIsLoading(false);
@@ -66,20 +74,33 @@ function SearchResults() {
     // Activamos el loading cada vez que cambian los parámetros
     setIsLoading(true);
     fetchRooms();
-  }, [searchParams]); // Dependencia clave para que reaccione a los cambios de URL
+  }, [
+    reservetionHotelId,
+    reservetionAdults,
+    reservetionChildren,
+    reservetionPets,
+    reservetionRooms,
+  ]); // Dependencia clave para que reaccione a los cambios de URL
 
   return (
-    <div className="z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div className=" w-full bg-white mt-10 rounded-2xl p-6">
+    <div className="z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 mb-[60px] ">
+      <div className=" w-full bg-white mt-10 rounded-2xl p-6 shadow-md ">
         {isLoading ? (
           <div className="flex h-full min-h-[400px] items-center justify-center">
             <div className="h-20 w-20 animate-spin rounded-full border-b-4 border-primary"></div>
           </div>
-        ) : roomsAvailable.length === 0 ? (
-          <div className="flex h-full min-h-[400px] items-center justify-center">
+        ) : roomsAvailable.length === 0 && !isLoading ? (
+          <div className="flex flex-col h-full min-h-[400px] items-center justify-center">
             <h2 className="text-xl font-bold text-primary md:text-2xl text-center">
-              No se encontraron habitaciones disponibles para tu búsqueda.
+              lo sentimos no encontramos habitaciones disponibles.
             </h2>
+            <Link
+              href="/#"
+              className="mt-4 inline-flex items-center rounded-full bg-primary px-6 py-3 font-semibold text-white transition-all duration-200 hover:-translate-y-1 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
+            >
+              Ver todas las habitaciones disponibles
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
           </div>
         ) : (
           <div className="w-full">
@@ -105,17 +126,8 @@ export default function SearchPage() {
     <div>
       <Navbar />
       <HeroSection />
-      <div className="mt-[230px] sm:mt-[380px] md:mt-[180px] lg:mt-[80px]">
-        {/* 3. Suspense Boundary: Obligatorio en Next.js para rutas que leen parámetros de cliente */}
-        <Suspense
-          fallback={
-            <div className="flex min-h-[50vh]  items-center justify-center">
-              <div className="h-20 w-20 animate-spin rounded-full border-b-4 border-primary"></div>
-            </div>
-          }
-        >
-          <SearchResults />
-        </Suspense>
+      <div className="mb-[60px]">
+        <SearchResults />
       </div>
       <FeaturedStaysSection />
       <Footer />
