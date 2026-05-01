@@ -21,7 +21,7 @@ export default function DetailCheckoutView() {
   }
 
   return (
-    <div className="relative w-full flex flex-col lg:flex-row max-w-7xl mx-auto py-12 lg:py-30">
+    <div className="relative w-full flex flex-col mt-10 md:mt-0 lg:flex-row max-w-7xl mx-auto py-12 lg:py-30">
       <div className="w-full lg:w-[70%] px-4">
         <RoomsSelected />
         <div className="mt-8 w-full overflow-hidden rounded-2xl border border-default bg-surface shadow-soft">

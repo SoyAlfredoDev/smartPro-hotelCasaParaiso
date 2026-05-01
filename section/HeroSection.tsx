@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import SearcherComponent from "@/components/SearcherComponent";
+import Image from "next/image";
 import { Suspense } from "react";
 
 export default function HeroSection() {
@@ -15,11 +16,15 @@ export default function HeroSection() {
           animate={{ scale: 1 }}
           transition={{ duration: 1.5, ease: "easeOut" }}
           className="absolute inset-0 h-[85vh] w-full"
-          style={{
-            backgroundImage:
-              "url('https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1600&q=80')",
-          }}
-        />
+        >
+          <Image
+            src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1600&q=80"
+            alt="Casa Paraíso Hotel"
+            fill
+            priority
+            className="object-cover"
+          />
+        </motion.div>
         {/* Gradiente mejorado: Más oscuro a la izquierda para asegurar legibilidad */}
         <div className="absolute inset-0 bg-gradient-to-r from-[#2f5d50]/90 via-[#2f5d50]/50 to-transparent" />
         {/* Gradiente inferior para suavizar la transición al componente solapado */}
