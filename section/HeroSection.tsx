@@ -1,13 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-//import SearcherComponent from "@/components/SearcherComponent";
+import SearcherComponent from "@/components/SearcherComponent";
 import { Suspense } from "react";
 
 export default function HeroSection() {
   return (
     <section className="w-full">
-      <div className="relative flex min-h-[70vh] w-full flex-col overflow-hidden md:justify-center">
+      <div className="relative min-h-[70vh] flex w-full flex-col overflow-hidden md:justify-center">
         {/* Imagen de fondo con sutil animación de zoom inicial */}
         <motion.div
           initial={{ scale: 1.05 }}
@@ -25,14 +25,14 @@ export default function HeroSection() {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#2f5d50]/40" />
 
         {/* Contenido Principal */}
-        <div className="z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 md:py-20 lg:px-8">
+        <div className="z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 pt-10 md:py-20 lg:px-8 ">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             className="max-w-2xl pt-10 md:pt-0"
           >
-            <span className="inline-flex rounded-full border border-white/30 bg-white/10 px-4 py-1.5 text-xs font-semibold tracking-wide text-white backdrop-blur-md sm:text-sm">
+            <span className="inline-flex rounded-full border border-white/30 bg-white/10 px-4 py-1.5 text-xs max-w-[300px] font-semibold tracking-wide text-white backdrop-blur-md sm:text-sm ">
               Estadía boutique en Santiago
             </span>
 
@@ -41,7 +41,7 @@ export default function HeroSection() {
               Bienvenido a tu hogar en Santiago
             </h1>
 
-            <p className="mt-6 font-inter text-base leading-relaxed text-gray-200 sm:text-lg">
+            <p className="mt-6 font-inter text-base leading-relaxed text-gray-200 text-lg md:text-xl mb-[10px]">
               Descubre una experiencia cálida, elegante y cómoda en una
               ubicación estratégica para disfrutar la ciudad, descansar y vivir
               una estadía con identidad local.
@@ -50,8 +50,8 @@ export default function HeroSection() {
         </div>
       </div>
 
-      <div className="relative z-50 flex w-full justify-center">
-        <div className="absolute bottom-[-180px] z-50 w-full max-w-7xl sm:bottom-[-280px] md:bottom-[-200px] lg:bottom-[-80px] xl:bottom-[-80px]">
+      <div className="relative z-50 flex w-full justify-center h-[400px] md:h-[200px] lg:h-[140px] ">
+        <div className="absolute top-[-100px] z-50 w-full max-w-7xl sm:bottom-[-280px] md:bottom-[-200px] lg:bottom-[-80px] xl:bottom-[-80px]">
           {/* AQUÍ APLICAMOS EL SUSPENSE SOLO AL BUSCADOR */}
           <Suspense
             fallback={
@@ -60,7 +60,7 @@ export default function HeroSection() {
               </div>
             }
           >
-            {/*<SearcherComponent />*/}
+            <SearcherComponent />
           </Suspense>
         </div>
       </div>

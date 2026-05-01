@@ -6,7 +6,6 @@ import ExperiencesSection from "@/section/ExperiencesSection";
 import AdditionalServicesSection from "@/section/AdditionalServicesSection";
 import BookingFormSection from "@/section/BookingFormSection";
 import Footer from "@/components/Footer";
-import SirvoyWidget from "@/components/SirvoyWidget";
 
 export default function Home() {
   return (
@@ -20,11 +19,6 @@ export default function Home() {
       <AdditionalServicesSection />
       <BookingFormSection />
 
-      <div className="flex justify-center py-8">
-        <div className="flex justify-center bg-white p-4 rounded-lg shadow-lg">
-          <SirvoyWidget />
-        </div>
-      </div>
       <Footer />
     </>
   );

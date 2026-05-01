@@ -180,8 +180,18 @@ function HotelCard({
             className="flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-white/20 text-white backdrop-blur-md transition-all duration-300 hover:bg-white/40 active:scale-90"
             aria-label="Imagen anterior"
           >
-            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            <svg
+              className="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
             </svg>
           </button>
           <button
@@ -192,8 +202,18 @@ function HotelCard({
             className="flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-white/20 text-white backdrop-blur-md transition-all duration-300 hover:bg-white/40 active:scale-90"
             aria-label="Siguiente imagen"
           >
-            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            <svg
+              className="h-4 w-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5l7 7-7 7"
+              />
             </svg>
           </button>
         </div>
@@ -224,9 +244,24 @@ function HotelCard({
           className="absolute left-4 top-4 z-20 flex items-center gap-2 rounded-xl border border-white/20 bg-white/15 px-3.5 py-2 backdrop-blur-xl"
         >
           <div className="flex h-5 w-5 items-center justify-center rounded-full bg-white/25">
-            <svg className="h-3 w-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            <svg
+              className="h-3 w-3 text-white"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+              />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+              />
             </svg>
           </div>
           <span className="font-inter text-[11px] font-semibold tracking-wide text-white">
@@ -288,8 +323,18 @@ function HotelCard({
             className="btn-primary gap-2 rounded-xl px-7 py-3 font-inter text-[13px]"
           >
             Reservar ahora
-            <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            <svg
+              className="h-3.5 w-3.5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2.5}
+                d="M14 5l7 7m0 0l-7 7m7-7H3"
+              />
             </svg>
           </Link>
 
@@ -304,7 +349,12 @@ function HotelCard({
               viewBox="0 0 24 24"
               stroke="currentColor"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M14 5l7 7m0 0l-7 7m7-7H3"
+              />
             </svg>
           </Link>
         </div>
@@ -318,7 +368,7 @@ export default function LocationsSection() {
   return (
     <section
       id="ubicaciones"
-      className="relative mt-[130px] overflow-hidden bg-[#f5f5f3] py-24 sm:mt-[380px] md:mt-[180px] lg:mt-[80px] lg:py-32"
+      className="relative overflow-hidden bg-[#f5f5f3] py-24"
     >
       {/* Animated ambient glows */}
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
@@ -330,12 +380,22 @@ export default function LocationsSection() {
         <motion.div
           className="absolute -right-[8%] bottom-[5%] h-[550px] w-[550px] rounded-full bg-[#c8a97e] opacity-[0.08] blur-[160px]"
           animate={{ x: [0, -40, 0], y: [0, -40, 0], scale: [1, 1.2, 1] }}
-          transition={{ duration: 22, repeat: Infinity, ease: "easeInOut", delay: 3 }}
+          transition={{
+            duration: 22,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 3,
+          }}
         />
         <motion.div
           className="absolute left-[40%] top-[60%] h-[300px] w-[300px] rounded-full bg-[#2f5d50] opacity-[0.06] blur-[120px]"
           animate={{ scale: [1, 1.3, 1] }}
-          transition={{ duration: 16, repeat: Infinity, ease: "easeInOut", delay: 5 }}
+          transition={{
+            duration: 16,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 5,
+          }}
         />
       </div>
 
