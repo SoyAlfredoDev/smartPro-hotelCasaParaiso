@@ -51,50 +51,112 @@ body {
 /* ─────────────────────────────────────────────
    Utility Classes — Backgrounds
    ───────────────────────────────────────────── */
-.bg-primary { background-color: var(--primary); }
-.bg-primary-dark { background-color: var(--primary-dark); }
-.bg-secondary { background-color: var(--secondary); }
-.bg-dark { background-color: var(--foreground); }
-.bg-gray { background-color: var(--background-gray); }
-.bg-accent { background-color: var(--accent); }
-.bg-surface { background-color: var(--surface); }
-.bg-surface-warm { background-color: var(--surface-warm); }
-.bg-background { background-color: var(--background); }
+.bg-primary {
+  background-color: var(--primary);
+}
+.bg-primary-dark {
+  background-color: var(--primary-dark);
+}
+.bg-secondary {
+  background-color: var(--secondary);
+}
+.bg-dark {
+  background-color: var(--foreground);
+}
+.bg-gray {
+  background-color: var(--background-gray);
+}
+.bg-accent {
+  background-color: var(--accent);
+}
+.bg-surface {
+  background-color: var(--surface);
+}
+.bg-surface-warm {
+  background-color: var(--surface-warm);
+}
+.bg-background {
+  background-color: var(--background);
+}
 
 /* ─────────────────────────────────────────────
    Utility Classes — Text
    ───────────────────────────────────────────── */
-.text-primary { color: var(--primary); }
-.text-secondary { color: var(--secondary); }
-.text-accent { color: var(--accent); }
-.text-foreground { color: var(--foreground); }
-.text-text-primary { color: var(--text-primary); }
-.text-text-secondary { color: var(--text-secondary); }
-.text-text-muted { color: var(--text-muted); }
-.text-dark { color: var(--foreground); }
-.text-gray { color: var(--text-secondary); }
+.text-primary {
+  color: var(--primary);
+}
+.text-secondary {
+  color: var(--secondary);
+}
+.text-accent {
+  color: var(--accent);
+}
+.text-foreground {
+  color: var(--foreground);
+}
+.text-text-primary {
+  color: var(--text-primary);
+}
+.text-text-secondary {
+  color: var(--text-secondary);
+}
+.text-text-muted {
+  color: var(--text-muted);
+}
+.text-dark {
+  color: var(--foreground);
+}
+.text-gray {
+  color: var(--text-secondary);
+}
 
 /* ─────────────────────────────────────────────
    Utility Classes — Borders
    ───────────────────────────────────────────── */
-.border-primary { border-color: var(--primary); }
-.border-secondary { border-color: var(--secondary); }
-.border-accent { border-color: var(--accent); }
-.border-default { border-color: var(--border); }
-.border-light { border-color: var(--border-light); }
+.border-primary {
+  border-color: var(--primary);
+}
+.border-secondary {
+  border-color: var(--secondary);
+}
+.border-accent {
+  border-color: var(--accent);
+}
+.border-default {
+  border-color: var(--border);
+}
+.border-light {
+  border-color: var(--border-light);
+}
 
 /* ─────────────────────────────────────────────
    Premium Shadows
    ───────────────────────────────────────────── */
-.shadow-soft { box-shadow: var(--shadow-soft); }
-.shadow-card { box-shadow: var(--shadow-card); }
-.shadow-elevated { box-shadow: var(--shadow-elevated); }
+.shadow-soft {
+  box-shadow: var(--shadow-soft);
+}
+.shadow-card {
+  box-shadow: var(--shadow-card);
+}
+.shadow-elevated {
+  box-shadow: var(--shadow-elevated);
+}
 
-.shadow-sm { box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08); }
-.shadow-md { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); }
-.shadow-lg { box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1); }
-.shadow-xl { box-shadow: 0 16px 40px rgba(0, 0, 0, 0.1); }
-.shadow-2xl { box-shadow: 0 24px 56px rgba(0, 0, 0, 0.12); }
+.shadow-sm {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+.shadow-md {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+.shadow-lg {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+.shadow-xl {
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.1);
+}
+.shadow-2xl {
+  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.12);
+}
 
 /* ─────────────────────────────────────────────
    Glassmorphism Utilities
@@ -121,48 +183,81 @@ body {
    Glow Effects
    ───────────────────────────────────────────── */
 .glow-primary {
-  box-shadow: 0 0 60px rgba(47, 93, 80, 0.15),
-              0 0 120px rgba(47, 93, 80, 0.08);
+  box-shadow:
+    0 0 60px rgba(47, 93, 80, 0.15),
+    0 0 120px rgba(47, 93, 80, 0.08);
 }
 
 .glow-accent {
-  box-shadow: 0 0 60px rgba(200, 169, 126, 0.2),
-              0 0 120px rgba(200, 169, 126, 0.1);
+  box-shadow:
+    0 0 60px rgba(200, 169, 126, 0.2),
+    0 0 120px rgba(200, 169, 126, 0.1);
 }
 
 /* ─────────────────────────────────────────────
    Custom Animations
    ───────────────────────────────────────────── */
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-12px); }
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
 }
 
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 @keyframes pulse-soft {
-  0%, 100% { opacity: 0.6; }
-  50% { opacity: 1; }
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 @keyframes grain {
-  0%, 100% { transform: translate(0, 0); }
-  10% { transform: translate(-5%, -10%); }
-  30% { transform: translate(3%, -15%); }
-  50% { transform: translate(12%, 9%); }
-  70% { transform: translate(9%, 4%); }
-  90% { transform: translate(-1%, 7%); }
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  10% {
+    transform: translate(-5%, -10%);
+  }
+  30% {
+    transform: translate(3%, -15%);
+  }
+  50% {
+    transform: translate(12%, 9%);
+  }
+  70% {
+    transform: translate(9%, 4%);
+  }
+  90% {
+    transform: translate(-1%, 7%);
+  }
 }
 
-.animate-float { animation: float 6s ease-in-out infinite; }
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
 .animate-shimmer {
   background-size: 200% 100%;
   animation: shimmer 2s linear infinite;
 }
-.animate-pulse-soft { animation: pulse-soft 3s ease-in-out infinite; }
+.animate-pulse-soft {
+  animation: pulse-soft 3s ease-in-out infinite;
+}
 
 /* Film grain overlay for premium texture */
 .grain-overlay::after {
@@ -213,7 +308,12 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.1) 50%, transparent 60%);
+  background: linear-gradient(
+    135deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 60%
+  );
   transform: translateX(-100%);
   transition: transform 0.5s var(--ease-smooth);
 }
@@ -280,4 +380,15 @@ body {
 ::selection {
   background-color: rgba(47, 93, 80, 0.15);
   color: var(--primary-dark);
+}
+
+* .perspective-1000 {
+  perspective: 1000px;
+}
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.transform-style-3d {
+  transform-style: preserve-3d;
 }

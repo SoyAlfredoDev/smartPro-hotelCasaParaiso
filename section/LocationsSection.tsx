@@ -319,7 +319,7 @@ function HotelCard({
         {/* Actions */}
         <div className="mt-8 flex items-center gap-4 pt-2">
           <Link
-            href={`#reservar-${hotel.id}`}
+            href={`/hotel/reservar-${hotel.id}`}
             className="btn-primary gap-2 rounded-xl px-7 py-3 font-inter text-[13px]"
           >
             Reservar ahora
@@ -339,7 +339,7 @@ function HotelCard({
           </Link>
 
           <Link
-            href={`#detalles-${hotel.id}`}
+            href={`/hotel/detalles-${hotel.id}`}
             className="group/link flex items-center gap-1.5 font-inter text-[13px] font-semibold text-[#8fa89e] transition-colors duration-300 hover:text-[#2f5d50]"
           >
             Ver detalles
