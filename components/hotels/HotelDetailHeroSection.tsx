@@ -17,6 +17,9 @@ interface HotelProps {
   name?: string;
   description?: string;
   address?: string;
+  city?: string;
+  commune?: string;
+  codePostal?: string;
 }
 
 interface PhotoItem {
@@ -29,9 +32,12 @@ interface PhotoItem {
 }
 
 const HotelDetailHeroSection = ({
-  name = "Casa Paraíso Hotel",
-  description = "Un refugio de serenidad donde la arquitectura moderna se funde con la calidez boutique.",
-  address = "Avenida República 19, Santiago Centro",
+  name = "",
+  description = "",
+  address = "",
+  city = "",
+  commune = "",
+  codePostal = "",
 }: HotelProps) => {
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -88,23 +94,26 @@ const HotelDetailHeroSection = ({
   ];
 
   return (
-    <section ref={containerRef} className="relative min-h-screen w-full overflow-hidden px-6 lg:px-16 py-28 md:py-36 bg-transparent">
+    <section
+      ref={containerRef}
+      className="relative min-h-screen w-full overflow-hidden px-6 lg:px-16 py-28 md:py-36 bg-transparent"
+    >
       {/* Background Decorative Glows */}
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
         <motion.div
-          animate={{ 
-            x: [0, 60, -30, 0], 
+          animate={{
+            x: [0, 60, -30, 0],
             y: [0, 40, -40, 0],
-            scale: [1, 1.1, 0.9, 1] 
+            scale: [1, 1.1, 0.9, 1],
           }}
           transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
           className="absolute -top-[10%] -left-[5%] h-[800px] w-[800px] rounded-full bg-[#2f5d50]/10 blur-[140px]"
         />
         <motion.div
-          animate={{ 
-            x: [0, -50, 40, 0], 
+          animate={{
+            x: [0, -50, 40, 0],
             y: [0, 50, -30, 0],
-            scale: [1, 1.2, 0.8, 1]
+            scale: [1, 1.2, 0.8, 1],
           }}
           transition={{
             duration: 25,
@@ -116,9 +125,12 @@ const HotelDetailHeroSection = ({
         />
       </div>
 
-      <motion.div style={{ y, opacity }} className="relative z-10 mx-auto max-w-7xl">
+      <motion.div
+        style={{ y, opacity }}
+        className="relative z-10 mx-auto max-w-7xl"
+      >
         {/* Header Section */}
-        <div className="mb-16 md:mb-20 max-w-3xl">
+        <div className="mb-16 md:mb-20 max-w-8xl">
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -130,7 +142,7 @@ const HotelDetailHeroSection = ({
               <MapPin className="h-4 w-4 text-[#c8a97e]" />
             </div>
             <span className="font-inter text-xs font-semibold uppercase tracking-widest text-[#6f6f6f]">
-              {address}
+              {`${address}, ${city}, ${commune}, ${codePostal}`}
             </span>
           </motion.div>
 
@@ -139,7 +151,7 @@ const HotelDetailHeroSection = ({
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
-            className="font-chillax text-5xl md:text-7xl font-bold leading-tight text-[#2b2b2b] mb-6 tracking-tight"
+            className="font-chillax text-5xl md:text-7xl font-bold leading-tight mb-6 tracking-tight bg-gradient-to-r  from-[#b5966b] via-[#2f5d50] to-[#2f5d50] bg-clip-text text-transparent"
           >
             {name}
           </motion.h1>
@@ -177,7 +189,7 @@ const PhotoCard = ({ photo, index }: { photo: PhotoItem; index: number }) => {
       transition={{
         duration: 0.8,
         delay: index * 0.1,
-        ease: [0.21, 0.47, 0.32, 0.98] // Custom ease for an elegant reveal
+        ease: [0.21, 0.47, 0.32, 0.98], // Custom ease for an elegant reveal
       }}
       className={`${photo.gridClass} group [perspective:1200px] w-full`}
       onMouseEnter={() => setIsFlipped(true)}
@@ -190,7 +202,7 @@ const PhotoCard = ({ photo, index }: { photo: PhotoItem; index: number }) => {
           type: "spring",
           stiffness: 70,
           damping: 18,
-          mass: 1.2
+          mass: 1.2,
         }}
         className="relative w-full h-full [transform-style:preserve-3d] cursor-pointer"
       >
@@ -204,11 +216,11 @@ const PhotoCard = ({ photo, index }: { photo: PhotoItem; index: number }) => {
             />
             {/* Elegant overlay gradient */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent transition-opacity duration-500 group-hover:opacity-90" />
-            
+
             {/* Subtle border overlay for depth */}
             <div className="absolute inset-0 rounded-[24px] border border-white/20 pointer-events-none" />
           </div>
-          
+
           <div className="absolute bottom-6 left-6 right-6 pointer-events-none transform transition-transform duration-500 group-hover:-translate-y-2">
             <h3 className="font-chillax text-white text-xl md:text-2xl font-bold tracking-wide drop-shadow-lg">
               {photo.title}

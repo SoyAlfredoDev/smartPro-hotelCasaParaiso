@@ -3,8 +3,8 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useBookingStore } from "@/store/useBookingStore";
 import { formatCurrency } from "@/utils/formatCurrency";
-
-import ButtonToPay from "@/components/checkout/ButtonToPay";
+import KlapButton from "@/components/klap/klap";
+import Image from "next/image";
 
 export default function ResumeCheckoutView() {
   const roomsSelected = useBookingStore((state) => state.roomsSelected);
@@ -28,23 +28,21 @@ export default function ResumeCheckoutView() {
             {formatCurrency(totalPrice)}
           </span>
         </div>
-
         {/* Total animado */}
-        <div className="my-6 overflow-hidden rounded-xl bg-primary px-5 py-4 text-white shadow-glow-primary">
+        <div className="my-6 overflow-hidden rounded-xl mx-[-10] px-4 py-4 bg-gray-200  shadow-glow-primary">
           <div className="flex items-center justify-between">
-            <span className="font-medium">Total Final</span>
+            <span className="font-chillax text-xl">Total Final</span>
             <motion.span
               key={totalPrice}
               initial={{ opacity: 0.5, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ type: "spring", stiffness: 300, damping: 20 }}
-              className="font-chillax text-3xl font-bold"
+              className="font-chillax text-3xl font-bold text-primary"
             >
               {formatCurrency(totalPrice)}
             </motion.span>
           </div>
         </div>
-
         {/* Habitaciones
         {roomsSelected?.filter(Boolean).length > 0 && (
           <div className="pl-3 border-l-2 border-primary/20 space-y-2 mt-2">
@@ -63,7 +61,6 @@ export default function ResumeCheckoutView() {
             ))}
           </div>
         )} */}
-
         {/* Subtotal animado */}
         <AnimatePresence>
           {subtotal > 0 && (
@@ -80,7 +77,6 @@ export default function ResumeCheckoutView() {
             </motion.div>
           )}
         </AnimatePresence>
-
         {/* IVA */}
         <div className="flex justify-between text-text-secondary">
           <span>IVA (19%)</span>
@@ -88,7 +84,6 @@ export default function ResumeCheckoutView() {
             {formatCurrency(iva)}
           </span>
         </div>
-
         {/* Total final (resumen abajo) */}
         <div className="flex justify-between border-t border-default pt-4 text-text-secondary">
           <span>Total</span>
@@ -96,8 +91,16 @@ export default function ResumeCheckoutView() {
             {formatCurrency(totalPrice)}
           </span>
         </div>
-
-        <ButtonToPay />
+        <div className="relative flex flex-col w-full justify-center items-center ">
+          <Image
+            src="/images/logo_klap.png"
+            alt="Hotel Casa Paraiso"
+            width={70}
+            height={70}
+            className="w-[70%] z-10 "
+          />
+          <KlapButton orderId="123" />
+        </div>
       </div>
     </div>
   );

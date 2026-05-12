@@ -4,45 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, Variants, AnimatePresence } from "framer-motion";
-
-const hotels = [
-  {
-    id: "republica",
-    title: "Hotel República",
-    address: "Avenida República 19, Santiago Centro",
-    description:
-      "Ubicación estratégica y diseño vanguardista en el corazón de la ciudad. Habitaciones equipadas con tecnología moderna y cercanía a los principales puntos culturales.",
-    images: [
-      "https://images.unsplash.com/photo-1560067174-c5a3a8f37060?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=1200&q=80",
-    ],
-    amenities: [
-      "Cafetería de Autor",
-      "Minibar Premium",
-      "Atención Personalizada",
-    ],
-    accent: "#c8a97e",
-  },
-  {
-    id: "san-miguel",
-    title: "Hotel San Miguel",
-    address: "Salesianos 1130, San Miguel",
-    description:
-      "El equilibrio perfecto entre un entorno residencial tranquilo y la modernidad. Disfruta de un servicio al cliente excepcional y espacios diseñados para tu máximo confort.",
-    images: [
-      "https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1542314831-c6a4d14d8373?auto=format&fit=crop&w=1200&q=80",
-      "https://images.unsplash.com/photo-1505691938895-1758d7def511?auto=format&fit=crop&w=1200&q=80",
-    ],
-    amenities: [
-      "Cafetería de Autor",
-      "Minibar Premium",
-      "Atención Personalizada",
-    ],
-    accent: "#2f5d50",
-  },
-];
+import hotels from "@/public/assets/hotels";
 
 /* ── Variants ── */
 const sectionHeaderVariants: Variants = {
@@ -130,7 +92,7 @@ function HotelCard({
   return (
     <motion.article
       variants={cardRevealVariants}
-      className={`group grid grid-cols-1 gap-0 overflow-hidden rounded-[2rem] bg-white shadow-[0_8px_40px_rgba(0,0,0,0.06)] transition-shadow duration-700 hover:shadow-[0_20px_60px_rgba(47,93,80,0.12)] lg:grid-cols-2 ${
+      className={`group grid grid-cols-1 gap-0 overflow-hidden rounded-[2rem] bg-white shadow-[0_8px_40px_rgba(0,0,0,0.06)] transition-shadow duration-700 hover:shadow-[0_20px_60px_rgba(47,93,80,0.12)] lg:grid-cols-2 shadow-lg  ${
         isReversed ? "lg:direction-rtl" : ""
       }`}
       style={{ perspective: "1200px" }}
@@ -157,8 +119,8 @@ function HotelCard({
             className="absolute inset-0"
           >
             <Image
-              src={hotel.images[currentImg]}
-              alt={`Vista de ${hotel.title}`}
+              src={hotel.images[0]}
+              alt={`Vista de ${hotel.id}`}
               fill
               sizes="(max-width: 1024px) 100vw, 50vw"
               className="object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.03]"
@@ -285,12 +247,12 @@ function HotelCard({
         />
 
         {/* Number index */}
-        <span className="font-chillax text-[80px] font-bold leading-none text-[#e5e5e5]/60 select-none">
+        <span className="font-chillax text-[80px] font-bold leading-none text-[#2f5d50]/80 select-none">
           0{index + 1}
         </span>
 
         <h3 className="mt-2 font-chillax text-3xl font-bold tracking-tight text-[#2b2b2b] transition-colors duration-500 group-hover:text-[#2f5d50] sm:text-4xl">
-          {hotel.title}
+          {hotel.name}
         </h3>
 
         {/* Gold decorative line */}
@@ -311,18 +273,18 @@ function HotelCard({
               className="inline-flex items-center gap-2 rounded-full border border-[#e5e5e5] bg-[#f5f5f3]/80 px-3.5 py-1.5 font-inter text-[11px] font-semibold uppercase tracking-wider text-[#2f5d50] transition-all duration-300 hover:border-[#c8a97e]/40 hover:bg-[#c8a97e]/8"
             >
               <span className="h-1 w-1 rounded-full bg-[#c8a97e]" />
-              {amenity}
+              {amenity.name}
             </span>
           ))}
         </div>
 
         {/* Actions */}
-        <div className="mt-8 flex items-center gap-4 pt-2">
+        <div className="mt-8 flex justify-center items-center gap-4 pt-2">
           <Link
-            href={`/hotel/reservar-${hotel.id}`}
+            href={`/hotel/${hotel.id}`}
             className="btn-primary gap-2 rounded-xl px-7 py-3 font-inter text-[13px]"
           >
-            Reservar ahora
+            Ver hotel
             <svg
               className="h-3.5 w-3.5"
               fill="none"
@@ -333,26 +295,6 @@ function HotelCard({
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={2.5}
-                d="M14 5l7 7m0 0l-7 7m7-7H3"
-              />
-            </svg>
-          </Link>
-
-          <Link
-            href={`/hotel/detalles-${hotel.id}`}
-            className="group/link flex items-center gap-1.5 font-inter text-[13px] font-semibold text-[#8fa89e] transition-colors duration-300 hover:text-[#2f5d50]"
-          >
-            Ver detalles
-            <svg
-              className="h-4 w-4 transition-transform duration-300 group-hover/link:translate-x-1"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
                 d="M14 5l7 7m0 0l-7 7m7-7H3"
               />
             </svg>
