@@ -121,7 +121,7 @@ export default function EventCard({
           {/* CTA Button — slides up on hover */}
           <div className="mt-4 translate-y-4 opacity-0 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-y-0 group-hover:opacity-100">
             <Link
-              href="https://hotelcasaparaiso.cl#contact"
+              href="#contact"
               className="inline-flex items-center gap-2.5 rounded-xl border border-[#c8a97e]/30 bg-[#c8a97e]/15 px-5 py-2.5 font-inter text-[12px] font-bold uppercase tracking-wider text-[#c8a97e] backdrop-blur-md cursor-pointer transition-all duration-300 hover:border-[#c8a97e]/50 hover:bg-[#c8a97e]/25 active:scale-95"
             >
               Solicitar Cotización

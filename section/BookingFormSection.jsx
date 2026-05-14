@@ -31,7 +31,8 @@ const featureCards = [
   {
     icon: Clock,
     title: "Respuesta en 24h",
-    description: "Un asesor te contactará para confirmar disponibilidad rápidamente.",
+    description:
+      "Un asesor te contactará para confirmar disponibilidad rápidamente.",
   },
   {
     icon: Shield,
@@ -41,14 +42,15 @@ const featureCards = [
   {
     icon: Sparkles,
     title: "Mejor precio",
-    description: "Garantizamos la mejor tarifa al reservar directamente con nosotros.",
+    description:
+      "Garantizamos la mejor tarifa al reservar directamente con nosotros.",
   },
 ];
 
 export default function BookingFormSection() {
   return (
     <section
-      id="reservar"
+      id="contact"
       className="relative overflow-hidden bg-[#f5f5f3] py-20 sm:py-24 lg:py-32"
     >
       {/* Background ambient effects */}
@@ -60,7 +62,12 @@ export default function BookingFormSection() {
         />
         <motion.div
           animate={{ scale: [1, 1.15, 1], opacity: [0.06, 0.12, 0.06] }}
-          transition={{ duration: 14, repeat: Infinity, ease: "easeInOut", delay: 3 }}
+          transition={{
+            duration: 14,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 3,
+          }}
           className="absolute -left-[8%] bottom-[10%] h-[500px] w-[500px] rounded-full bg-[#c8a97e] blur-[160px]"
         />
       </div>
@@ -84,8 +91,8 @@ export default function BookingFormSection() {
           </h2>
 
           <p className="mt-4 font-inter text-[15px] leading-[1.8] text-[#6f6f6f]">
-            Completa el formulario y recibe información sobre fechas,
-            ubicación y disponibilidad según tu estadía ideal.
+            Completa el formulario y recibe información sobre fechas, ubicación
+            y disponibilidad según tu estadía ideal.
           </p>
         </motion.div>
 
@@ -116,7 +123,10 @@ export default function BookingFormSection() {
                     Nombre completo
                   </label>
                   <div className="flex items-center gap-3">
-                    <User size={16} className="text-[#8fa89e] transition-colors group-focus-within:text-[#2f5d50]" />
+                    <User
+                      size={16}
+                      className="text-[#8fa89e] transition-colors group-focus-within:text-[#2f5d50]"
+                    />
                     <input
                       type="text"
                       placeholder="Tu nombre"
@@ -134,7 +144,10 @@ export default function BookingFormSection() {
                     Correo electrónico
                   </label>
                   <div className="flex items-center gap-3">
-                    <Mail size={16} className="text-[#8fa89e] transition-colors group-focus-within:text-[#2f5d50]" />
+                    <Mail
+                      size={16}
+                      className="text-[#8fa89e] transition-colors group-focus-within:text-[#2f5d50]"
+                    />
                     <input
                       type="email"
                       placeholder="correo@ejemplo.com"
@@ -155,7 +168,10 @@ export default function BookingFormSection() {
                     Teléfono
                   </label>
                   <div className="flex items-center gap-3">
-                    <Phone size={16} className="text-[#8fa89e] transition-colors group-focus-within:text-[#2f5d50]" />
+                    <Phone
+                      size={16}
+                      className="text-[#8fa89e] transition-colors group-focus-within:text-[#2f5d50]"
+                    />
                     <input
                       type="tel"
                       placeholder="+56 9 1234 5678"
@@ -173,7 +189,10 @@ export default function BookingFormSection() {
                     Huéspedes
                   </label>
                   <div className="flex items-center gap-3">
-                    <Users size={16} className="text-[#8fa89e] transition-colors group-focus-within:text-[#2f5d50]" />
+                    <Users
+                      size={16}
+                      className="text-[#8fa89e] transition-colors group-focus-within:text-[#2f5d50]"
+                    />
                     <select className="w-full cursor-pointer bg-transparent font-inter text-[14px] font-medium text-[#2b2b2b] outline-none">
                       <option>1 huésped</option>
                       <option>2 huéspedes</option>
@@ -196,7 +215,10 @@ export default function BookingFormSection() {
                     Check-in
                   </label>
                   <div className="flex items-center gap-3">
-                    <CalendarDays size={16} className="text-[#8fa89e] transition-colors group-focus-within:text-[#2f5d50]" />
+                    <CalendarDays
+                      size={16}
+                      className="text-[#8fa89e] transition-colors group-focus-within:text-[#2f5d50]"
+                    />
                     <input
                       type="date"
                       className="w-full bg-transparent font-inter text-[14px] font-medium text-[#2b2b2b] outline-none"
@@ -213,7 +235,10 @@ export default function BookingFormSection() {
                     Check-out
                   </label>
                   <div className="flex items-center gap-3">
-                    <CalendarDays size={16} className="text-[#8fa89e] transition-colors group-focus-within:text-[#2f5d50]" />
+                    <CalendarDays
+                      size={16}
+                      className="text-[#8fa89e] transition-colors group-focus-within:text-[#2f5d50]"
+                    />
                     <input
                       type="date"
                       className="w-full bg-transparent font-inter text-[14px] font-medium text-[#2b2b2b] outline-none"
@@ -248,7 +273,10 @@ export default function BookingFormSection() {
                   Mensaje
                 </label>
                 <div className="flex items-start gap-3">
-                  <MessageSquare size={16} className="mt-0.5 text-[#8fa89e] transition-colors group-focus-within:text-[#2f5d50]" />
+                  <MessageSquare
+                    size={16}
+                    className="mt-0.5 text-[#8fa89e] transition-colors group-focus-within:text-[#2f5d50]"
+                  />
                   <textarea
                     rows={4}
                     placeholder="Cuéntanos qué tipo de estadía buscas..."

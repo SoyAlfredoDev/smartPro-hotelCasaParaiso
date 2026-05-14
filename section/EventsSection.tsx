@@ -69,20 +69,6 @@ const eventCategories = [
   },
 ];
 
-/**
- * 
- * {
-    title: "Shows & Espectáculos",
-    description:
-      "Escenario equipado con luces inteligentes, sonido envolvente y backstage profesional. Ideal para shows en vivo, stand-up y espectáculos artísticos.",
-    image:
-      "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=1200&q=80",
-    tag: "Espectáculos",
-    icon: Mic2,
-    layout: "standard" as const,
-  }
- */
-
 /* ─────────────────────────────────────────────
    Animation Variants
    ───────────────────────────────────────────── */
