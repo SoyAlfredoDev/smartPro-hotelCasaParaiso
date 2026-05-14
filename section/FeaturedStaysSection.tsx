@@ -15,70 +15,8 @@ import {
   ArrowRight,
   Sparkles,
 } from "lucide-react";
-
-// Datos extraídos de las categorías de habitaciones con amenities
-const rooms = [
-  {
-    title: "Habitación Single",
-    capacity: "1 Persona",
-    description: "1 Cama Matrimonial",
-    image:
-      "https://images.unsplash.com/photo-1536270578847-a7274c4a4f81?auto=format&fit=crop&w=1200&q=80",
-    price: "$40.000",
-    amenities: ["Wi-Fi", "TV Smart", "Cafetería"],
-    tag: "Económica",
-  },
-  {
-    title: "Habitación Doble",
-    capacity: "2 Personas",
-    description: "2 Camas Individuales",
-    image:
-      "https://images.unsplash.com/photo-1558976825-6b1b1ceca8ec?auto=format&fit=crop&w=1200&q=80",
-    price: "$50.000",
-    amenities: ["Wi-Fi", "TV Smart", "Cafetería"],
-    tag: "Popular",
-  },
-  {
-    title: "Habitación Matrimonial",
-    capacity: "2 Personas",
-    description: "1 Cama Matrimonial",
-    image:
-      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80",
-    price: "$50.000",
-    amenities: ["Wi-Fi", "TV Smart", "Minibar Premium", "Cafetería"],
-    tag: "Romántica",
-  },
-  {
-    title: "Habitación Familiar",
-    capacity: "3 Personas",
-    description: "1 Cama Matrimonial y 1 Cama Individual",
-    image:
-      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=80",
-    price: "$75.000",
-    amenities: ["Wi-Fi", "TV Smart", "Estacionamiento", "Cafetería"],
-    tag: "Familiar",
-  },
-  {
-    title: "Habitación Triple",
-    capacity: "3 Personas",
-    description: "3 Camas Individuales",
-    image:
-      "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=80",
-    price: "$75.000",
-    amenities: ["Wi-Fi", "TV Smart", "Cafetería"],
-    tag: "Grupal",
-  },
-  {
-    title: "Habitación Cuádruple",
-    capacity: "4 Personas",
-    description: "4 Camas Individuales",
-    image:
-      "https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=1200&q=80",
-    price: "$100.000",
-    amenities: ["Wi-Fi", "TV Smart", "Estacionamiento", "Pet Friendly"],
-    tag: "Premium",
-  },
-];
+import { useState, useEffect } from "react";
+import { getRooms } from "@/lib/rooms/getRooms";
 
 // Función helper para renderizar el ícono correcto de Lucide
 const getAmenityIcon = (amenityName: string) => {
@@ -132,7 +70,23 @@ const headerVariants: Variants = {
   },
 };
 
+interface Room {
+  id: string;
+  name: string;
+  description: string;
+  hotelId: string;
+  category: string;
+  capacity: number;
+  price: number;
+  images: string[];
+  amenities: string[];
+}
+
 export default function FeaturedStaysSection() {
+  const [rooms, setRooms] = useState<Room[]>([]);
+  useEffect(() => {
+    getRooms().then((data) => setRooms(data));
+  }, []);
   return (
     <section
       id="habitaciones"
@@ -164,9 +118,12 @@ export default function FeaturedStaysSection() {
           className="absolute -bottom-[20%] -left-[10%] h-[600px] w-[600px] rounded-full bg-[#8fa89e] blur-[150px]"
         />
         {/* Subtle noise texture overlay */}
-        <div className="absolute inset-0 opacity-[0.03]" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E")`,
-        }} />
+        <div
+          className="absolute inset-0 opacity-[0.03]"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E")`,
+          }}
+        />
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -222,16 +179,16 @@ export default function FeaturedStaysSection() {
         >
           {rooms.map((room) => (
             <motion.article
-              key={room.title}
+              key={room.id}
               variants={cardVariants}
               whileHover={{ y: -8, transition: { duration: 0.4 } }}
               className="group flex flex-col overflow-hidden rounded-[1.75rem] border border-white/[0.08] bg-white/[0.06] backdrop-blur-xl transition-all duration-500 hover:border-white/[0.15] hover:bg-white/[0.1] hover:shadow-[0_20px_60px_rgba(0,0,0,0.3)]"
             >
               {/* Image Container */}
-              <div className="relative h-[220px] overflow-hidden">
+              <div className="relative h-[280px] overflow-hidden">
                 <Image
-                  src={room.image}
-                  alt={room.title}
+                  src={room.images[0]}
+                  alt={room.name}
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className="object-cover transition-transform duration-[1s] ease-out group-hover:scale-110"
@@ -242,7 +199,7 @@ export default function FeaturedStaysSection() {
                 {/* Floating tag */}
                 <div className="absolute left-4 top-4 z-20">
                   <span className="inline-flex items-center gap-1 rounded-lg border border-white/15 bg-white/10 px-3 py-1 font-inter text-[10px] font-bold uppercase tracking-widest text-white backdrop-blur-md">
-                    {room.tag}
+                    {room.category}
                   </span>
                 </div>
 
@@ -262,7 +219,7 @@ export default function FeaturedStaysSection() {
               {/* Content */}
               <div className="flex flex-1 flex-col p-6">
                 <h3 className="font-chillax text-xl font-bold text-white transition-colors duration-300 group-hover:text-[#c8a97e]">
-                  {room.title}
+                  {room.name}
                 </h3>
 
                 {/* Room details */}
@@ -279,13 +236,25 @@ export default function FeaturedStaysSection() {
 
                   <div className="flex items-start gap-2.5">
                     <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-white/[0.08]">
-                      <svg className="h-3 w-3 text-[#c8a97e]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                      <svg
+                        className="h-3 w-3 text-[#c8a97e]"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+                        />
                       </svg>
                     </div>
                     <span className="font-inter text-[13px] leading-snug text-white/60">
                       Incluye:{" "}
-                      <strong className="text-white/90">{room.description}</strong>
+                      <strong className="text-white/90">
+                        {room.description}
+                      </strong>
                     </span>
                   </div>
                 </div>
@@ -310,7 +279,7 @@ export default function FeaturedStaysSection() {
                   <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
                   <div className="mt-4 flex items-center justify-between">
                     <Link
-                      href={`#reservar-${room.title.toLowerCase().replace(/ /g, "-")}`}
+                      href={`#reservar-${room.name.toLowerCase().replace(/ /g, "-")}`}
                       className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-white px-5 font-inter text-[12px] font-bold text-[#1e3f36] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(255,255,255,0.15)] active:scale-95"
                     >
                       Reservar

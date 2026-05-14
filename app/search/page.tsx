@@ -12,6 +12,7 @@ import Footer from "@/components/Footer";
 import FeaturedStaysSection from "@/section/FeaturedStaysSection";
 
 import { useBookingStore } from "@/store/useBookingStore";
+import { getRooms } from "@/lib/rooms/getRooms";
 
 interface Room {
   id: string;
@@ -41,20 +42,10 @@ function SearchResults() {
 
   const fetchRooms = async () => {
     try {
-      const res = await fetch("/api/rooms");
-      const rooms = await res.json();
-      // Filtro por hotel (manejando el caso en que el parámetro esté vacío o sea 'all')
-      let filteredRooms;
-      if (reservetionHotelId !== "all") {
-        filteredRooms = rooms.filter(
-          (room: Room) => room.hotelId === reservetionHotelId,
-        );
-      } else {
-        filteredRooms = rooms;
-      }
+      const rooms = await getRooms(reservetionHotelId);
       // Filtro por capacidad
       const totalPeople = reservetionAdults + reservetionChildren;
-      const filteredRoomsByCapacity = filteredRooms.filter((room: Room) => {
+      const filteredRoomsByCapacity = rooms.filter((room: Room) => {
         return room.capacity >= totalPeople;
       });
 
@@ -105,10 +96,10 @@ function SearchResults() {
         ) : (
           <div className="w-full">
             <h2 className="mb-8 text-2xl font-bold text-primary">
-              Habitaciones disponibles ({roomsAvailable.length})
+              Habitaciones disponibles
             </h2>
             {/* Uso de Grid para ordenar las tarjetas perfectamente */}
-            <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
               {roomsAvailable.map((room: Room) => (
                 <RoomCard key={room.id} room={room} />
               ))}

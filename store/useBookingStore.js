@@ -18,7 +18,7 @@ export const useBookingStore = create(
       nights: null,
 
       roomsSelected: null,
-      totalPrice: 100000,
+      totalPrice: 0,
 
       setReservetionHotelId: (hotelId) => set({ hotelId }),
       setReservationCheckIn: (checkIn) => set({ checkIn }),

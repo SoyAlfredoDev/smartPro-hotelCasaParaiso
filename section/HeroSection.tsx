@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import SearcherComponent from "@/components/SearcherComponent";
+import SearcherComponent from "@/components/search/SearcherComponent";
 import { Sparkles } from "lucide-react";
 import Image from "next/image";
 import { Suspense } from "react";

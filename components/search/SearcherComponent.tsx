@@ -4,7 +4,7 @@ import hotels from "@/public/assets/hotels";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import ButtonCheck from "@/components/ui/buttonCheck";
-import GuestsSearcherBar from "@/components/GuestsSearcherBar";
+import GuestsSearcherBar from "@/components/search/GuestsSearcherBar";
 import { Users, ChevronDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useBookingStore } from "@/store/useBookingStore";
@@ -31,6 +31,7 @@ const getNumber = (value: string | null) => {
 
 export default function SearcherComponent() {
   const [showGuests, setShowGuests] = useState(false);
+  const [isLooking, setIsLooking] = useState(false);
   const router = useRouter();
 
   // funciones store
@@ -70,8 +71,6 @@ export default function SearcherComponent() {
   const childrenQuantity = useBookingStore((state) => state.children);
   const petsQuantity = useBookingStore((state) => state.pets);
   const roomsQuantity = useBookingStore((state) => state.roomsQuantity);
-  const roomsSelected = useBookingStore((state) => state.roomsSelected);
-  const totalPrice = useBookingStore((state) => state.totalPrice);
 
   // fechas
   const dateRange = calculateDate();
@@ -89,10 +88,7 @@ export default function SearcherComponent() {
     totalPrice: 0,
   });
 
-  const [mounted, setMounted] = useState(false);
-
   useEffect(() => {
-    setMounted(true);
     if (nights > 0 || hotelId) {
       setReservation((prev) => ({
         ...prev,
@@ -105,6 +101,7 @@ export default function SearcherComponent() {
         dateCheckOut: checkOut || prev.dateCheckOut,
         numberNights: nights || prev.numberNights,
       }));
+    } else {
     }
   }, [
     hotelId,
@@ -155,11 +152,14 @@ export default function SearcherComponent() {
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
 
+    setIsLooking(true);
+
     if (
       reservation.dateCheckOut &&
       reservation.dateCheckIn &&
       reservation.dateCheckOut < reservation.dateCheckIn
     ) {
+      setIsLooking(false);
       alert("La fecha de salida debe ser mayor a la fecha de entrada");
       return;
     }
@@ -175,6 +175,10 @@ export default function SearcherComponent() {
     setReservetionPeopleQuantity(reservation.adults + reservation.children);
 
     router.push(`/search`);
+
+    setTimeout(() => {
+      setIsLooking(false);
+    }, 4000);
   };
 
   return (
@@ -286,9 +290,10 @@ export default function SearcherComponent() {
             <div className="w-full">
               <button
                 type="submit"
-                className="inline-flex h-full min-h-[56px] w-full items-center justify-center rounded-xl bg-primary px-8 font-semibold text-white shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary/90 active:scale-95 md:hidden lg:block cursor-pointer"
+                className="inline-flex h-full min-h-[56px] w-full items-center justify-center rounded-xl bg-primary px-8 font-semibold text-white shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary/90 active:scale-95 md:hidden lg:block cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={isLooking}
               >
-                Consultar
+                {isLooking ? "Buscando..." : "Consultar"}
               </button>
             </div>
           </div>

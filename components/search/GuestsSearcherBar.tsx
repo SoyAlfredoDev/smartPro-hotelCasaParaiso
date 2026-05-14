@@ -65,6 +65,7 @@ export default function GuestsSearcherBar({
           <button
             onClick={onClose}
             className="text-text-primary cursor-pointer hover:text-red-500"
+            type="button"
           >
             <X size={16} />
           </button>
