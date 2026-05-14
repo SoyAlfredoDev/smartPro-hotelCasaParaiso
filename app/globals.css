@@ -82,19 +82,26 @@ body {
 /* ─────────────────────────────────────────────
    Utility Classes — Text
    ───────────────────────────────────────────── */
+
+/* Green dark */
 .text-primary {
   color: var(--primary);
 }
+
+/* Green medium */
 .text-secondary {
   color: var(--secondary);
 }
+
+/* Gold */
 .text-accent {
   color: var(--accent);
 }
+
 .text-foreground {
   color: var(--foreground);
 }
-.text-text-primary {
+.text-primary {
   color: var(--text-primary);
 }
 .text-text-secondary {
@@ -110,6 +117,21 @@ body {
   color: var(--text-secondary);
 }
 
+/*
+NUEVOS ESTILOS DE TEXTO
+*/
+
+.text-base {
+  color: var(--text-primary);
+}
+.text-green {
+  color: var(--primary);
+}
+
+.text-gold {
+  color: var(--accent);
+}
+
 /* ─────────────────────────────────────────────
    Utility Classes — Borders
    ───────────────────────────────────────────── */
@@ -120,6 +142,9 @@ body {
   border-color: var(--secondary);
 }
 .border-accent {
+  border-color: var(--accent);
+}
+.border-gold {
   border-color: var(--accent);
 }
 .border-default {

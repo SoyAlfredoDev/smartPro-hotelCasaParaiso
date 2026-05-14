@@ -158,9 +158,9 @@ export default function Navbar() {
           aria-label={isOpen ? "Cerrar menú" : "Abrir menú"}
           aria-expanded={isOpen}
           onClick={() => setIsOpen((prev) => !prev)}
-          className={`relative z-50 inline-flex h-10 w-10 items-center justify-center rounded-xl transition-all duration-300 md:hidden ${
+          className={`relative z-9999 inline-flex h-10 w-10 items-center justify-center rounded-xl transition-all duration-300 md:hidden ${
             isOpen
-              ? "bg-[#2f5d50] text-primary"
+              ? " text-primary"
               : hasScrolled
                 ? "border border-[#e5e5e5] text-[#2b2b2b] hover:border-[#2f5d50]/30 hover:text-[#2f5d50]"
                 : "border border-white/30 hover:bg-white/10"
@@ -172,7 +172,7 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       <div
-        className={`fixed inset-0 z-40 transition-all duration-500 md:hidden ${
+        className={`fixed inset-0 z-40 -transition-all duration-500 md:hidden ${
           isOpen
             ? "pointer-events-auto opacity-100"
             : "pointer-events-none opacity-0"
@@ -186,7 +186,7 @@ export default function Navbar() {
         />
 
         <div
-          className={`absolute right-0 top-0 flex h-full w-[85%] max-w-[380px] flex-col bg-white shadow-2xl transition-transform duration-500 ${
+          className={`absolute z-9999   right-0 top-0 flex h-full w-[85%] max-w-[380px] flex-col bg-white shadow-2xl transition-transform duration-500 ${
             isOpen ? "translate-x-0" : "translate-x-full"
           }`}
         >
@@ -194,12 +194,12 @@ export default function Navbar() {
             <span className="font-chillax text-lg font-bold text-[#2b2b2b]">
               Menú
             </span>
-            <button onClick={() => setIsOpen(false)}>
-              <X size={16} />
+            <button className="" onClick={() => setIsOpen(false)}>
+              <X size={16} className="text-white" />
             </button>
           </div>
 
-          <nav className="flex flex-1 flex-col gap-1 px-4 py-6">
+          <nav className="flex flex-1 bg-white flex-col gap-1 px-4 py-6">
             {navItems.map((item) => {
               const isActive = activeSection === item.href;
 

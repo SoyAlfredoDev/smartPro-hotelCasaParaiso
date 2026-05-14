@@ -1,0 +1,43 @@
+import { Utensils, GlassWater, Wine } from "lucide-react";
+
+export const restaurants = [
+  {
+    id: "resto-bar-republicana",
+    address: "Republica 19 Santiago, Santiago, Santiago, 8340000",
+    title: "Restobar Republicana",
+    subtitle: "Gastronomía Chilena de Autor",
+    description:
+      "Disfruta de una experiencia culinaria única con platos tradicionales reinventados con ingredientes locales en un ambiente natural.",
+    image:
+      "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80",
+    features: ["Terraza", "Cata de Vinos", "Música en vivo"],
+    icon: Utensils,
+    color: "#c8a97e",
+  },
+  {
+    id: "restarurante-republicana-2",
+    title: "Restaurante Republicana",
+    address: "Republica 19 Santiago, Santiago, Santiago, 8340000",
+    subtitle: "Sabores del Pacífico",
+    description:
+      "Pescados frescos y mariscos capturados diariamente con vistas privilegiadas.",
+    image:
+      "https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=800&q=80",
+    features: ["Vistas al Cerro", "Coctelería", "Cenas Románticas"],
+    icon: GlassWater,
+    color: "#8fa89e",
+  },
+  {
+    id: "restarurante-san-miguel",
+    title: "Restaurante San Miguel",
+    address: "Av Salesianos 1130, San Miguel, Santiago, San Miguel, 8930000",
+    subtitle: "Tapas y Vinos Premium",
+    description:
+      "Una selección única de cepas nacionales acompañada de las mejores tapas de Santiago.",
+    image:
+      "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=800&q=80",
+    features: ["Bodega Privada", "Degustaciones", "Eventos"],
+    icon: Wine,
+    color: "#c8a97e",
+  },
+];

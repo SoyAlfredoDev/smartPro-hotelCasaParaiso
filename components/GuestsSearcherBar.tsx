@@ -34,7 +34,7 @@ export default function GuestsSearcherBar({
       min: 1,
     },
     {
-      title: "Niños",
+      title: "Niños (Desde 8 años)",
       id: "children",
       icon: <Baby size={16} className="text-primary" />,
       count: children,

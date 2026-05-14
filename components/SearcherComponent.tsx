@@ -106,7 +106,16 @@ export default function SearcherComponent() {
         numberNights: nights || prev.numberNights,
       }));
     }
-  }, [hotelId, adultsQuantity, childrenQuantity, petsQuantity, roomsQuantity, checkIn, checkOut, nights]);
+  }, [
+    hotelId,
+    adultsQuantity,
+    childrenQuantity,
+    petsQuantity,
+    roomsQuantity,
+    checkIn,
+    checkOut,
+    nights,
+  ]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -131,7 +140,10 @@ export default function SearcherComponent() {
       const updated = { ...prev, [name]: finalValue };
       if (name === "dateCheckIn" || name === "dateCheckOut") {
         if (updated.dateCheckIn && updated.dateCheckOut) {
-          updated.numberNights = calculateNights(updated.dateCheckIn, updated.dateCheckOut);
+          updated.numberNights = calculateNights(
+            updated.dateCheckIn,
+            updated.dateCheckOut,
+          );
         } else {
           updated.numberNights = 0;
         }
@@ -170,10 +182,10 @@ export default function SearcherComponent() {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 0.4 }}
-      className="relative p-4 w-full"
+      className="relative p-4 w-full z-0"
       id="search"
     >
-      <div className="z-10 rounded-2xl border border-default shadow-md bg-surface p-4 backdrop-blur-xl md:rounded-3xl md:p-6 lg:p-8">
+      <div className="z-0 rounded-2xl border border-default shadow-md bg-surface p-4 backdrop-blur-xl md:rounded-3xl md:p-6 lg:p-8">
         <form onSubmit={handleSubmit}>
           <div className="w-full grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_1.2fr_auto] lg:gap-6 items-end">
             {/* HOTEL */}
@@ -274,7 +286,7 @@ export default function SearcherComponent() {
             <div className="w-full">
               <button
                 type="submit"
-                className="inline-flex h-full min-h-[56px] w-full items-center justify-center rounded-xl bg-primary px-8 text-base font-semibold text-white shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary/90 active:scale-95 md:hidden lg:block"
+                className="inline-flex h-full min-h-[56px] w-full items-center justify-center rounded-xl bg-primary px-8 font-semibold text-white shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary/90 active:scale-95 md:hidden lg:block cursor-pointer"
               >
                 Consultar
               </button>

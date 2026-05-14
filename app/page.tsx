@@ -4,6 +4,8 @@ import LocationsSection from "@/section/LocationsSection";
 import FeaturedStaysSection from "@/section/FeaturedStaysSection";
 import ExperiencesSection from "@/section/ExperiencesSection";
 import AdditionalServicesSection from "@/section/AdditionalServicesSection";
+import EventsSection from "@/section/EventsSection";
+import RestaurantsSection from "@/section/RestaurantsSection";
 import BookingFormSection from "@/section/BookingFormSection";
 import Footer from "@/components/Footer";
 import Script from "next/script";
@@ -11,7 +13,7 @@ import Script from "next/script";
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "LodgingBusiness",
-  name: "Casa Paraíso Hotel",
+  name: "Hotel Casa Paraiso",
   image: "https://casaparaisohotel.cl/images/logo-hotel-casa-paraiso.png",
   description:
     "Hotel boutique con enfoque en comodidad, ubicación y experiencia. Tu hogar lejos de casa en Santiago.",
@@ -36,16 +38,15 @@ export default function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-
       <Navbar />
       <HeroSection />
-
       <LocationsSection />
+      <RestaurantsSection />
       <FeaturedStaysSection />
       <ExperiencesSection />
       <AdditionalServicesSection />
+      <EventsSection />
       <BookingFormSection />
-
       <Footer />
     </>
   );
