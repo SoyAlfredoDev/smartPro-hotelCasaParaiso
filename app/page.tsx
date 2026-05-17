@@ -3,6 +3,7 @@ import HeroSection from "@/section/HeroSection";
 import LocationsSection from "@/section/LocationsSection";
 import FeaturedStaysSection from "@/section/FeaturedStaysSection";
 import ExperiencesSection from "@/section/ExperiencesSection";
+import VideoShowcaseSection from "@/section/VideoShowcaseSection";
 import AdditionalServicesSection from "@/section/AdditionalServicesSection";
 import EventsSection from "@/section/EventsSection";
 import RestaurantsSection from "@/section/RestaurantsSection";
@@ -41,9 +42,11 @@ export default function Home() {
       <Navbar />
       <HeroSection />
       <LocationsSection />
+      <VideoShowcaseSection />
       <RestaurantsSection />
       <FeaturedStaysSection />
       <ExperiencesSection />
+
       <AdditionalServicesSection />
       <EventsSection />
       <BookingFormSection />
