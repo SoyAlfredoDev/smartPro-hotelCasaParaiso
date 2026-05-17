@@ -303,7 +303,10 @@ export default function VideoShowcaseSection() {
                     poster="/images/video-thumbnail-hotel.png"
                   >
                     {/* Replace this src with the actual hotel video URL */}
-                    <source src="videos/hotel-01.mp4" type="video/mp4" />
+                    <source
+                      src="https://res.cloudinary.com/dtg53cua9/video/upload/v1778980879/hotel-01_dgastt.mov"
+                      type="video/mp4"
+                    />
                     Tu navegador no soporta la reproducción de video.
                   </video>
                 </div>
