@@ -9,6 +9,7 @@ import EventsSection from "@/section/EventsSection";
 import RestaurantsSection from "@/section/RestaurantsSection";
 import BookingFormSection from "@/section/BookingFormSection";
 import Footer from "@/components/Footer";
+import WhatsAppButton from "@/components/WhatsAppButton";
 import Script from "next/script";
 
 const jsonLd = {
@@ -51,6 +52,7 @@ export default function Home() {
       <EventsSection />
       <BookingFormSection />
       <Footer />
+      <WhatsAppButton />
     </>
   );
 }
