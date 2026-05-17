@@ -181,7 +181,7 @@ export default function VideoShowcaseSection() {
               {/* Thumbnail */}
               <div className="relative aspect-[16/9] w-full overflow-hidden">
                 <Image
-                  src="/images/video-thumbnail-hotel.png"
+                  src="/images/portada-video.jpg"
                   alt="Vista cinematográfica del Hotel Casa Paraíso"
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
