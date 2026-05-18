@@ -16,13 +16,14 @@ import EventsHeader from "@/components/events/EventsHeader";
 /* ─────────────────────────────────────────────
    Event Categories Data
    ───────────────────────────────────────────── */
+
+//https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1600&q=80
 const eventCategories = [
   {
     title: "Eventos Corporativos",
     description:
       "Equipamiento audiovisual de última generación, conectividad premium y un espacio diseñado para que tu empresa deje huella. Reuniones, seminarios y conferencias con estándar ejecutivo.",
-    image:
-      "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1600&q=80",
+    image: "/images/events/event-02.jpg",
     tag: "Corporativo",
     icon: Building2,
     layout: "featured" as const,
@@ -51,8 +52,7 @@ const eventCategories = [
     title: "Galas & Premiaciones",
     description:
       "Alfombra roja, iluminación dramática y un espacio que respira exclusividad. Organizamos cada elemento para que tu gala sea un evento de clase mundial.",
-    image:
-      "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&w=1600&q=80",
+    image: "/images/republica/restaurants/restaurant-05.jpg",
     tag: "Galas",
     icon: GlassWater,
     layout: "standard" as const,
