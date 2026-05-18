@@ -134,7 +134,14 @@ export default [
     ],
     phone: "",
     email: "",
-    images: ["/images/assest/hotels/hotelCasaParaiso.jpg"],
+    images: [
+      "/images/republica/hotel/lobby-02.jpg",
+      "/images/republica/hotel/lobby-01.jpg",
+      "/images/republica/rooms/cuadruple-01.jpg",
+      "/images/republica/rooms/single-01.jpg",
+      "/images/republica/restaurants/restaurant-04.jpg",
+      "/images/republica/restaurants/restaurant-05.jpg",
+    ],
     accent: "#2f5d50",
     places: [
       {
