@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, Variants, AnimatePresence } from "framer-motion";
+import { motion, Variants } from "framer-motion";
+import { Play, Pause, Volume2, VolumeX } from "lucide-react";
 import hotels from "@/public/assets/hotels";
 
 /* ── Variants ── */
@@ -39,26 +40,6 @@ const cardRevealVariants: Variants = {
   },
 };
 
-const sliderVariants = {
-  enter: (direction: number) => ({
-    x: direction > 0 ? 60 : -60,
-    opacity: 0,
-    scale: 1.02,
-  }),
-  center: {
-    zIndex: 1,
-    x: 0,
-    opacity: 1,
-    scale: 1,
-  },
-  exit: (direction: number) => ({
-    zIndex: 0,
-    x: direction < 0 ? 60 : -60,
-    opacity: 0,
-    scale: 0.98,
-  }),
-};
-
 const lineVariants: Variants = {
   hidden: { scaleX: 0 },
   visible: {
@@ -68,25 +49,84 @@ const lineVariants: Variants = {
 };
 
 /* ── Hotel Card Component ── */
-function HotelCard({
-  hotel,
-  index,
-}: {
-  hotel: (typeof hotels)[0];
+interface HotelCardProps {
+  hotel: (typeof hotels)[0] & { video?: string };
   index: number;
-}) {
-  const [currentImg, setCurrentImg] = useState(0);
-  const [direction, setDirection] = useState(0);
+}
+
+function HotelCard({ hotel, index }: HotelCardProps) {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [buffered, setBuffered] = useState(0);
+
+  const videoRef = useRef<HTMLVideoElement>(null);
   const isReversed = index % 2 !== 0;
 
-  const paginate = (newDirection: number) => {
-    setDirection(newDirection);
-    setCurrentImg((prev) => {
-      let nextIndex = prev + newDirection;
-      if (nextIndex < 0) nextIndex = hotel.images.length - 1;
-      if (nextIndex >= hotel.images.length) nextIndex = 0;
-      return nextIndex;
-    });
+  // Sincronizar estados nativos del video
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const handleTimeUpdate = () => setCurrentTime(video.currentTime);
+    const handleDurationChange = () => setDuration(video.duration);
+    const handleProgress = () => {
+      if (video.buffered.length > 0 && video.duration) {
+        const bufferedEnd = video.buffered.end(video.buffered.length - 1);
+        setBuffered((bufferedEnd / video.duration) * 100);
+      }
+    };
+
+    video.addEventListener("timeupdate", handleTimeUpdate);
+    video.addEventListener("durationchange", handleDurationChange);
+    video.addEventListener("progress", handleProgress);
+
+    return () => {
+      video.removeEventListener("timeupdate", handleTimeUpdate);
+      video.removeEventListener("durationchange", handleDurationChange);
+      video.removeEventListener("progress", handleProgress);
+    };
+  }, []);
+
+  const togglePlay = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!videoRef.current) return;
+
+    if (isPlaying) {
+      videoRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      videoRef.current
+        .play()
+        .then(() => {
+          setIsPlaying(true);
+        })
+        .catch((error) => {
+          console.error("Error al intentar jugar el video:", error);
+        });
+    }
+  };
+
+  const toggleMute = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!videoRef.current) return;
+    videoRef.current.muted = !videoRef.current.muted;
+    setIsMuted(videoRef.current.muted);
+  };
+
+  const handleScrub = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!videoRef.current) return;
+    const newTime = parseFloat(e.target.value);
+    videoRef.current.currentTime = newTime;
+    setCurrentTime(newTime);
+  };
+
+  const formatTime = (timeInSeconds: number) => {
+    if (isNaN(timeInSeconds)) return "00:00";
+    const mins = Math.floor(timeInSeconds / 60);
+    const secs = Math.floor(timeInSeconds % 60);
+    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   };
 
   return (
@@ -97,105 +137,95 @@ function HotelCard({
       }`}
       style={{ perspective: "1200px" }}
     >
-      {/* Image Gallery Side */}
+      {/* Video Side */}
       <div
-        className={`relative h-[340px] overflow-hidden lg:h-auto lg:min-h-[480px] ${
+        className={`relative h-[340px] overflow-hidden bg-black lg:h-auto lg:min-h-[480px] ${
           isReversed ? "lg:order-2" : "lg:order-1"
         }`}
       >
-        <AnimatePresence initial={false} custom={direction}>
-          <motion.div
-            key={currentImg}
-            custom={direction}
-            variants={sliderVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{
-              x: { type: "spring", stiffness: 250, damping: 28 },
-              opacity: { duration: 0.35 },
-              scale: { duration: 0.4 },
-            }}
-            className="absolute inset-0"
-          >
-            <Image
-              src={hotel.images[currentImg]}
-              alt={`Vista de ${hotel.id}`}
-              fill
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              className="object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.03]"
-            />
-          </motion.div>
-        </AnimatePresence>
+        <video
+          ref={videoRef}
+          src={hotel.video || "https://www.w3schools.com/html/mov_bbb.mp4"}
+          poster={hotel.images?.[0] || "/images/republica/hotel/lobby-02.jpg"}
+          loop
+          muted={isMuted}
+          playsInline
+          className="h-full w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.01]"
+          onPlay={() => setIsPlaying(true)}
+          onPause={() => setIsPlaying(false)}
+        />
 
         {/* Cinematic gradient overlay */}
-        <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
+        <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
         <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-r from-black/20 to-transparent" />
 
-        {/* Navigation Arrows */}
-        <div className="absolute inset-0 z-20 flex items-center justify-between px-4 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+        {/* Custom Central Play Button Overlay */}
+        <div className="absolute inset-0 z-20 flex items-center justify-center opacity-0 transition-opacity duration-500 group-hover:opacity-100 pb-12">
           <button
-            onClick={(e) => {
-              e.preventDefault();
-              paginate(-1);
-            }}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-white/20 text-white backdrop-blur-md transition-all duration-300 hover:bg-white/40 active:scale-90"
-            aria-label="Imagen anterior"
+            onClick={togglePlay}
+            className="flex h-16 w-16 items-center justify-center rounded-full border border-white/30 bg-white/20 text-white backdrop-blur-md transition-all duration-300 hover:bg-white hover:text-[#2f5d50] hover:scale-105 active:scale-95 shadow-xl cursor-pointer"
+            aria-label={isPlaying ? "Pausar video" : "Reproducir video"}
           >
-            <svg
-              className="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-          </button>
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              paginate(1);
-            }}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-white/20 text-white backdrop-blur-md transition-all duration-300 hover:bg-white/40 active:scale-90"
-            aria-label="Siguiente imagen"
-          >
-            <svg
-              className="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
+            {isPlaying ? (
+              <Pause size={24} fill="currentColor" />
+            ) : (
+              <Play size={24} fill="currentColor" className="ml-1" />
+            )}
           </button>
         </div>
 
-        {/* Slide Indicators */}
-        <div className="absolute bottom-6 left-0 right-0 z-20 flex justify-center gap-2">
-          {hotel.images.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => {
-                setDirection(idx > currentImg ? 1 : -1);
-                setCurrentImg(idx);
-              }}
-              className={`h-1 rounded-full transition-all duration-400 ${
-                idx === currentImg
-                  ? "w-8 bg-white"
-                  : "w-2 bg-white/40 hover:bg-white/70"
-              }`}
+        {/* Control Bar (Aatrasar, adelantar, volumen, carga) */}
+        <div className="absolute bottom-0 inset-x-0 z-30 p-4 bg-gradient-to-t from-black/80 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100 flex flex-col gap-2">
+          {/* Timeline and Buffer Tracker */}
+          <div className="relative w-full flex items-center group/timeline h-2">
+            {/* Fake Buffer line */}
+            <div
+              className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-white/20 rounded-full pointer-events-none"
+              style={{ width: `${buffered}%` }}
             />
-          ))}
+            {/* Fake Active line */}
+            <div
+              className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-[#c8a97e] rounded-full pointer-events-none z-10"
+              style={{
+                width: `${duration ? (currentTime / duration) * 100 : 0}%`,
+              }}
+            />
+            {/* Real Input Ranger */}
+            <input
+              type="range"
+              min={0}
+              max={duration || 0}
+              value={currentTime}
+              onChange={handleScrub}
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"
+            />
+            <div className="w-full bg-white/10 h-1 rounded-full pointer-events-none" />
+          </div>
+
+          {/* Controls Metadata Row */}
+          <div className="flex items-center justify-between text-white font-inter text-xs">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={togglePlay}
+                className="hover:text-[#c8a97e] transition-colors cursor-pointer"
+              >
+                {isPlaying ? (
+                  <Pause size={14} fill="currentColor" />
+                ) : (
+                  <Play size={14} fill="currentColor" />
+                )}
+              </button>
+              <button
+                onClick={toggleMute}
+                className="hover:text-[#c8a97e] transition-colors cursor-pointer"
+              >
+                {isMuted ? <VolumeX size={14} /> : <Volume2 size={14} />}
+              </button>
+              <span className="tracking-wider select-none text-[11px] text-gray-300">
+                {formatTime(currentTime)} / {formatTime(duration)}
+              </span>
+            </div>
+          </div>
         </div>
 
         {/* Floating Location Badge */}

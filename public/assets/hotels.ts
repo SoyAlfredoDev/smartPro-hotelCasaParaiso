@@ -51,6 +51,8 @@ export default [
       "/images/san-miguel/rooms/room-01.jpg",
       "/images/san-miguel/restaurants/restaurant-03.jpg",
     ],
+    video:
+      "https://res.cloudinary.com/dtg53cua9/video/upload/v1779232372/HOTEL_PARAISO_SAN_MIGUEL_2_ie3itr.mov",
     accent: "#2f5d50",
     places: [
       {
@@ -146,6 +148,8 @@ export default [
       "/images/republica/restaurants/restaurant-04.jpg",
       "/images/republica/restaurants/restaurant-05.jpg",
     ],
+    video:
+      "https://res.cloudinary.com/dtg53cua9/video/upload/v1778980879/hotel-01_dgastt.mov",
     accent: "#2f5d50",
     places: [
       {

@@ -165,7 +165,10 @@ function RoomCard({ room }: { room: Room }) {
         <div className="absolute bottom-4 right-4 z-20">
           <div className="rounded-xl border border-[#c8a97e]/30 bg-[#c8a97e]/15 px-3.5 py-2 backdrop-blur-md">
             <span className="block font-inter text-[18px] font-bold text-[#c8a97e]">
-              {room.price}
+              {room.price.toLocaleString("es-CL", {
+                style: "currency",
+                currency: "CLP",
+              })}
             </span>
             <span className="block -mt-0.5 font-inter text-[9px] font-medium tracking-wider uppercase text-[#c8a97e]/70">
               por noche

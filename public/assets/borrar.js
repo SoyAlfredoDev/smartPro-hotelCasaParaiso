@@ -37,3 +37,24 @@ const cuadruple = [
   "/images/republica/badroom-01.jpg",
   "/images/republica/badroom-02.jpg",
 ];
+//-----------------------------------
+const matrimonialSanMiguel = [
+  "/images/san-miguel/rooms/matrimonial-01.jpg",
+  "/images/san-miguel/rooms/matrimonial-02.jpg",
+  "/images/san-miguel/bathrooms/bathroom-01.jpg",
+  "/images/san-miguel/bathrooms/bathroom-02.jpg",
+  "/images/san-miguel/bathrooms/bathroom-03.jpg",
+  "/images/san-miguel/bathrooms/bathroom-04.jpg",
+  "/images/san-miguel/bathrooms/bathroom-05.jpg",
+];
+const matrimonialBanoCompartidoSanMiguel = [
+  "/images/san-miguel/rooms/matrimonial-03.jpg",
+  "/images/san-miguel/bathrooms/bathroom-01.jpg",
+  "/images/san-miguel/bathrooms/bathroom-02.jpg",
+  "/images/san-miguel/bathrooms/bathroom-03.jpg",
+];
+const quintupleSanMiguel = [
+  "/images/san-miguel/rooms/quintuple-01.jpg",
+  "/images/san-miguel/bathrooms/bathroom-01.jpg",
+  "/images/san-miguel/bathrooms/bathroom-02.jpg",
+];

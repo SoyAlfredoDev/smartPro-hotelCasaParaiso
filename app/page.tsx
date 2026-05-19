@@ -2,9 +2,6 @@ import Navbar from "@/components/NavBar";
 import HeroSection from "@/section/HeroSection";
 import LocationsSection from "@/section/LocationsSection";
 import FeaturedStaysSection from "@/section/FeaturedStaysSection";
-import ExperiencesSection from "@/section/ExperiencesSection";
-import VideoShowcaseSection from "@/section/VideoShowcaseSection";
-import AdditionalServicesSection from "@/section/AdditionalServicesSection";
 import EventsSection from "@/section/EventsSection";
 import RestaurantsSection from "@/section/RestaurantsSection";
 import BookingFormSection from "@/section/BookingFormSection";
@@ -43,12 +40,8 @@ export default function Home() {
       <Navbar />
       <HeroSection />
       <LocationsSection />
-      <VideoShowcaseSection />
       <RestaurantsSection />
       <FeaturedStaysSection />
-      <ExperiencesSection />
-
-      <AdditionalServicesSection />
       <EventsSection />
       <BookingFormSection />
       <Footer />
