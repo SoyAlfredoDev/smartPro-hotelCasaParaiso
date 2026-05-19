@@ -46,7 +46,11 @@ export default [
     ],
     phone: "",
     email: "",
-    images: ["/images/logo-hotel-casa-paraiso.png"],
+    images: [
+      "/images/san-miguel/rooms/room-02.jpg",
+      "/images/san-miguel/rooms/room-01.jpg",
+      "/images/san-miguel/restaurants/restaurant-03.jpg",
+    ],
     accent: "#2f5d50",
     places: [
       {

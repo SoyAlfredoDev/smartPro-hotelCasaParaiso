@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { motion, Variants } from "framer-motion";
+import { motion, Variants, AnimatePresence } from "framer-motion";
 import {
   Users,
   Coffee,
@@ -70,6 +70,23 @@ const headerVariants: Variants = {
   },
 };
 
+const sliderVariants = {
+  enter: (direction: number) => ({
+    x: direction > 0 ? 40 : -40,
+    opacity: 0,
+  }),
+  center: {
+    zIndex: 1,
+    x: 0,
+    opacity: 1,
+  },
+  exit: (direction: number) => ({
+    zIndex: 0,
+    x: direction < 0 ? 40 : -40,
+    opacity: 0,
+  }),
+};
+
 interface Room {
   id: string;
   name: string;
@@ -82,19 +99,244 @@ interface Room {
   amenities: string[];
 }
 
+/* ── Componente de Tarjeta Individual ── */
+function RoomCard({ room }: { room: Room }) {
+  const [currentImg, setCurrentImg] = useState(0);
+  const [direction, setDirection] = useState(0);
+
+  const hasMultipleImages = room.images && room.images.length > 1;
+
+  const paginate = (newDirection: number) => {
+    setDirection(newDirection);
+    setCurrentImg((prev) => {
+      let nextIndex = prev + newDirection;
+      if (nextIndex < 0) nextIndex = room.images.length - 1;
+      if (nextIndex >= room.images.length) nextIndex = 0;
+      return nextIndex;
+    });
+  };
+
+  return (
+    <motion.article
+      variants={cardVariants}
+      whileHover={{ y: -8, transition: { duration: 0.4 } }}
+      className="group flex flex-col overflow-hidden rounded-[1.75rem] border border-white/[0.08] bg-white/[0.06] backdrop-blur-xl transition-all duration-500 hover:border-white/[0.15] hover:bg-white/[0.1] hover:shadow-[0_20px_60px_rgba(0,0,0,0.3)]"
+    >
+      {/* Container de Imagen */}
+      <div className="relative h-[280px] overflow-hidden">
+        <AnimatePresence initial={false} custom={direction}>
+          <motion.div
+            key={currentImg}
+            custom={direction}
+            variants={sliderVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{
+              x: { type: "spring", stiffness: 300, damping: 30 },
+              opacity: { duration: 0.3 },
+            }}
+            className="absolute inset-0 h-full w-full"
+          >
+            <Image
+              src={
+                room.images[currentImg] ||
+                "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80"
+              }
+              alt={room.name}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="object-cover transition-transform duration-[1s] ease-out group-hover:scale-105"
+            />
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Capa de gradiente cinematográfico */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#1e3f36] via-[#1e3f36]/20 to-transparent opacity-90 z-10 pointer-events-none" />
+
+        {/* Tag flotante superior */}
+        <div className="absolute left-4 top-4 z-20">
+          <span className="inline-flex items-center gap-1 rounded-lg border border-white/15 bg-white/10 px-3 py-1 font-inter text-[10px] font-bold uppercase tracking-widest text-white backdrop-blur-md">
+            {room.category}
+          </span>
+        </div>
+
+        {/* Etiqueta de precio flotante inferior derecha */}
+        <div className="absolute bottom-4 right-4 z-20">
+          <div className="rounded-xl border border-[#c8a97e]/30 bg-[#c8a97e]/15 px-3.5 py-2 backdrop-blur-md">
+            <span className="block font-inter text-[18px] font-bold text-[#c8a97e]">
+              {room.price}
+            </span>
+            <span className="block -mt-0.5 font-inter text-[9px] font-medium tracking-wider uppercase text-[#c8a97e]/70">
+              por noche
+            </span>
+          </div>
+        </div>
+
+        {/* Flechas de Navegación del Carrusel */}
+        {hasMultipleImages && (
+          <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 z-30 flex justify-between px-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                paginate(-1);
+              }}
+              className="pointer-events-auto flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-black/30 text-white backdrop-blur-md transition-all duration-300 hover:bg-white hover:text-[#1e3f36] active:scale-90"
+              aria-label="Imagen anterior"
+            >
+              <svg
+                className="h-3.5 w-3.5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2.5}
+                  d="M15 19l-7-7 7-7"
+                />
+              </svg>
+            </button>
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                paginate(1);
+              }}
+              className="pointer-events-auto flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-black/30 text-white backdrop-blur-md transition-all duration-300 hover:bg-white hover:text-[#1e3f36] active:scale-90"
+              aria-label="Siguiente imagen"
+            >
+              <svg
+                className="h-3.5 w-3.5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2.5}
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </button>
+          </div>
+        )}
+
+        {/* Indicadores de posición de imagen (Puntos discretos en hover) */}
+        {hasMultipleImages && (
+          <div className="absolute bottom-4 left-4 z-20 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            {room.images.map((_, idx) => (
+              <span
+                key={idx}
+                className={`h-1 rounded-full transition-all duration-300 ${
+                  idx === currentImg ? "w-4 bg-white" : "w-1 bg-white/40"
+                }`}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Contenido de la Tarjeta */}
+      <div className="flex flex-1 flex-col p-6">
+        <h3 className="font-chillax text-xl font-bold text-white transition-colors duration-300 group-hover:text-[#c8a97e]">
+          {room.name}
+        </h3>
+
+        {/* Detalles de la habitación */}
+        <div className="mt-4 space-y-2.5">
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-6 w-6 items-center justify-center rounded-md bg-white/[0.08]">
+              <Users className="h-3 w-3 text-[#c8a97e]" />
+            </div>
+            <span className="font-inter text-[13px] text-white/60">
+              Capacidad:{" "}
+              <strong className="text-white/90">{room.capacity}</strong>
+            </span>
+          </div>
+
+          <div className="flex items-start gap-2.5">
+            <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-white/[0.08]">
+              <svg
+                className="h-3 w-3 text-[#c8a97e]"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+                />
+              </svg>
+            </div>
+            <span className="font-inter text-[13px] leading-snug text-white/60">
+              Incluye:{" "}
+              <strong className="text-white/90">{room.description}</strong>
+            </span>
+          </div>
+        </div>
+
+        {/* Amenidades */}
+        <div className="mt-5 flex flex-wrap gap-1.5">
+          {room.amenities.map((amenity, index) => (
+            <span
+              key={index}
+              className="group/amenity inline-flex items-center gap-1.5 rounded-lg border border-white/[0.06] bg-white/[0.04] px-2.5 py-1 font-inter text-[10px] font-medium text-white/50 transition-all duration-300 hover:border-[#c8a97e]/20 hover:bg-[#c8a97e]/8 hover:text-[#c8a97e]"
+            >
+              <span className="transition-colors group-hover/amenity:text-[#c8a97e]">
+                {getAmenityIcon(amenity)}
+              </span>
+              {amenity}
+            </span>
+          ))}
+        </div>
+
+        {/* Separador & Acciones */}
+        <div className="mt-auto pt-6">
+          <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+          <div className="mt-4 flex items-center justify-between">
+            <Link
+              href={`#reservar-${room.name.toLowerCase().replace(/ /g, "-")}`}
+              className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-white px-5 font-inter text-[12px] font-bold text-[#1e3f36] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(255,255,255,0.15)] active:scale-95"
+            >
+              Reservar
+              <ArrowRight className="h-3 w-3" />
+            </Link>
+
+            <Link
+              href="#contacto"
+              className="group/link flex items-center gap-1.5 font-inter text-[12px] font-semibold text-white/40 transition-colors duration-300 hover:text-[#c8a97e]"
+            >
+              Detalles
+              <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover/link:translate-x-1" />
+            </Link>
+          </div>
+        </div>
+      </div>
+    </motion.article>
+  );
+}
+
+/* ── Componente Principal de la Sección ── */
 export default function FeaturedStaysSection() {
   const [rooms, setRooms] = useState<Room[]>([]);
+
   useEffect(() => {
     getRooms().then((data) => setRooms(data));
   }, []);
+
   return (
     <section
       id="habitaciones"
       className="relative overflow-hidden bg-[#1e3f36] py-20 sm:py-24 lg:py-32"
     >
-      {/* Background texture & glow */}
+      {/* Textura y resplandores decorativos de fondo */}
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-        {/* Large gold glow top-right */}
         <motion.div
           animate={{
             scale: [1, 1.25, 1],
@@ -103,7 +345,6 @@ export default function FeaturedStaysSection() {
           transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
           className="absolute -right-[15%] -top-[10%] h-[700px] w-[700px] rounded-full bg-[#c8a97e] blur-[180px]"
         />
-        {/* Green glow bottom-left */}
         <motion.div
           animate={{
             scale: [1, 1.3, 1],
@@ -117,7 +358,6 @@ export default function FeaturedStaysSection() {
           }}
           className="absolute -bottom-[20%] -left-[10%] h-[600px] w-[600px] rounded-full bg-[#8fa89e] blur-[150px]"
         />
-        {/* Subtle noise texture overlay */}
         <div
           className="absolute inset-0 opacity-[0.03]"
           style={{
@@ -127,7 +367,7 @@ export default function FeaturedStaysSection() {
       </div>
 
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Header – elegant white on dark green */}
+        {/* Encabezado Editorial */}
         <motion.div
           variants={headerVariants}
           initial="hidden"
@@ -169,7 +409,7 @@ export default function FeaturedStaysSection() {
           </Link>
         </motion.div>
 
-        {/* Cards Grid – glassmorphism on dark */}
+        {/* Grilla de Tarjetas */}
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -178,125 +418,7 @@ export default function FeaturedStaysSection() {
           className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3"
         >
           {rooms.map((room) => (
-            <motion.article
-              key={room.id}
-              variants={cardVariants}
-              whileHover={{ y: -8, transition: { duration: 0.4 } }}
-              className="group flex flex-col overflow-hidden rounded-[1.75rem] border border-white/[0.08] bg-white/[0.06] backdrop-blur-xl transition-all duration-500 hover:border-white/[0.15] hover:bg-white/[0.1] hover:shadow-[0_20px_60px_rgba(0,0,0,0.3)]"
-            >
-              {/* Image Container */}
-              <div className="relative h-[280px] overflow-hidden">
-                <Image
-                  src={room.images[0]}
-                  alt={room.name}
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  className="object-cover transition-transform duration-[1s] ease-out group-hover:scale-110"
-                />
-                {/* Cinematic overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#1e3f36] via-[#1e3f36]/20 to-transparent opacity-90" />
-
-                {/* Floating tag */}
-                <div className="absolute left-4 top-4 z-20">
-                  <span className="inline-flex items-center gap-1 rounded-lg border border-white/15 bg-white/10 px-3 py-1 font-inter text-[10px] font-bold uppercase tracking-widest text-white backdrop-blur-md">
-                    {room.category}
-                  </span>
-                </div>
-
-                {/* Price tag floating bottom-right */}
-                <div className="absolute bottom-4 right-4 z-20">
-                  <div className="rounded-xl border border-[#c8a97e]/30 bg-[#c8a97e]/15 px-3.5 py-2 backdrop-blur-md">
-                    <span className="block font-inter text-[18px] font-bold text-[#c8a97e]">
-                      {room.price}
-                    </span>
-                    <span className="block -mt-0.5 font-inter text-[9px] font-medium tracking-wider uppercase text-[#c8a97e]/70">
-                      por noche
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Content */}
-              <div className="flex flex-1 flex-col p-6">
-                <h3 className="font-chillax text-xl font-bold text-white transition-colors duration-300 group-hover:text-[#c8a97e]">
-                  {room.name}
-                </h3>
-
-                {/* Room details */}
-                <div className="mt-4 space-y-2.5">
-                  <div className="flex items-center gap-2.5">
-                    <div className="flex h-6 w-6 items-center justify-center rounded-md bg-white/[0.08]">
-                      <Users className="h-3 w-3 text-[#c8a97e]" />
-                    </div>
-                    <span className="font-inter text-[13px] text-white/60">
-                      Capacidad:{" "}
-                      <strong className="text-white/90">{room.capacity}</strong>
-                    </span>
-                  </div>
-
-                  <div className="flex items-start gap-2.5">
-                    <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-white/[0.08]">
-                      <svg
-                        className="h-3 w-3 text-[#c8a97e]"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
-                        />
-                      </svg>
-                    </div>
-                    <span className="font-inter text-[13px] leading-snug text-white/60">
-                      Incluye:{" "}
-                      <strong className="text-white/90">
-                        {room.description}
-                      </strong>
-                    </span>
-                  </div>
-                </div>
-
-                {/* Amenities */}
-                <div className="mt-5 flex flex-wrap gap-1.5">
-                  {room.amenities.map((amenity, index) => (
-                    <span
-                      key={index}
-                      className="group/amenity inline-flex items-center gap-1.5 rounded-lg border border-white/[0.06] bg-white/[0.04] px-2.5 py-1 font-inter text-[10px] font-medium text-white/50 transition-all duration-300 hover:border-[#c8a97e]/20 hover:bg-[#c8a97e]/8 hover:text-[#c8a97e]"
-                    >
-                      <span className="transition-colors group-hover/amenity:text-[#c8a97e]">
-                        {getAmenityIcon(amenity)}
-                      </span>
-                      {amenity}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Divider & Actions */}
-                <div className="mt-auto pt-6">
-                  <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-                  <div className="mt-4 flex items-center justify-between">
-                    <Link
-                      href={`#reservar-${room.name.toLowerCase().replace(/ /g, "-")}`}
-                      className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-white px-5 font-inter text-[12px] font-bold text-[#1e3f36] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(255,255,255,0.15)] active:scale-95"
-                    >
-                      Reservar
-                      <ArrowRight className="h-3 w-3" />
-                    </Link>
-
-                    <Link
-                      href="#contacto"
-                      className="group/link flex items-center gap-1.5 font-inter text-[12px] font-semibold text-white/40 transition-colors duration-300 hover:text-[#c8a97e]"
-                    >
-                      Detalles
-                      <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover/link:translate-x-1" />
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </motion.article>
+            <RoomCard key={room.id} room={room} />
           ))}
         </motion.div>
       </div>

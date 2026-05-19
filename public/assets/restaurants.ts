@@ -32,8 +32,7 @@ export const restaurants = [
     subtitle: "Tapas y Vinos Premium",
     description:
       "Una selección única de cepas nacionales acompañada de las mejores tapas de Santiago.",
-    image:
-      "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?auto=format&fit=crop&w=800&q=80",
+    image: "/images/san-miguel/restaurants/restaurant-03.jpg",
     features: ["Bodega Privada", "Degustaciones", "Eventos"],
     icon: Wine,
     color: "#c8a97e",

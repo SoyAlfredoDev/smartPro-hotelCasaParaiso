@@ -119,7 +119,7 @@ function HotelCard({
             className="absolute inset-0"
           >
             <Image
-              src={hotel.images[0]}
+              src={hotel.images[currentImg]}
               alt={`Vista de ${hotel.id}`}
               fill
               sizes="(max-width: 1024px) 100vw, 50vw"
