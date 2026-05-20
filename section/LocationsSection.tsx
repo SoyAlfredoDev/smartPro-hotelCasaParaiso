@@ -3,8 +3,8 @@
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion, Variants } from "framer-motion";
-import { Play, Pause, Volume2, VolumeX } from "lucide-react";
+import { motion, Variants, AnimatePresence } from "framer-motion";
+import { Play, Pause, Volume2, VolumeX, X } from "lucide-react";
 import hotels from "@/public/assets/hotels";
 
 /* ── Variants ── */
@@ -55,8 +55,9 @@ interface HotelCardProps {
 }
 
 function HotelCard({ hotel, index }: HotelCardProps) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
+  const [isMuted, setIsMuted] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [buffered, setBuffered] = useState(0);
@@ -64,7 +65,22 @@ function HotelCard({ hotel, index }: HotelCardProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const isReversed = index % 2 !== 0;
 
-  // Sincronizar estados nativos del video
+  // Escuchar teclado para cerrar con ESC
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeModal();
+    };
+    if (isModalOpen) {
+      window.addEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "hidden"; // Bloquear scroll de fondo
+    }
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "unset";
+    };
+  }, [isModalOpen]);
+
+  // Sincronizar eventos nativos una vez abierto el video en el modal
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -82,12 +98,33 @@ function HotelCard({ hotel, index }: HotelCardProps) {
     video.addEventListener("durationchange", handleDurationChange);
     video.addEventListener("progress", handleProgress);
 
+    // Auto-reproducción al abrir modal
+    video
+      .play()
+      .then(() => setIsPlaying(true))
+      .catch(() => setIsPlaying(false));
+
     return () => {
       video.removeEventListener("timeupdate", handleTimeUpdate);
       video.removeEventListener("durationchange", handleDurationChange);
       video.removeEventListener("progress", handleProgress);
     };
-  }, []);
+  }, [isModalOpen]);
+
+  const openModal = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    if (videoRef.current) {
+      videoRef.current.pause();
+    }
+    setIsPlaying(false);
+    setIsModalOpen(false);
+    setCurrentTime(0);
+    setBuffered(0);
+  };
 
   const togglePlay = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -99,15 +136,8 @@ function HotelCard({ hotel, index }: HotelCardProps) {
     } else {
       videoRef.current
         .play()
-        .then(() => {
-          setIsPlaying(true);
-        })
-        .catch((error) => {
-          console.error(
-            "Error al intentar reproducir el video en este dispositivo:",
-            error,
-          );
-        });
+        .then(() => setIsPlaying(true))
+        .catch((error) => console.error("Error al reproducir:", error));
     }
   };
 
@@ -133,208 +163,252 @@ function HotelCard({ hotel, index }: HotelCardProps) {
   };
 
   return (
-    <motion.article
-      variants={cardRevealVariants}
-      className={`group grid grid-cols-1 gap-0 overflow-hidden rounded-[2rem] bg-white shadow-[0_8px_40px_rgba(0,0,0,0.06)] transition-shadow duration-700 hover:shadow-[0_20px_60px_rgba(47,93,80,0.12)] lg:grid-cols-2 shadow-lg  ${
-        isReversed ? "lg:direction-rtl" : ""
-      }`}
-      style={{ perspective: "1200px" }}
-    >
-      {/* Video Side */}
-      <div
-        className={`relative h-[340px] overflow-hidden bg-black lg:h-auto lg:min-h-[480px] ${
-          isReversed ? "lg:order-2" : "lg:order-1"
+    <>
+      <motion.article
+        variants={cardRevealVariants}
+        className={`group grid grid-cols-1 gap-0 overflow-hidden rounded-[2rem] bg-white shadow-[0_8px_40px_rgba(0,0,0,0.06)] transition-shadow duration-700 hover:shadow-[0_20px_60px_rgba(47,93,80,0.12)] lg:grid-cols-2 shadow-lg ${
+          isReversed ? "lg:direction-rtl" : ""
         }`}
+        style={{ perspective: "1200px" }}
       >
-        <video
-          ref={videoRef}
-          src={hotel.video}
-          poster={hotel.images?.[0] || "/images/republica/hotel/lobby-02.jpg"}
-          loop
-          muted={isMuted}
-          playsInline // Atributo crítico para evitar que iOS abra el reproductor nativo en pantalla completa
-          className="h-full w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.01]"
-          onPlay={() => setIsPlaying(true)}
-          onPause={() => setIsPlaying(false)}
-        />
+        {/* Thumbnail Preview Side */}
+        <div
+          onClick={openModal}
+          className={`relative h-[340px] overflow-hidden bg-black lg:h-auto lg:min-h-[480px] cursor-pointer ${
+            isReversed ? "lg:order-2" : "lg:order-1"
+          }`}
+        >
+          <Image
+            src={hotel.images?.[0] || "/images/republica/hotel/lobby-02.jpg"}
+            alt={`Miniatura de video de ${hotel.id}`}
+            fill
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            className="object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-105"
+            priority={index === 0}
+          />
 
-        {/* Cinematic gradient overlay */}
-        <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-        <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-r from-black/20 to-transparent" />
+          {/* Cinematic overlays */}
+          <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+          <div className="absolute inset-0 z-10 bg-black/10 group-hover:bg-black/30 transition-colors duration-500" />
 
-        {/* Custom Central Play Button Overlay ─ Ajustado para verse siempre en móviles */}
-        <div className="absolute inset-0 z-20 flex items-center justify-center opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-500 pb-14 md:pb-12">
-          <button
-            onClick={togglePlay}
-            className="flex h-14 w-14 md:h-16 md:w-16 items-center justify-center rounded-full border border-white/30 bg-black/40 md:bg-white/20 text-white backdrop-blur-md transition-all duration-300 hover:bg-white hover:text-[#2f5d50] hover:scale-105 active:scale-95 shadow-xl cursor-pointer"
-            aria-label={isPlaying ? "Pausar video" : "Reproducir video"}
-          >
-            {isPlaying ? (
-              <Pause size={22} fill="currentColor" />
-            ) : (
-              <Play size={22} fill="currentColor" className="ml-1" />
-            )}
-          </button>
-        </div>
-
-        {/* Control Bar ─ Visible por defecto en móviles al no existir hover */}
-        <div className="absolute bottom-0 inset-x-0 z-30 p-4 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-500 flex flex-col gap-2">
-          {/* Timeline and Buffer Tracker ─ Mayor área interactiva para el touch de los dedos */}
-          <div className="relative w-full flex items-center group/timeline h-4 md:h-2">
-            {/* Fake Buffer line */}
-            <div
-              className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-white/20 rounded-full pointer-events-none"
-              style={{ width: `${buffered}%` }}
-            />
-            {/* Fake Active line */}
-            <div
-              className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-[#c8a97e] rounded-full pointer-events-none z-10"
-              style={{
-                width: `${duration ? (currentTime / duration) * 100 : 0}%`,
-              }}
-            />
-            {/* Real Input Ranger */}
-            <input
-              type="range"
-              min={0}
-              max={duration || 0}
-              value={currentTime}
-              onChange={handleScrub}
-              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"
-            />
-            <div className="w-full bg-white/10 h-1 rounded-full pointer-events-none" />
-          </div>
-
-          {/* Controls Metadata Row */}
-          <div className="flex items-center justify-between text-white font-inter text-xs">
-            <div className="flex items-center gap-4 md:gap-3">
-              <button
-                onClick={togglePlay}
-                className="p-1 hover:text-[#c8a97e] transition-colors cursor-pointer"
-              >
-                {isPlaying ? (
-                  <Pause size={14} fill="currentColor" />
-                ) : (
-                  <Play size={14} fill="currentColor" />
-                )}
-              </button>
-              <button
-                onClick={toggleMute}
-                className="p-1 hover:text-[#c8a97e] transition-colors cursor-pointer"
-              >
-                {isMuted ? <VolumeX size={14} /> : <Volume2 size={14} />}
-              </button>
-              <span className="tracking-wider select-none text-[11px] text-gray-300 ml-1">
-                {formatTime(currentTime)} / {formatTime(duration)}
-              </span>
+          {/* Floating Central Play Icon */}
+          <div className="absolute inset-0 z-20 flex items-center justify-center">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full border border-white/40 bg-black/40 text-white backdrop-blur-md shadow-2xl transition-all duration-500 group-hover:scale-110 group-hover:bg-[#c8a97e] group-hover:border-[#c8a97e] group-hover:text-white">
+              <Play size={26} fill="currentColor" className="ml-1" />
             </div>
           </div>
-        </div>
 
-        {/* Floating Location Badge */}
-        <motion.div
-          initial={{ y: 10, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-          className="absolute left-4 top-4 z-20 flex items-center gap-2 rounded-xl border border-white/20 bg-white/15 px-3.5 py-2 backdrop-blur-xl"
-        >
-          <div className="flex h-5 w-5 items-center justify-center rounded-full bg-white/25">
-            <svg
-              className="h-3 w-3 text-white"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-              />
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-              />
-            </svg>
-          </div>
-          <span className="font-inter text-[11px] font-semibold tracking-wide text-white">
-            {hotel.address}
-          </span>
-        </motion.div>
-      </div>
-
-      {/* Content Side */}
-      <div
-        className={`relative flex flex-col justify-center p-8 sm:p-10 lg:p-12 ${
-          isReversed ? "lg:order-1" : "lg:order-2"
-        }`}
-      >
-        {/* Decorative accent corner */}
-        <div
-          className="absolute right-0 top-0 h-32 w-32 opacity-[0.04]"
-          style={{
-            background: `radial-gradient(circle at top right, ${hotel.accent}, transparent 70%)`,
-          }}
-        />
-
-        {/* Number index */}
-        <span className="font-chillax text-[80px] font-bold leading-none text-[#2f5d50]/80 select-none">
-          0{index + 1}
-        </span>
-
-        <h3 className="mt-2 font-chillax text-3xl font-bold tracking-tight text-[#2b2b2b] transition-colors duration-500 group-hover:text-[#2f5d50] sm:text-4xl">
-          {hotel.name}
-        </h3>
-
-        {/* Gold decorative line */}
-        <motion.div
-          variants={lineVariants}
-          className="mt-4 h-[2px] w-12 origin-left rounded-full bg-gradient-to-r from-[#c8a97e] to-[#c8a97e]/30"
-        />
-
-        <p className="mt-5 font-inter text-[15px] leading-[1.8] text-[#6f6f6f]">
-          {hotel.description}
-        </p>
-
-        {/* Amenities as elegant inline list */}
-        <div className="mt-6 flex flex-wrap gap-3">
-          {hotel.amenities.map((amenity, i) => (
-            <span
-              key={i}
-              className="inline-flex items-center gap-2 rounded-full border border-[#e5e5e5] bg-[#f5f5f3]/80 px-3.5 py-1.5 font-inter text-[11px] font-semibold uppercase tracking-wider text-[#2f5d50] transition-all duration-300 hover:border-[#c8a97e]/40 hover:bg-[#c8a97e]/8"
-            >
-              <span className="h-1 w-1 rounded-full bg-[#c8a97e]" />
-              {amenity.name}
+          {/* Floating Location Badge */}
+          <div className="absolute left-4 top-4 z-20 flex items-center gap-2 rounded-xl border border-white/20 bg-white/15 px-3.5 py-2 backdrop-blur-xl">
+            <div className="flex h-5 w-5 items-center justify-center rounded-full bg-white/25">
+              <svg
+                className="h-3 w-3 text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                />
+              </svg>
+            </div>
+            <span className="font-inter text-[11px] font-semibold tracking-wide text-white">
+              {hotel.address}
             </span>
-          ))}
+          </div>
         </div>
 
-        {/* Actions */}
-        <div className="mt-8 flex justify-center items-center gap-4 pt-2">
-          <Link
-            href={`/hotel/${hotel.id}`}
-            className="btn-primary gap-2 rounded-xl px-7 py-3 font-inter text-[13px]"
-          >
-            Ver hotel
-            <svg
-              className="h-3.5 w-3.5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+        {/* Content Side */}
+        <div
+          className={`relative flex flex-col justify-center p-8 sm:p-10 lg:p-12 ${
+            isReversed ? "lg:order-1" : "lg:order-2"
+          }`}
+        >
+          <div
+            className="absolute right-0 top-0 h-32 w-32 opacity-[0.04]"
+            style={{
+              background: `radial-gradient(circle at top right, ${hotel.accent}, transparent 70%)`,
+            }}
+          />
+
+          <span className="font-chillax text-[80px] font-bold leading-none text-[#2f5d50]/80 select-none">
+            0{index + 1}
+          </span>
+
+          <h3 className="mt-2 font-chillax text-3xl font-bold tracking-tight text-[#2b2b2b] transition-colors duration-500 group-hover:text-[#2f5d50] sm:text-4xl">
+            {hotel.name}
+          </h3>
+
+          <motion.div
+            variants={lineVariants}
+            className="mt-4 h-[2px] w-12 origin-left rounded-full bg-gradient-to-r from-[#c8a97e] to-[#c8a97e]/30"
+          />
+
+          <p className="mt-5 font-inter text-[15px] leading-[1.8] text-[#6f6f6f]">
+            {hotel.description}
+          </p>
+
+          <div className="mt-6 flex flex-wrap gap-3">
+            {hotel.amenities.map((amenity, i) => (
+              <span
+                key={i}
+                className="inline-flex items-center gap-2 rounded-full border border-[#e5e5e5] bg-[#f5f5f3]/80 px-3.5 py-1.5 font-inter text-[11px] font-semibold uppercase tracking-wider text-[#2f5d50] transition-all duration-300 hover:border-[#c8a97e]/40 hover:bg-[#c8a97e]/8"
+              >
+                <span className="h-1 w-1 rounded-full bg-[#c8a97e]" />
+                {amenity.name}
+              </span>
+            ))}
+          </div>
+
+          <div className="mt-8 flex justify-center items-center gap-4 pt-2">
+            <Link
+              href={`/hotel/${hotel.id}`}
+              className="btn-primary gap-2 rounded-xl px-7 py-3 font-inter text-[13px]"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2.5}
-                d="M14 5l7 7m0 0l-7 7m7-7H3"
-              />
-            </svg>
-          </Link>
+              Ver hotel
+              <svg
+                className="h-3.5 w-3.5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2.5}
+                  d="M14 5l7 7m0 0l-7 7m7-7H3"
+                />
+              </svg>
+            </Link>
+          </div>
         </div>
-      </div>
-    </motion.article>
+      </motion.article>
+
+      {/* ── IMMERSIVE VIDEO LIGHTBOX MODAL ── */}
+      <AnimatePresence>
+        {isModalOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={closeModal}
+            className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 p-4 backdrop-blur-lg"
+          >
+            {/* Close Top Button */}
+            <button
+              onClick={closeModal}
+              className="absolute right-4 top-4 z-[10000] p-3 text-white/70 hover:text-white transition-colors bg-white/10 hover:bg-white/20 rounded-full backdrop-blur-md cursor-pointer"
+              aria-label="Cerrar modal"
+            >
+              <X size={24} />
+            </button>
+
+            {/* Modal Box wrapper */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{
+                opacity: 1,
+                scale: 1,
+                y: 0,
+                transition: { type: "spring", damping: 25, stiffness: 300 },
+              }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              onClick={(e) => e.stopPropagation()} // Evitar cierre interno
+              className="group/modal relative w-full max-w-5xl aspect-video overflow-hidden rounded-2xl bg-black shadow-2xl border border-white/10"
+            >
+              <video
+                ref={videoRef}
+                src={
+                  hotel.video || "https://www.w3schools.com/html/mov_bbb.mp4"
+                }
+                loop
+                muted={isMuted}
+                playsInline
+                onClick={togglePlay}
+                className="h-full w-full object-contain cursor-pointer"
+              />
+
+              {/* Central Floating Overlay Status Indicator */}
+              <div
+                onClick={togglePlay}
+                className="absolute inset-0 flex items-center justify-center bg-transparent opacity-0 group-hover/modal:opacity-100 transition-opacity duration-300 pointer-events-none pb-12"
+              >
+                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-black/50 border border-white/20 text-white pointer-events-auto cursor-pointer shadow-lg hover:scale-105 transition-transform">
+                  {isPlaying ? (
+                    <Pause size={20} fill="currentColor" />
+                  ) : (
+                    <Play size={20} fill="currentColor" className="ml-0.5" />
+                  )}
+                </div>
+              </div>
+
+              {/* Responsively Optimized Fixed Control Bar */}
+              <div className="absolute bottom-0 inset-x-0 z-30 p-4 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col gap-2 opacity-100 md:opacity-0 md:group-hover/modal:opacity-100 transition-opacity duration-400">
+                {/* Timeline Progress Slider */}
+                <div className="relative w-full flex items-center h-4 md:h-2">
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-white/20 rounded-full pointer-events-none w-full" />
+                  <div
+                    className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-white/40 rounded-full pointer-events-none"
+                    style={{ width: `${buffered}%` }}
+                  />
+                  <div
+                    className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-[#c8a97e] rounded-full pointer-events-none z-10"
+                    style={{
+                      width: `${duration ? (currentTime / duration) * 100 : 0}%`,
+                    }}
+                  />
+                  <input
+                    type="range"
+                    min={0}
+                    max={duration || 0}
+                    value={currentTime}
+                    onChange={handleScrub}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"
+                  />
+                </div>
+
+                {/* Meta Controls controls */}
+                <div className="flex items-center justify-between text-white font-inter text-xs">
+                  <div className="flex items-center gap-4">
+                    <button
+                      onClick={togglePlay}
+                      className="p-1 hover:text-[#c8a97e] transition-colors cursor-pointer"
+                    >
+                      {isPlaying ? (
+                        <Pause size={14} fill="currentColor" />
+                      ) : (
+                        <Play size={14} fill="currentColor" />
+                      )}
+                    </button>
+                    <button
+                      onClick={toggleMute}
+                      className="p-1 hover:text-[#c8a97e] transition-colors cursor-pointer"
+                    >
+                      {isMuted ? <VolumeX size={14} /> : <Volume2 size={14} />}
+                    </button>
+                    <span className="tracking-wider select-none text-[11px] text-gray-300">
+                      {formatTime(currentTime)} / {formatTime(duration)}
+                    </span>
+                  </div>
+                  <span className="hidden sm:inline font-chillax text-[11px] uppercase tracking-widest text-[#c8a97e]/80">
+                    {hotel.name}
+                  </span>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
 
