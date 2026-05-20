@@ -103,7 +103,10 @@ function HotelCard({ hotel, index }: HotelCardProps) {
           setIsPlaying(true);
         })
         .catch((error) => {
-          console.error("Error al intentar jugar el video:", error);
+          console.error(
+            "Error al intentar reproducir el video en este dispositivo:",
+            error,
+          );
         });
     }
   };
@@ -145,39 +148,39 @@ function HotelCard({ hotel, index }: HotelCardProps) {
       >
         <video
           ref={videoRef}
-          src={hotel.video || "https://www.w3schools.com/html/mov_bbb.mp4"}
+          src={hotel.video}
           poster={hotel.images?.[0] || "/images/republica/hotel/lobby-02.jpg"}
           loop
           muted={isMuted}
-          playsInline
+          playsInline // Atributo crítico para evitar que iOS abra el reproductor nativo en pantalla completa
           className="h-full w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-[1.01]"
           onPlay={() => setIsPlaying(true)}
           onPause={() => setIsPlaying(false)}
         />
 
         {/* Cinematic gradient overlay */}
-        <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+        <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
         <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-r from-black/20 to-transparent" />
 
-        {/* Custom Central Play Button Overlay */}
-        <div className="absolute inset-0 z-20 flex items-center justify-center opacity-0 transition-opacity duration-500 group-hover:opacity-100 pb-12">
+        {/* Custom Central Play Button Overlay ─ Ajustado para verse siempre en móviles */}
+        <div className="absolute inset-0 z-20 flex items-center justify-center opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-500 pb-14 md:pb-12">
           <button
             onClick={togglePlay}
-            className="flex h-16 w-16 items-center justify-center rounded-full border border-white/30 bg-white/20 text-white backdrop-blur-md transition-all duration-300 hover:bg-white hover:text-[#2f5d50] hover:scale-105 active:scale-95 shadow-xl cursor-pointer"
+            className="flex h-14 w-14 md:h-16 md:w-16 items-center justify-center rounded-full border border-white/30 bg-black/40 md:bg-white/20 text-white backdrop-blur-md transition-all duration-300 hover:bg-white hover:text-[#2f5d50] hover:scale-105 active:scale-95 shadow-xl cursor-pointer"
             aria-label={isPlaying ? "Pausar video" : "Reproducir video"}
           >
             {isPlaying ? (
-              <Pause size={24} fill="currentColor" />
+              <Pause size={22} fill="currentColor" />
             ) : (
-              <Play size={24} fill="currentColor" className="ml-1" />
+              <Play size={22} fill="currentColor" className="ml-1" />
             )}
           </button>
         </div>
 
-        {/* Control Bar (Aatrasar, adelantar, volumen, carga) */}
-        <div className="absolute bottom-0 inset-x-0 z-30 p-4 bg-gradient-to-t from-black/80 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100 flex flex-col gap-2">
-          {/* Timeline and Buffer Tracker */}
-          <div className="relative w-full flex items-center group/timeline h-2">
+        {/* Control Bar ─ Visible por defecto en móviles al no existir hover */}
+        <div className="absolute bottom-0 inset-x-0 z-30 p-4 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-500 flex flex-col gap-2">
+          {/* Timeline and Buffer Tracker ─ Mayor área interactiva para el touch de los dedos */}
+          <div className="relative w-full flex items-center group/timeline h-4 md:h-2">
             {/* Fake Buffer line */}
             <div
               className="absolute left-0 top-1/2 -translate-y-1/2 h-1 bg-white/20 rounded-full pointer-events-none"
@@ -204,10 +207,10 @@ function HotelCard({ hotel, index }: HotelCardProps) {
 
           {/* Controls Metadata Row */}
           <div className="flex items-center justify-between text-white font-inter text-xs">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4 md:gap-3">
               <button
                 onClick={togglePlay}
-                className="hover:text-[#c8a97e] transition-colors cursor-pointer"
+                className="p-1 hover:text-[#c8a97e] transition-colors cursor-pointer"
               >
                 {isPlaying ? (
                   <Pause size={14} fill="currentColor" />
@@ -217,11 +220,11 @@ function HotelCard({ hotel, index }: HotelCardProps) {
               </button>
               <button
                 onClick={toggleMute}
-                className="hover:text-[#c8a97e] transition-colors cursor-pointer"
+                className="p-1 hover:text-[#c8a97e] transition-colors cursor-pointer"
               >
                 {isMuted ? <VolumeX size={14} /> : <Volume2 size={14} />}
               </button>
-              <span className="tracking-wider select-none text-[11px] text-gray-300">
+              <span className="tracking-wider select-none text-[11px] text-gray-300 ml-1">
                 {formatTime(currentTime)} / {formatTime(duration)}
               </span>
             </div>

@@ -145,16 +145,16 @@ export default function RoomCard({ room }: { room: RoomProps }) {
           Disponible
         </div>
 
-        {/* Flechas de Navegación */}
+        {/* Flechas de Navegación (Corregidas para Mobile) */}
         {hasMultipleImages && (
-          <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 z-30 flex justify-between px-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+          <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 z-30 flex justify-between px-3 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
             <button
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 paginate(-1);
               }}
-              className="pointer-events-auto flex h-8 w-8 items-center justify-center rounded-full border border-default bg-white/90 text-primary shadow-sm backdrop-blur-sm transition-all duration-300 hover:bg-white hover:scale-105 active:scale-95 cursor-pointer"
+              className="pointer-events-auto flex h-9 w-9 md:h-8 md:w-8 items-center justify-center rounded-full border border-default bg-white/90 text-primary shadow-sm backdrop-blur-sm transition-all duration-300 hover:bg-white hover:scale-105 active:scale-95 cursor-pointer"
               aria-label="Imagen anterior"
             >
               <ChevronLeft size={16} />
@@ -165,7 +165,7 @@ export default function RoomCard({ room }: { room: RoomProps }) {
                 e.stopPropagation();
                 paginate(1);
               }}
-              className="pointer-events-auto flex h-8 w-8 items-center justify-center rounded-full border border-default bg-white/90 text-primary shadow-sm backdrop-blur-sm transition-all duration-300 hover:bg-white hover:scale-105 active:scale-95 cursor-pointer"
+              className="pointer-events-auto flex h-9 w-9 md:h-8 md:w-8 items-center justify-center rounded-full border border-default bg-white/90 text-primary shadow-sm backdrop-blur-sm transition-all duration-300 hover:bg-white hover:scale-105 active:scale-95 cursor-pointer"
               aria-label="Siguiente imagen"
             >
               <ChevronRight size={16} />
@@ -173,9 +173,9 @@ export default function RoomCard({ room }: { room: RoomProps }) {
           </div>
         )}
 
-        {/* Indicadores de posición de imagen en hover */}
+        {/* Indicadores de posición (Corregidos para Mobile) */}
         {hasMultipleImages && (
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex gap-1 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
             {room.images.map((_, idx) => (
               <span
                 key={idx}
