@@ -8,12 +8,12 @@ import { useState } from "react";
    Floating CTA · Premium · Responsive
    ───────────────────────────────────────────── */
 
-const WHATSAPP_NUMBER = "56935841793";
+const WHATSAPP_NUMBER = "56955103829";
 const DEFAULT_MESSAGE =
   "Hola, me gustaría obtener más información sobre las reservas en Hotel Casa Paraíso.";
 
 const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-  DEFAULT_MESSAGE
+  DEFAULT_MESSAGE,
 )}`;
 
 /* Transition curve matching the project design system */
@@ -55,8 +55,7 @@ export default function WhatsAppButton() {
             <span
               className="inline-flex items-center whitespace-nowrap rounded-xl px-4 py-2.5 font-inter text-[13px] font-medium tracking-wide text-white"
               style={{
-                background:
-                  "linear-gradient(135deg, #2f5d50 0%, #1e3f36 100%)",
+                background: "linear-gradient(135deg, #2f5d50 0%, #1e3f36 100%)",
                 boxShadow:
                   "0 8px 32px rgba(47, 93, 80, 0.3), 0 2px 8px rgba(0,0,0,0.1)",
               }}

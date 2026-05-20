@@ -46,8 +46,8 @@ export default function Footer() {
     address: "Avenida República #19, Santiago, RM, código postal 8320000",
     address2: "Salesiano #1130, San Miguel, RM, código postal 8900000",
     email: "contacto@hotelcasaparaiso.cl",
-    phone: "+56 9 3584 1793",
-    whatsapp: "56935841793",
+    phone: " +56 9 5510 3829",
+    whatsapp: "56955103829",
   };
 
   const currentYear = new Date().getFullYear();
