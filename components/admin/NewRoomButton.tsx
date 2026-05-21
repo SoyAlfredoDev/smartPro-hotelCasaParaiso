@@ -206,7 +206,6 @@ export default function NewRoomButton({
         amenities: [...prev.amenities, value],
       }));
     }
-    console.log(roomData.amenities);
   };
 
   const resetForm = () => {

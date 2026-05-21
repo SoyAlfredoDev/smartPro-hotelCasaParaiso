@@ -15,7 +15,6 @@ import VideoShowcaseSection from "@/section/VideoShowcaseSection";
 export default function HotelDetailPage() {
   const params = useParams();
   const hotel = hotels.find((h) => h.id === params.id);
-  console.log("params", params.id, hotel);
 
   return (
     <>
@@ -46,7 +45,10 @@ export default function HotelDetailPage() {
           {/* Decorative separator to soften transitions */}
           <div className="w-full h-px bg-gradient-to-r from-transparent via-[#e5e5e5] to-transparent opacity-50" />
         </div>
-        <VideoShowcaseSection url={hotel?.video} thumbnail={hotel?.images[0]} />
+        <VideoShowcaseSection
+          url={hotel?.video || ""}
+          thumbnail={hotel?.images?.[0] || ""}
+        />
         <LocationMapSection />
 
         <div className="w-full h-px bg-gradient-to-r from-transparent via-[#e5e5e5] to-transparent opacity-50" />

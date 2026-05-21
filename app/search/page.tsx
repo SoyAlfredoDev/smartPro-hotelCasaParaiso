@@ -49,8 +49,6 @@ function SearchResults() {
         return room.capacity >= totalPeople;
       });
 
-      console.log("filteredRoomsByCapacity", filteredRoomsByCapacity);
-
       setRoomsAvailable(filteredRoomsByCapacity);
       setTimeout(() => {
         setIsLoading(false);

@@ -10,16 +10,12 @@ export default function RoomsSelected() {
   const checkOut = useBookingStore((state) => state.checkOut);
   const peopleQuantity = useBookingStore((state) => state.peopleQuantity);
 
-  console.log("room", room);
-  console.log("nights", nights);
-  console.log("checkIn", checkIn);
-  console.log("checkOut", checkOut);
-  console.log("peopleQuantity", peopleQuantity);
-
   if (!room) {
     return (
       <section className="overflow-hidden rounded-2xl border border-default bg-surface shadow-soft p-6">
-        <p className="text-center text-text-secondary">No hay habitación seleccionada.</p>
+        <p className="text-center text-text-secondary">
+          No hay habitación seleccionada.
+        </p>
       </section>
     );
   }
@@ -66,8 +62,13 @@ export default function RoomsSelected() {
               <div className="flex flex-col leading-tight">
                 <span className="text-xs font-semibold uppercase">Fechas</span>
                 <span>
-                  {checkIn ? new Date(checkIn).toLocaleDateString("es-CL") : "-"} -{" "}
-                  {checkOut ? new Date(checkOut).toLocaleDateString("es-CL") : "-"}
+                  {checkIn
+                    ? new Date(checkIn).toLocaleDateString("es-CL")
+                    : "-"}{" "}
+                  -{" "}
+                  {checkOut
+                    ? new Date(checkOut).toLocaleDateString("es-CL")
+                    : "-"}
                 </span>
               </div>
             </div>

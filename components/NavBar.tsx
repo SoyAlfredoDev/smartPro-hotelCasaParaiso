@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { Menu, X, ArrowRight } from "lucide-react";
 import Image from "next/image";
+import { usePathname, useRouter } from "next/navigation";
 
 /* ───────────────────────────────────────────── */
 const navItems = [
@@ -12,14 +13,16 @@ const navItems = [
   { label: "Habitaciones", href: "#habitaciones" },
   { label: "Entorno", href: "#entorno" },
   { label: "Traslados", href: "#traslados" },
-  { label: "Solicitud Especiales", href: "#contacto" },
+  { label: "Solicitud Especiales", href: "#contact" },
 ];
 
 export default function Navbar() {
+  const pathname = usePathname();
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [hasScrolled, setHasScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState("#inicio");
+  const [activeSection, setActiveSection] = useState("#hero");
 
   const lastScrollY = useRef(0);
 
@@ -40,12 +43,17 @@ export default function Navbar() {
 
     // 👇 detectar top
     if (currentScrollY < 100) {
-      setActiveSection("#inicio");
+      setActiveSection("#hero");
     }
   }, []);
 
   /* ── Active section ── */
   useEffect(() => {
+    if (pathname !== "/") {
+      setActiveSection("");
+      return;
+    }
+
     const observers: IntersectionObserver[] = [];
 
     navItems.forEach((item) => {
@@ -67,7 +75,7 @@ export default function Navbar() {
     });
 
     return () => observers.forEach((obs) => obs.disconnect());
-  }, []);
+  }, [pathname]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -87,16 +95,20 @@ export default function Navbar() {
     e: React.MouseEvent<HTMLAnchorElement>,
     href: string,
   ) => {
-    e.preventDefault();
-    setIsOpen(false);
+    if (pathname === "/") {
+      e.preventDefault();
+      setIsOpen(false);
 
-    const target = document.querySelector(href);
-    if (!target) return;
+      const target = document.querySelector(href);
+      if (!target) return;
 
-    const navHeight = 80;
-    const y = target.getBoundingClientRect().top + window.scrollY - navHeight;
+      const navHeight = 80;
+      const y = target.getBoundingClientRect().top + window.scrollY - navHeight;
 
-    window.scrollTo({ top: y, behavior: "smooth" });
+      window.scrollTo({ top: y, behavior: "smooth" });
+    } else {
+      setIsOpen(false);
+    }
   };
 
   return (
@@ -128,9 +140,9 @@ export default function Navbar() {
             const isActive = activeSection === item.href;
 
             return (
-              <a
+              <Link
                 key={item.label}
-                href={item.href}
+                href={pathname === "/" ? item.href : `/${item.href}`}
                 onClick={(e) => scrollToSection(e, item.href)}
                 className={`relative rounded-lg px-4 py-2 font-inter text-[18px] font-medium transition-all duration-300 ${
                   isActive
@@ -147,7 +159,7 @@ export default function Navbar() {
                     isActive ? "scale-100 opacity-100" : "scale-0 opacity-0"
                   }`}
                 />
-              </a>
+              </Link>
             );
           })}
         </nav>
@@ -204,9 +216,9 @@ export default function Navbar() {
               const isActive = activeSection === item.href;
 
               return (
-                <a
+                <Link
                   key={item.label}
-                  href={item.href}
+                  href={pathname === "/" ? item.href : `/${item.href}`}
                   onClick={(e) => scrollToSection(e, item.href)}
                   className={`group flex items-center justify-between rounded-xl px-4 py-3.5 font-inter text-[15px] font-medium transition-all duration-300 ${
                     isActive
@@ -218,7 +230,7 @@ export default function Navbar() {
                   {isActive && (
                     <span className="h-1.5 w-1.5 rounded-full bg-[#c8a97e]" />
                   )}
-                </a>
+                </Link>
               );
             })}
           </nav>

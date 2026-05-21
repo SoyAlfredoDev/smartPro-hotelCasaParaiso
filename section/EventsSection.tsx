@@ -97,7 +97,7 @@ const bannerVariants: Variants = {
    ───────────────────────────────────────────── */
 export default function EventsSection() {
   const handleRequestQuote = () => {
-    const contactSection = document.getElementById("contacto");
+    const contactSection = document.getElementById("contact");
     if (contactSection) {
       contactSection.scrollIntoView({ behavior: "smooth" });
     }

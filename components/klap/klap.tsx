@@ -15,7 +15,6 @@ export default function KlapButton({ orderId }: KlapProps) {
   const { totalPrice } = useBookingStore();
 
   const handlePayment = async () => {
-    console.log("totalPrice", totalPrice);
     try {
       setIsLoading(true);
       const getOrderIdResponse = await fetch("/api/klap", {

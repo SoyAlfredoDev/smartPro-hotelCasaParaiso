@@ -5,17 +5,18 @@ import Image from "next/image";
 import { Mail, Phone, MapPin, ArrowUpRight, Heart } from "lucide-react";
 import { FaInstagram, FaFacebook, FaTiktok } from "react-icons/fa";
 import { motion, Variants } from "framer-motion";
+import { usePathname } from "next/navigation";
 
 const footerLinks = {
   alojamientos: [
     { label: "Habitaciones", href: "#habitaciones" },
     { label: "Ubicaciones", href: "#ubicaciones" },
-    { label: "Servicios", href: "#servicios" },
+    { label: "Servicios", href: "#traslados" },
   ],
   empresa: [
-    { label: "Nosotros", href: "#nosotros" },
-    { label: "Experiencias", href: "#experiencias" },
-    { label: "Contacto", href: "#contacto" },
+    { label: "Nosotros", href: "#hero" },
+    { label: "Experiencias", href: "#entorno" },
+    { label: "Contacto", href: "#contact" },
   ],
 };
 
@@ -40,6 +41,7 @@ const itemVariants: Variants = {
 };
 
 export default function Footer() {
+  const pathname = usePathname();
   const company = {
     rut: "77.010.418-1",
     name: "ATLANTIC GROUP SPA",
@@ -182,7 +184,7 @@ export default function Footer() {
               {footerLinks.alojamientos.map((item) => (
                 <li key={item.label}>
                   <Link
-                    href={item.href}
+                    href={pathname === "/" ? item.href : `/${item.href}`}
                     className="group/link flex items-center gap-1.5 font-inter text-[16px] text-white/80 transition-colors duration-300 hover:text-[#c8a97e]"
                   >
                     {item.label}
@@ -199,7 +201,7 @@ export default function Footer() {
               {footerLinks.empresa.map((item) => (
                 <li key={item.label}>
                   <Link
-                    href={item.href}
+                    href={pathname === "/" ? item.href : `/${item.href}`}
                     className="group/link flex items-center gap-1.5 font-inter text-[16px] text-white/80 transition-colors duration-300 hover:text-[#c8a97e]"
                   >
                     {item.label}

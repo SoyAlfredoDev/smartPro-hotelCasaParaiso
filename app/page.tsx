@@ -8,6 +8,8 @@ import BookingFormSection from "@/section/BookingFormSection";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import Script from "next/script";
+import ExperiencesSection from "@/section/ExperiencesSection";
+import AdditionalServicesSection from "@/section/AdditionalServicesSection";
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -42,6 +44,8 @@ export default function Home() {
       <LocationsSection />
       <RestaurantsSection />
       <FeaturedStaysSection />
+      <ExperiencesSection />
+      <AdditionalServicesSection />
       <EventsSection />
       <BookingFormSection />
       <Footer />

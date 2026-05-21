@@ -22,8 +22,6 @@ class ServiceClient {
       if (!documentNumber) {
         throw new Error("Numero de documento es requerido");
       }
-
-      
     } catch (error) {
       console.log(error);
     }
