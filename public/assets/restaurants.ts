@@ -8,7 +8,9 @@ export const restaurants = [
     subtitle: "Gastronomía Chilena de Autor",
     description:
       "Disfruta de una experiencia culinaria única con platos tradicionales reinventados con ingredientes locales en un ambiente natural.",
-    image: "/images/republica/restaurants/restaurant-05.jpg",
+    image: "/images/republica/restaurants/restaurant-01.jpg",
+    video:
+      "https://res.cloudinary.com/dtg53cua9/video/upload/v1779320806/restobar-republica_q6emp4.mp4",
     features: ["Terraza", "Cata de Vinos", "Música en vivo"],
     icon: Utensils,
     color: "#c8a97e",
@@ -21,6 +23,8 @@ export const restaurants = [
     description:
       "Pescados frescos y mariscos capturados diariamente con vistas privilegiadas.",
     image: "/images/republica/restaurants/restaurant-06.jpg",
+    video:
+      "https://res.cloudinary.com/dtg53cua9/video/upload/v1779321691/restaurant-republica_h0v23b.mp4",
     features: ["Vistas al Cerro", "Coctelería", "Cenas Románticas"],
     icon: GlassWater,
     color: "#8fa89e",
@@ -33,6 +37,8 @@ export const restaurants = [
     description:
       "Una selección única de cepas nacionales acompañada de las mejores tapas de Santiago.",
     image: "/images/san-miguel/restaurants/restaurant-03.jpg",
+    video:
+      "https://res.cloudinary.com/dtg53cua9/video/upload/v1779320300/restaurant-san-miguel_qgsc7w.mp4",
     features: ["Bodega Privada", "Degustaciones", "Eventos"],
     icon: Wine,
     color: "#c8a97e",

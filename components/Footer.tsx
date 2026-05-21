@@ -260,14 +260,31 @@ export default function Footer() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="mt-14 flex flex-col gap-4 border-t border-white/[0.06] pt-8 sm:flex-row sm:items-center sm:justify-between"
         >
-          <p className="flex items-center gap-1.5 font-inter text-[16px] text-white/80">
-            © {currentYear} {company.name}. Todos los derechos reservados.
-            <span className="hidden sm:inline">·</span>
-            <span className="hidden items-center gap-1 sm:inline-flex">
-              Hecho con <Heart className="h-3 w-3 text-[#c8a97e]/50" /> en
-              Santiago
+          <div>
+            <p className="flex items-center gap-1.5 font-inter text-[16px] text-white/80">
+              © {currentYear} {company.name}. Todos los derechos reservados.
+              <span className="hidden sm:inline">·</span>
+            </p>
+          </div>
+
+          <div className="flex items-center gap-1.5">
+            <span className=" items-center text-[16px] text-white/80">
+              creado por:
             </span>
-          </p>
+            <a
+              href="https://smartpro.cl"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Image
+                src="/images/logo-smartpro.png"
+                alt="Logo"
+                width={200}
+                height={96}
+                className="h-auto w-full bg-white p-2 rounded max-w-[100px] opacity-70 transition-opacity duration-300 hover:opacity-100"
+              />
+            </a>
+          </div>
 
           <div className="flex flex-wrap gap-6">
             <Link
