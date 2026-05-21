@@ -27,40 +27,13 @@ export default function HeroSection() {
           />
         </motion.div>
         {/* Gradiente mejorado: Más oscuro a la izquierda para asegurar legibilidad */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#2f5d50] via-[#2f5d50]/60 to-transparent" />
+        <div className="absolute inset-0 " />
         {/* Gradiente inferior para suavizar la transición al componente solapado */}
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#2f5d50]/40" />
 
         {/* Contenido Principal */}
         <div className="z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 pt-10 md:py-20 lg:px-8 ">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="max-w-2xl pt-10 md:pt-0"
-          >
-            <motion.span
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: false }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="inline-flex items-center gap-2 rounded-full border border-[#c8a97e]/80 bg-[#c8a97e]/10 px-4 py-1.5 font-inter text-[11px] font-bold uppercase tracking-[0.2em] text-[#c8a97e]"
-            >
-              <Sparkles className="h-3.5 w-3.5" />
-              Estadía boutique en Santiago
-            </motion.span>
-
-            {/* Asumiendo que tienes 'font-chillax' en tu tailwind.config */}
-            <h1 className="mt-6 font-chillax text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
-              Bienvenido a tu hogar en Santiago
-            </h1>
-
-            <p className="mt-6 font-inter text-gray-200 leading-relaxed  text-lg md:text-xl mb-[10px]">
-              Descubre una experiencia cálida, elegante y cómoda en una
-              ubicación estratégica para disfrutar la ciudad, descansar y vivir
-              una estadía con identidad local.
-            </p>
-          </motion.div>
+          
         </div>
       </div>
 

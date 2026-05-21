@@ -9,7 +9,6 @@ import {
   Coffee,
   ConciergeBell,
   Building2,
-  ArrowRight,
 } from "lucide-react";
 import NavBar from "@/components/NavBar";
 
@@ -267,9 +266,7 @@ const PhotoCard = ({ photo, index }: { photo: PhotoItem; index: number }) => {
             {photo.description}
           </p>
 
-          <div className="relative z-10 flex items-center gap-2 text-[#c8a97e] text-xs font-bold uppercase tracking-widest transition-colors hover:text-white">
-            Ver detalle <ArrowRight className="h-4 w-4" />
-          </div>
+          
         </div>
       </motion.div>
     </motion.div>
