@@ -15,6 +15,11 @@ import NavBar from "@/components/NavBar";
 
 interface HotelProps {
   name?: string;
+  image1?: string;
+  image2?: string;
+  image3?: string;
+  image4?: string;
+  image5?: string;
   description?: string;
   address?: string;
   city?: string;
@@ -33,6 +38,11 @@ interface PhotoItem {
 
 const HotelDetailHeroSection = ({
   name = "",
+  image1 = "",
+  image2 = "",
+  image3 = "",
+  image4 = "",
+  image5 = "",
   description = "",
   address = "",
   city = "",
@@ -55,7 +65,7 @@ const HotelDetailHeroSection = ({
       description:
         "Lujo minimalista con vistas panorámicas y textiles orgánicos.",
       icon: BedDouble,
-      img: "https://images.unsplash.com/photo-1618773928121-c32242e63f39?q=80&w=2070&auto=format&fit=crop",
+      img: image1,
       gridClass: "md:col-span-2 md:row-span-2 h-[350px] md:h-full",
     },
     {
@@ -64,7 +74,7 @@ const HotelDetailHeroSection = ({
       description:
         "Sabores locales reinterpretados por nuestro chef ejecutivo.",
       icon: Utensils,
-      img: "https://images.unsplash.com/photo-1550966841-3ee3ad15f33f?q=80&w=2070&auto=format&fit=crop",
+      img: image2,
       gridClass: "md:col-span-1 md:row-span-1 h-[250px] md:h-full",
     },
     {
@@ -72,7 +82,7 @@ const HotelDetailHeroSection = ({
       title: "Cafetería Premium",
       description: "Granos seleccionados y repostería artesanal cada mañana.",
       icon: Coffee,
-      img: "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?q=80&w=2078&auto=format&fit=crop",
+      img: image3,
       gridClass: "md:col-span-1 md:row-span-1 h-[250px] md:h-full",
     },
     {
@@ -80,15 +90,15 @@ const HotelDetailHeroSection = ({
       title: "Servicio Concierge",
       description: "Atención personalizada las 24 horas para cada necesidad.",
       icon: ConciergeBell,
-      img: "https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=2070&auto=format&fit=crop",
+      img: image4,
       gridClass: "md:col-span-1 md:row-span-1 h-[250px] md:h-full",
     },
     {
       id: 5,
-      title: "Arquitectura",
-      description: "Diseño contemporáneo que rinde homenaje al entorno.",
+      title: "Ubicación",
+      description: "En el corazon de la ciudad.",
       icon: Building2,
-      img: "https://images.unsplash.com/photo-1582719478250-c89cae4df85b?q=80&w=2070&auto=format&fit=crop",
+      img: image5,
       gridClass: "md:col-span-1 md:row-span-1 h-[250px] md:h-full",
     },
   ];

@@ -31,6 +31,11 @@ export default function HotelDetailPage() {
           {/* Parallax and smooth transitions are handled inside each section */}
           <HotelDetailHeroSection
             name={hotel?.name}
+            image1={hotel?.images[1]}
+            image2={hotel?.images[2]}
+            image3={hotel?.images[3]}
+            image4={hotel?.images[4]}
+            image5={hotel?.images[5]}
             description={hotel?.description}
             address={hotel?.address}
             city={hotel?.city}
@@ -41,7 +46,7 @@ export default function HotelDetailPage() {
           {/* Decorative separator to soften transitions */}
           <div className="w-full h-px bg-gradient-to-r from-transparent via-[#e5e5e5] to-transparent opacity-50" />
         </div>
-        <VideoShowcaseSection />
+        <VideoShowcaseSection url={hotel?.video} thumbnail={hotel?.images[0]} />
         <LocationMapSection />
 
         <div className="w-full h-px bg-gradient-to-r from-transparent via-[#e5e5e5] to-transparent opacity-50" />

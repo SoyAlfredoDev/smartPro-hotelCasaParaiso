@@ -46,7 +46,14 @@ export default [
     ],
     phone: "",
     email: "",
-    images: ["/images/san-miguel/hotel-san-miguel.png"],
+    images: [
+      "/images/san-miguel/hotel-san-miguel.png",
+      "/images/san-miguel/rooms/matrimonial-01.jpg",
+      "/images/republica/restaurants/restaurant-03.jpg",
+      "/images/republica/restaurants/restaurant-02.jpg",
+      "/images/portada-video.jpg",
+      "/images/san-miguel/hotel-san-miguel.png",
+    ],
     video:
       "https://res.cloudinary.com/dtg53cua9/video/upload/v1779232372/HOTEL_PARAISO_SAN_MIGUEL_2_ie3itr.mov",
     accent: "#2f5d50",
@@ -136,7 +143,14 @@ export default [
     ],
     phone: "",
     email: "",
-    images: ["/images/republica/hotel-republica.png"],
+    images: [
+      "/images/republica/hotel-republica.png",
+      "/images/republica/rooms/matrimonial-01.jpg",
+      "/images/republica/restaurants/restaurant-02.jpg",
+      "/images/republica/restaurants/restaurant-04.jpg",
+      "/images/portada-video.jpg",
+      "/images/republica/hotel-republica.png",
+    ],
     video:
       "https://res.cloudinary.com/dtg53cua9/video/upload/v1778980879/hotel-01_dgastt.mov",
     accent: "#2f5d50",

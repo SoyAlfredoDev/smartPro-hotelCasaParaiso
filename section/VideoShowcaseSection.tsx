@@ -57,7 +57,13 @@ const modalContentVariants: Variants = {
 };
 
 /* ─── Component ─── */
-export default function VideoShowcaseSection() {
+export default function VideoShowcaseSection({
+  url,
+  thumbnail,
+}: {
+  url: string;
+  thumbnail: string;
+}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -181,7 +187,7 @@ export default function VideoShowcaseSection() {
               {/* Thumbnail */}
               <div className="relative aspect-[16/9] w-full overflow-hidden">
                 <Image
-                  src="/images/portada-video.jpg"
+                  src={thumbnail}
                   alt="Vista cinematográfica del Hotel Casa Paraíso"
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"
@@ -300,13 +306,10 @@ export default function VideoShowcaseSection() {
                     playsInline
                     muted={isMuted}
                     controls
-                    poster="/images/video-thumbnail-hotel.png"
+                    poster={thumbnail}
                   >
                     {/* Replace this src with the actual hotel video URL */}
-                    <source
-                      src="https://res.cloudinary.com/dtg53cua9/video/upload/v1778980879/hotel-01_dgastt.mov"
-                      type="video/mp4"
-                    />
+                    <source src={url} type="video/mp4" />
                     Tu navegador no soporta la reproducción de video.
                   </video>
                 </div>
