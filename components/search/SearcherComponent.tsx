@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import ButtonCheck from "@/components/ui/buttonCheck";
 import GuestsSearcherBar from "@/components/search/GuestsSearcherBar";
-import { Users, ChevronDown } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useBookingStore } from "@/store/useBookingStore";
 import { calculateNights } from "@/utils/calculateNights";
@@ -186,22 +186,22 @@ export default function SearcherComponent() {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 0.4 }}
-      className="relative p-4 w-full z-0"
+      className="relative z-0 w-full"
       id="search"
     >
-      <div className="z-0 rounded-2xl border border-default shadow-md bg-surface p-4 backdrop-blur-xl md:rounded-3xl md:p-6 lg:p-8">
+      <div className="overflow-hidden rounded-2xl bg-white shadow-[0_8px_30px_rgba(0,0,0,0.12)] md:rounded-3xl">
         <form onSubmit={handleSubmit}>
-          <div className="w-full grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_1.2fr_auto] lg:gap-6 items-end">
+          <div className="grid w-full grid-cols-1 items-stretch md:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_1.15fr_auto] lg:divide-x lg:divide-gray-200">
             {/* HOTEL */}
-            <div className="group h-full flex flex-col justify-center rounded-xl border border-default bg-background/50 px-4 py-3 transition-colors focus-within:border-primary focus-within:ring-1 focus-within:ring-primary">
-              <label className="mb-1 block text-xs font-semibold uppercase tracking-wider text-text-secondary">
+            <div className="group flex min-h-[72px] flex-col justify-center border-b border-gray-200 px-5 py-4 lg:border-b-0">
+              <label className="mb-1.5 block text-[10px] font-medium uppercase tracking-[0.12em] text-gray-400">
                 Hotel
               </label>
               <select
                 name="hotelId"
                 value={reservation.hotelId}
                 onChange={handleChange}
-                className="w-full appearance-none cursor-pointer bg-transparent text-sm font-medium text-text-primary outline-none transition-colors group-hover:text-primary"
+                className="w-full cursor-pointer appearance-none bg-transparent text-sm font-semibold text-gray-900 outline-none"
               >
                 <option value="all">Todos</option>
                 {hotels?.map((hotel: any) => (
@@ -231,26 +231,23 @@ export default function SearcherComponent() {
             />
 
             {/* GUESTS */}
-            <div className="relative h-full flex flex-col justify-center">
+            <div className="relative flex min-h-[72px] flex-col justify-center border-b border-gray-200 lg:border-b-0">
               <button
                 type="button"
-                className="group h-full w-full text-left rounded-xl border border-default bg-background/50 px-4 py-3 transition-colors focus-within:border-primary focus-within:ring-1 focus-within:ring-primary"
+                className="group h-full w-full px-5 py-4 text-left"
                 onClick={() => setShowGuests(!showGuests)}
               >
-                <span className="mb-1 block text-xs font-semibold uppercase tracking-wider text-text-secondary">
-                  Huéspedes y Habs.
+                <span className="mb-1.5 block text-[10px] font-medium uppercase tracking-[0.12em] text-gray-400">
+                  Huéspedes y Hab.
                 </span>
-                <div className="flex w-full items-center justify-between text-sm font-medium text-text-primary">
-                  <div className="flex items-center gap-2">
-                    <Users size={16} className="text-primary" />
-                    <span>
-                      {reservation.adults + reservation.children} pax,{" "}
-                      {reservation.rooms} hab
-                    </span>
-                  </div>
+                <div className="flex w-full items-center justify-between gap-2 text-sm font-semibold text-gray-900">
+                  <span>
+                    {reservation.adults + reservation.children} pers. ·{" "}
+                    {reservation.rooms} hab.
+                  </span>
                   <ChevronDown
                     size={16}
-                    className={`text-primary transition-transform duration-300 ${
+                    className={`shrink-0 text-gray-400 transition-transform duration-300 ${
                       showGuests ? "rotate-180" : ""
                     }`}
                   />
@@ -287,10 +284,10 @@ export default function SearcherComponent() {
             </div>
 
             {/* BOTÓN */}
-            <div className="w-full">
+            <div className="flex items-stretch p-3 lg:p-4">
               <button
                 type="submit"
-                className="inline-flex h-full min-h-[56px] w-full items-center justify-center rounded-xl bg-primary px-8 font-semibold text-white shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:bg-primary/90 active:scale-95 md:hidden lg:block cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                className="inline-flex min-h-[48px] w-full cursor-pointer items-center justify-center rounded-lg bg-[#3d6355] px-8 text-sm font-semibold text-white transition-colors duration-200 hover:bg-[#345e4d] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 lg:min-h-full lg:min-w-[140px]"
                 disabled={isLooking}
               >
                 {isLooking ? "Buscando..." : "Consultar"}

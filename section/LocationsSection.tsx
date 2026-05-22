@@ -240,9 +240,7 @@ function HotelCard({ hotel, index }: HotelCardProps) {
             }}
           />
 
-          <span className="font-chillax text-[80px] font-bold leading-none text-[#2f5d50]/80 select-none">
-            0{index + 1}
-          </span>
+       
 
           <h3 className="mt-2 font-chillax text-3xl font-bold tracking-tight text-[#2b2b2b] transition-colors duration-500 group-hover:text-[#2f5d50] sm:text-4xl">
             {hotel.name}

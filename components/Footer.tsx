@@ -6,6 +6,7 @@ import { Mail, Phone, MapPin, ArrowUpRight, Heart } from "lucide-react";
 import { FaInstagram, FaFacebook, FaTiktok } from "react-icons/fa";
 import { motion, Variants } from "framer-motion";
 import { usePathname } from "next/navigation";
+import { useState, useEffect, useCallback, useRef } from "react";
 
 const footerLinks = {
   alojamientos: [
@@ -31,6 +32,16 @@ const containerVariants: Variants = {
   },
 };
 
+const navItems = [
+  { label: "Inicio", href: "#hero" },
+  { label: "Ubicaciones", href: "#ubicaciones" },
+  { label: "Habitaciones", href: "#habitaciones" },
+  { label: "Entorno", href: "#entorno" },
+  { label: "Traslados", href: "#traslados" },
+  { label: "Solicitud Especiales", href: "#contact" },
+];
+
+
 const itemVariants: Variants = {
   hidden: { opacity: 0, y: 14 },
   visible: {
@@ -41,7 +52,11 @@ const itemVariants: Variants = {
 };
 
 export default function Footer() {
+  const [hasScrolled, setHasScrolled] = useState(false);
   const pathname = usePathname();
+  const [isOpen, setIsOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [activeSection, setActiveSection] = useState("#hero");
   const company = {
     rut: "77.010.418-1",
     name: "ATLANTIC GROUP SPA",
@@ -51,6 +66,49 @@ export default function Footer() {
     phone: " +56 9 5510 3829",
     whatsapp: "56955103829",
   };
+
+  const handleScroll = useCallback(() => {
+    const currentScrollY = window.scrollY;
+
+    setHasScrolled(currentScrollY > 40);
+    const lastScrollY = useRef(0);
+
+    if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
+      setIsVisible(false);
+      setIsOpen(false);
+    } else {
+      setIsVisible(true);
+    }
+
+    lastScrollY.current = currentScrollY;
+
+    // 👇 detectar top
+    if (currentScrollY < 100) {
+      setActiveSection("#hero");
+    }
+  }, []);
+
+   /* ── Smooth scroll ── */
+   const scrollToSection = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    href: string,
+  ) => {
+    if (pathname === "/") {
+      e.preventDefault();
+      setIsOpen(false);
+
+      const target = document.querySelector(href);
+      if (!target) return;
+
+      const navHeight = 80;
+      const y = target.getBoundingClientRect().top + window.scrollY - navHeight;
+
+      window.scrollTo({ top: y, behavior: "smooth" });
+    } else {
+      setIsOpen(false);
+    }
+  };
+
 
   const currentYear = new Date().getFullYear();
 
@@ -178,38 +236,37 @@ export default function Footer() {
           {/* Quick Links */}
           <motion.div variants={itemVariants}>
             <h3 className="font-inter text-[16px] font-bold uppercase tracking-[0.2em] text-[#c8a97e]">
-              Alojamientos
+              Menu
             </h3>
-            <ul className="mt-5 space-y-2">
-              {footerLinks.alojamientos.map((item) => (
-                <li key={item.label}>
-                  <Link
-                    href={pathname === "/" ? item.href : `/${item.href}`}
-                    className="group/link flex items-center gap-1.5 font-inter text-[16px] text-white/80 transition-colors duration-300 hover:text-[#c8a97e]"
-                  >
-                    {item.label}
-                    <ArrowUpRight className="h-4 w-4 opacity-0 transition-all duration-300 group-hover/link:opacity-100 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
-                  </Link>
-                </li>
-              ))}
-            </ul>
+             <nav className="flex flex-col  gap-[0.2] ">
+             {navItems.map((item) => {
+            const isActive = activeSection === item.href;
 
-            <h3 className="mt-8 font-inter text-[16px] font-bold uppercase tracking-[0.2em] text-[#c8a97e]">
-              Empresa
-            </h3>
-            <ul className="mt-5 space-y-2">
-              {footerLinks.empresa.map((item) => (
-                <li key={item.label}>
-                  <Link
-                    href={pathname === "/" ? item.href : `/${item.href}`}
-                    className="group/link flex items-center gap-1.5 font-inter text-[16px] text-white/80 transition-colors duration-300 hover:text-[#c8a97e]"
-                  >
-                    {item.label}
-                    <ArrowUpRight className="h-4 w-4 opacity-0 transition-all duration-300 group-hover/link:opacity-100 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            return (
+              <Link
+                key={item.label}
+                href={pathname === "/" ? item.href : `/${item.href}`}
+                onClick={(e) => scrollToSection(e, item.href)}
+                className={`relative rounded-lg px-4 py-2 font-inter text-[18px] font-medium transition-all duration-300 ${
+                  isActive
+                    ? "text-white"
+                    : hasScrolled
+                      ? "text-white/80 hover:text-text-white"
+                      : "text-white/90 hover:text-gray-900 text-[20px]"
+                }`}
+              >
+                {item.label}
+
+                <span
+                  className={`absolute bottom-0.5 left-1/2 h-[3px] w-[3px] -translate-x-1/2 rounded-full bg-[#c8a97e] transition-all duration-300 ${
+                    isActive ? "scale-100 opacity-100" : "scale-0 opacity-0"
+                  }`}
+                />
+              </Link>
+            );
+          })}
+        </nav>
+           
           </motion.div>
 
           {/* Legal Info */}
