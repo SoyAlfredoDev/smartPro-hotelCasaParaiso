@@ -2,24 +2,10 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Mail, Phone, MapPin, ArrowUpRight, Heart } from "lucide-react";
+import { Mail, Phone, MapPin } from "lucide-react";
 import { FaInstagram, FaFacebook, FaTiktok } from "react-icons/fa";
 import { motion, Variants } from "framer-motion";
 import { usePathname } from "next/navigation";
-import { useState, useEffect, useCallback, useRef } from "react";
-
-const footerLinks = {
-  alojamientos: [
-    { label: "Habitaciones", href: "#habitaciones" },
-    { label: "Ubicaciones", href: "#ubicaciones" },
-    { label: "Servicios", href: "#traslados" },
-  ],
-  empresa: [
-    { label: "Nosotros", href: "#hero" },
-    { label: "Experiencias", href: "#entorno" },
-    { label: "Contacto", href: "#contact" },
-  ],
-};
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -38,9 +24,8 @@ const navItems = [
   { label: "Habitaciones", href: "#habitaciones" },
   { label: "Entorno", href: "#entorno" },
   { label: "Traslados", href: "#traslados" },
-  { label: "Solicitud Especiales", href: "#contact" },
+  { label: "Solicitudes Especiales", href: "#contact" },
 ];
-
 
 const itemVariants: Variants = {
   hidden: { opacity: 0, y: 14 },
@@ -52,63 +37,35 @@ const itemVariants: Variants = {
 };
 
 export default function Footer() {
-  const [hasScrolled, setHasScrolled] = useState(false);
   const pathname = usePathname();
-  const [isOpen, setIsOpen] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
-  const [activeSection, setActiveSection] = useState("#hero");
+
   const company = {
     rut: "77.010.418-1",
     name: "ATLANTIC GROUP SPA",
     address: "Avenida República #19, Santiago, RM, código postal 8320000",
     address2: "Salesiano #1130, San Miguel, RM, código postal 8900000",
     email: "contacto@hotelcasaparaiso.cl",
-    phone: " +56 9 5510 3829",
+    phone: "+56 9 5510 3829",
     whatsapp: "56955103829",
   };
 
-  const handleScroll = useCallback(() => {
-    const currentScrollY = window.scrollY;
-
-    setHasScrolled(currentScrollY > 40);
-    const lastScrollY = useRef(0);
-
-    if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
-      setIsVisible(false);
-      setIsOpen(false);
-    } else {
-      setIsVisible(true);
-    }
-
-    lastScrollY.current = currentScrollY;
-
-    // 👇 detectar top
-    if (currentScrollY < 100) {
-      setActiveSection("#hero");
-    }
-  }, []);
-
-   /* ── Smooth scroll ── */
-   const scrollToSection = (
+  /* ── Smooth scroll ── */
+  const scrollToSection = (
     e: React.MouseEvent<HTMLAnchorElement>,
-    href: string,
+    href: string
   ) => {
     if (pathname === "/") {
       e.preventDefault();
-      setIsOpen(false);
 
       const target = document.querySelector(href);
       if (!target) return;
 
-      const navHeight = 80;
+      const navHeight = 80; // Altura de tu navbar fijo para que no tape el título
       const y = target.getBoundingClientRect().top + window.scrollY - navHeight;
 
       window.scrollTo({ top: y, behavior: "smooth" });
-    } else {
-      setIsOpen(false);
     }
   };
-
 
   const currentYear = new Date().getFullYear();
 
@@ -146,7 +103,7 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* Social links – elevated pill style */}
+          {/* Social links */}
           <div className="flex items-center gap-3 my-auto">
             <span className="mr-2 font-inter text-[18px] font-bold uppercase tracking-[0.2em] text-white/90">
               Síguenos
@@ -233,40 +190,24 @@ export default function Footer() {
             </ul>
           </motion.div>
 
-          {/* Quick Links */}
+          {/* Quick Links / Menu */}
           <motion.div variants={itemVariants}>
             <h3 className="font-inter text-[16px] font-bold uppercase tracking-[0.2em] text-[#c8a97e]">
-              Menu
+              Menú
             </h3>
-             <nav className="flex flex-col  gap-[0.2] ">
-             {navItems.map((item) => {
-            const isActive = activeSection === item.href;
-
-            return (
-              <Link
-                key={item.label}
-                href={pathname === "/" ? item.href : `/${item.href}`}
-                onClick={(e) => scrollToSection(e, item.href)}
-                className={`relative rounded-lg px-4 py-2 font-inter text-[18px] font-medium transition-all duration-300 ${
-                  isActive
-                    ? "text-white"
-                    : hasScrolled
-                      ? "text-white/80 hover:text-text-white"
-                      : "text-white/90 hover:text-gray-900 text-[20px]"
-                }`}
-              >
-                {item.label}
-
-                <span
-                  className={`absolute bottom-0.5 left-1/2 h-[3px] w-[3px] -translate-x-1/2 rounded-full bg-[#c8a97e] transition-all duration-300 ${
-                    isActive ? "scale-100 opacity-100" : "scale-0 opacity-0"
-                  }`}
-                />
-              </Link>
-            );
-          })}
-        </nav>
-           
+            <nav className="mt-5 flex flex-col items-start gap-2">
+              {navItems.map((item) => (
+                <Link
+                  key={item.label}
+                  href={pathname === "/" ? item.href : `/${item.href}`}
+                  onClick={(e) => scrollToSection(e, item.href)}
+                  className="group relative px-2 py-1 font-inter text-[16px] font-medium text-white/80 transition-colors duration-300 hover:text-white"
+                >
+                  {item.label}
+                  <span className="absolute bottom-0 left-2 h-[2px] w-0 bg-[#c8a97e] transition-all duration-300 group-hover:w-[calc(100%-16px)]" />
+                </Link>
+              ))}
+            </nav>
           </motion.div>
 
           {/* Legal Info */}
@@ -327,7 +268,7 @@ export default function Footer() {
           </div>
 
           <div className="flex items-center gap-1.5">
-            <span className=" items-center text-[16px] text-white/80">
+            <span className="items-center text-[16px] text-white/80">
               creado por:
             </span>
             <a
@@ -340,20 +281,20 @@ export default function Footer() {
                 alt="Logo"
                 width={200}
                 height={96}
-                className="h-auto w-full bg-white p-2 rounded max-w-[100px] opacity-70 transition-opacity duration-300 hover:opacity-100"
+                className="h-auto w-full max-w-[100px] rounded bg-white p-2 opacity-70 transition-opacity duration-300 hover:opacity-100"
               />
             </a>
           </div>
 
           <div className="flex flex-wrap gap-6">
             <Link
-              className="font-inter text-[16px] text-white/80 transition-colors duration-300 hover:text-white/60"
+              className="font-inter text-[16px] text-white/80 transition-colors duration-300 hover:text-white"
               href="#"
             >
               Política de privacidad
             </Link>
             <Link
-              className="font-inter text-[16px] text-white/80 transition-colors duration-300 hover:text-white/60"
+              className="font-inter text-[16px] text-white/80 transition-colors duration-300 hover:text-white"
               href="#"
             >
               Términos y condiciones
