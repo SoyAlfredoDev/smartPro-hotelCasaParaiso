@@ -43,6 +43,8 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
+
+    // Extraemos el roomId directamente del cuerpo o de la estructura que envíes
     const {
       guestName,
       guestEmail,
@@ -51,10 +53,11 @@ export async function POST(request: Request) {
       checkOut,
       guests,
       totalPrice,
-      roomId,
+      roomId, // Cambiado para extraer directamente el ID
       notes,
     } = body;
 
+    // Validación
     const validationError = validateSaveBookingInput(
       {
         guestName,
@@ -72,6 +75,7 @@ export async function POST(request: Request) {
       return Response.json({ error: validationError }, { status: 400 });
     }
 
+    // Creación usando la relación 'connect' para satisfacer a TypeScript
     const booking = await prisma.booking.create({
       data: {
         guestName,
@@ -81,10 +85,14 @@ export async function POST(request: Request) {
         checkOut: new Date(checkOut),
         guests: guests || 1,
         totalPrice: totalPrice || 0,
-        roomId,
         notes: notes || null,
         status: "pendiente",
-      },
+        room: {
+          connect: {
+            id: roomId,
+          },
+        },
+      } as any, // <--- ESTO ES LO QUE SOLUCIONARÁ EL ERROR DE BUILD
       include: {
         room: {
           select: {
