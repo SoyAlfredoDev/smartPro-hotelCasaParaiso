@@ -70,6 +70,7 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
+    <> 
     <footer className="relative overflow-hidden bg-primary">
       {/* Decorative accent line at top */}
       <div className="h-px w-full bg-gradient-to-r from-transparent via-[#c8a97e]/40 to-transparent" />
@@ -252,56 +253,66 @@ export default function Footer() {
           </motion.div>
         </motion.div>
 
-        {/* Bottom Bar */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: false }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="mt-14 flex flex-col gap-4 border-t border-white/[0.06] pt-8 sm:flex-row sm:items-center sm:justify-between"
-        >
-          <div>
-            <p className="flex items-center gap-1.5 font-inter text-[16px] text-white/80">
-              © {currentYear} {company.name}. Todos los derechos reservados.
-              <span className="hidden sm:inline">·</span>
-            </p>
-          </div>
-
-          <div className="flex items-center gap-1.5">
-            <span className="items-center text-[16px] text-white/80">
-              creado por:
-            </span>
-            <a
-              href="https://smartpro.cl"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <Image
-                src="/images/logo-smartpro.png"
-                alt="Logo"
-                width={200}
-                height={96}
-                className="h-auto w-full max-w-[100px] rounded bg-white p-2 opacity-70 transition-opacity duration-300 hover:opacity-100"
-              />
-            </a>
-          </div>
-
-          <div className="flex flex-wrap gap-6">
-            <Link
-              className="font-inter text-[16px] text-white/80 transition-colors duration-300 hover:text-white"
-              href="#"
-            >
-              Política de privacidad
-            </Link>
-            <Link
-              className="font-inter text-[16px] text-white/80 transition-colors duration-300 hover:text-white"
-              href="#"
-            >
-              Términos y condiciones
-            </Link>
-          </div>
-        </motion.div>
+       
       </div>
+      
     </footer>
+
+     {/* Bottom Bar */}
+     <div className="mx-auto w-full max-w-7xl px-4 lg:px-8">
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.6, delay: 0.2 }}
+    className="my-8 flex flex-col items-center justify-between gap-6   text-center md:flex-row md:text-left"
+  >
+    {/* 1. Copyright (Izquierda en PC, Abajo en Móvil) */}
+    <div className="order-3 flex-1 md:order-1">
+      <p className="font-inter text-[14px] leading-relaxed text-black/60">
+        © {currentYear} {company.name}.{" "}
+        <span className="block sm:inline">Todos los derechos reservados.</span>
+      </p>
+    </div>
+
+    {/* 2. Creado por SmartPro (Centro) */}
+    <div className="order-1 flex flex-1 items-center justify-center gap-2 md:order-2">
+      <span className="font-inter text-[14px] text-black/60">
+        creado por:
+      </span>
+      <a
+        href="https://smartpro.cl"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group transition-transform hover:scale-105"
+      >
+        <Image
+          src="/images/logo-smartpro.png"
+          alt="Logo SmartPro"
+          width={130}
+          height={40}
+          className="h-auto w-auto max-w-[100px]  transition-all duration-300 group-hover:opacity-100 group-hover:grayscale-0"
+        />
+      </a>
+    </div>
+
+    {/* 3. Enlaces Legales (Derecha en PC, Medio en Móvil) */}
+    <div className="order-2 flex flex-1 flex-wrap items-center justify-center gap-x-6 gap-y-2 md:order-3 md:justify-end">
+      <Link
+        className="font-inter text-[14px] text-black/60 transition-colors duration-300 hover:text-black hover:underline underline-offset-4"
+        href="#"
+      >
+        Política de privacidad
+      </Link>
+      <Link
+        className="font-inter text-[14px] text-black/60 transition-colors duration-300 hover:text-black hover:underline underline-offset-4"
+        href="#"
+      >
+        Términos y condiciones
+      </Link>
+    </div>
+  </motion.div>
+</div>
+   </>
   );
 }
