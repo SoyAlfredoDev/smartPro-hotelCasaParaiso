@@ -28,7 +28,7 @@ model Room {
 }
 
 model Booking {
-  id            String   @id @default(uuid())
+  id            String   @id
   guestName     String
   guestEmail    String
   guestPhone    String

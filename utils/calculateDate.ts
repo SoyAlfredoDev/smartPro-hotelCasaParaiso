@@ -1,11 +1,10 @@
+import { addDaysToISODate, getMinCheckInDate } from "./dateHelpers";
+
 /**
- * Calculates the current date and tomorrow's date
- * @returns {Object} An object with today and tomorrow's dates
+ * Default check-in / check-out for the search bar (local timezone).
  */
-export function calculateDate() {
-  const today = new Date().toISOString().split("T")[0];
-  const tomorrowDate = new Date();
-  tomorrowDate.setDate(tomorrowDate.getDate() + 1);
-  const tomorrow = tomorrowDate.toISOString().split("T")[0];
+export function calculateDate(now = new Date()) {
+  const today = getMinCheckInDate(now);
+  const tomorrow = addDaysToISODate(today, 1);
   return { today, tomorrow };
 }

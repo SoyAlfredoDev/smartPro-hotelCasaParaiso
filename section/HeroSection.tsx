@@ -5,8 +5,10 @@ import SearcherComponent from "@/components/search/SearcherComponent";
 import Image from "next/image";
 import { Suspense } from "react";
 import FeaturesCardSection from "@/components/FeaturesCardSection";
+import { usePathname } from "next/navigation";
 
 export default function HeroSection() {
+  const pathname = usePathname();
   return (
     <section className="w-full bg-[#f9f9f7]" id="hero">
       {/* Imagen hero — ~42% del viewport */}
@@ -43,9 +45,11 @@ export default function HeroSection() {
       </div>
 
       {/* Contenido: encabezado + tarjetas */}
-      <div className="relative w-full pt-12 md:pt-16">
-        <FeaturesCardSection />
-      </div>
+      {pathname === "/" && (
+        <div className="relative w-full pt-12 md:pt-16">
+          <FeaturesCardSection />
+        </div>
+      )}
     </section>
   );
 }

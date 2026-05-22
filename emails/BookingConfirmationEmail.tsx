@@ -3,11 +3,7 @@ import { DetailRow } from "./DetailRow";
 import { EmailLayout } from "./EmailLayout";
 import { HOTEL_NAME, HOTEL_WEBSITE } from "./constants";
 import type { BookingConfirmationEmailProps } from "./types";
-import {
-  formatBookingDate,
-  getStayNights,
-  guestLabel,
-} from "./utils";
+import { formatBookingDate, getStayNights, guestLabel } from "./utils";
 
 export function BookingConfirmationEmail({
   guestName,
@@ -33,8 +29,7 @@ export function BookingConfirmationEmail({
 
       <Text className="text-[#374151] text-[15px] leading-relaxed m-0 mb-6">
         Gracias por elegir {HOTEL_NAME}. Hemos recibido tu solicitud de reserva
-        y nuestro equipo la está revisando. Te contactaremos a la brevedad para
-        confirmar la disponibilidad y los detalles de tu estadía.
+        con el número de referencia: {bookingId}
       </Text>
 
       <Section className="bg-brand-surface rounded-lg px-5 py-5 mb-6">
@@ -49,19 +44,16 @@ export function BookingConfirmationEmail({
         />
         <DetailRow label="Habitación" value={roomLabel} />
         <DetailRow label="Invitados" value={guestLabel(guests)} />
-        {bookingId ? (
-          <DetailRow label="Referencia" value={bookingId} />
-        ) : null}
+        {bookingId ? <DetailRow label="Referencia" value={bookingId} /> : null}
       </Section>
 
       <Section className="border border-solid border-[#b8f5dc] bg-[#f0fdf8] rounded-lg px-5 py-4 mb-6">
         <Text className="text-brand-dark text-[14px] font-semibold m-0 mb-2">
-          Estado: pendiente de validación
+          Estado: aceptada
         </Text>
         <Text className="text-[#374151] text-[14px] leading-relaxed m-0">
-          Tu reserva aún no está confirmada. Una vez validada, recibirás un
-          correo con los pasos siguientes para completar tu estadía con
-          tranquilidad.
+          Tu reserva ha sido aceptada. Puedes acceder a tu reserva en el
+          siguiente enlace: {HOTEL_WEBSITE}/booking
         </Text>
       </Section>
 

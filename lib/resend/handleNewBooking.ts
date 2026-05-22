@@ -93,7 +93,7 @@ export async function handleNewBooking(
       },
       adminEmailData: {
         from: "Sistema <notificaciones@hotelcasaparaiso.cl>",
-        to: process.env.ADMIN_EMAIL ?? "admin@tuhotel.com",
+        to: process.env.ADMIN_EMAIL ?? "contacto@hotelcasaparaiso.cl",
         subject: "Nueva reserva",
         react: BookingAdminNotificationEmail(toAdminEmailProps(booking)),
       },

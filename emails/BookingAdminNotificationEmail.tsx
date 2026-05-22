@@ -12,6 +12,7 @@ import {
 
 const STATUS_LABELS: Record<string, string> = {
   pendiente: "Pendiente",
+  aceptada: "Aceptada",
   confirmada: "Confirmada",
   finalizada: "Finalizada",
   cancelada: "Cancelada",

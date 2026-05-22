@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { validateSaveBookingInput } from "@/lib/validation/bookingForm";
+import generateReservationNumber from "./generateReservationNumber";
 
 export interface SaveBookingInput {
   guestName?: string;
@@ -20,7 +21,10 @@ export interface SaveBookingInput {
 
 function resolveGuestName(input: SaveBookingInput): string {
   if (input.guestName?.trim()) return input.guestName.trim();
-  const parts = [input.firstName, input.lastName].filter(Boolean).join(" ").trim();
+  const parts = [input.firstName, input.lastName]
+    .filter(Boolean)
+    .join(" ")
+    .trim();
   return parts;
 }
 
@@ -51,9 +55,11 @@ export async function saveBookingToDatabase(formData: SaveBookingInput) {
   const guestName = resolveGuestName(formData);
   const guestEmail = resolveGuestEmail(formData);
   const roomId = resolveRoomId(formData.roomId);
+  const id = await generateReservationNumber();
 
   return prisma.booking.create({
     data: {
+      id: id.toString(),
       guestName,
       guestEmail,
       guestPhone: resolveGuestPhone(formData),

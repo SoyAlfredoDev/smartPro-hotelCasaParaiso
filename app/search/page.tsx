@@ -44,7 +44,8 @@ function SearchResults() {
     try {
       const rooms = await getRooms(reservetionHotelId);
       // Filtro por capacidad
-      const totalPeople = reservetionAdults + reservetionChildren;
+      const totalPeople =
+        (reservetionAdults ?? 0) + (reservetionChildren ?? 0) || 1;
       const filteredRoomsByCapacity = rooms.filter((room: Room) => {
         return room.capacity >= totalPeople;
       });

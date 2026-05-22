@@ -1,14 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  AlertCircle,
-  CheckCircle2,
-  Copy,
-  Home,
-  Mail,
-  X,
-} from "lucide-react";
+import { AlertCircle, CheckCircle2, Copy, Home, Mail, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -83,7 +76,10 @@ export default function ReservationResultModal({
             {state.type === "success" ? (
               <div className="p-8 pt-10 text-center">
                 <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
-                  <CheckCircle2 className="h-9 w-9 text-primary" strokeWidth={2} />
+                  <CheckCircle2
+                    className="h-9 w-9 text-primary"
+                    strokeWidth={2}
+                  />
                 </div>
                 <h2
                   id="reservation-modal-title"
@@ -143,7 +139,10 @@ export default function ReservationResultModal({
             ) : state.type === "error" ? (
               <div className="p-8 pt-10 text-center">
                 <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-red-50">
-                  <AlertCircle className="h-9 w-9 text-red-500" strokeWidth={2} />
+                  <AlertCircle
+                    className="h-9 w-9 text-red-500"
+                    strokeWidth={2}
+                  />
                 </div>
                 <h2
                   id="reservation-modal-title"
