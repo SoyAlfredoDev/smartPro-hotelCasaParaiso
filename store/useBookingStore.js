@@ -51,7 +51,8 @@ export const useBookingStore = create(
           nights: null,
 
           roomsSelected: null,
-          totalPrice: null,
+          totalPrice: 0,
+          peopleQuantity: null,
         }),
     }),
     {

@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { validateSaveBookingInput } from "@/lib/validation/bookingForm";
 
 export async function GET(request: Request) {
   try {
@@ -42,13 +43,33 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { guestName, guestEmail, guestPhone, checkIn, checkOut, guests, totalPrice, roomId, notes } = body;
+    const {
+      guestName,
+      guestEmail,
+      guestPhone,
+      checkIn,
+      checkOut,
+      guests,
+      totalPrice,
+      roomId,
+      notes,
+    } = body;
 
-    if (!guestName || !guestEmail || !checkIn || !checkOut || !roomId) {
-      return Response.json(
-        { error: "Faltan campos obligatorios" },
-        { status: 400 },
-      );
+    const validationError = validateSaveBookingInput(
+      {
+        guestName,
+        guestEmail,
+        guestPhone,
+        checkIn,
+        checkOut,
+        guests,
+        roomId,
+      },
+      { requirePhone: false },
+    );
+
+    if (validationError) {
+      return Response.json({ error: validationError }, { status: 400 });
     }
 
     const booking = await prisma.booking.create({

@@ -67,9 +67,9 @@ export default function SearcherComponent() {
   const hotelId = useBookingStore((state) => state.hotelId);
   const checkIn = useBookingStore((state) => state.checkIn);
   const checkOut = useBookingStore((state) => state.checkOut);
-  const adultsQuantity = useBookingStore((state) => state.adults);
-  const childrenQuantity = useBookingStore((state) => state.children);
-  const petsQuantity = useBookingStore((state) => state.pets);
+  const adultsQuantity = useBookingStore((state) => state.adultsQuantity);
+  const childrenQuantity = useBookingStore((state) => state.childrenQuantity);
+  const petsQuantity = useBookingStore((state) => state.petsQuantity);
   const roomsQuantity = useBookingStore((state) => state.roomsQuantity);
 
   // fechas

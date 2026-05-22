@@ -1,65 +1,80 @@
 "use client";
-import { useState } from "react";
 
-export default function FormCustomer() {
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    documentType: "rut",
-    documentNumber: "",
-    email: "",
-    phone: "",
-    comment: "",
-  });
+import type {
+  GuestFormData,
+  GuestFormErrors,
+  GuestFormField,
+} from "@/lib/validation/bookingForm";
 
-  const handleChange = (
+interface FormCustomerProps {
+  formData: GuestFormData;
+  errors: GuestFormErrors;
+  onChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  ) => void;
+  disabled?: boolean;
+}
 
+export default function FormCustomer({
+  formData,
+  errors,
+  onChange,
+  disabled = false,
+}: FormCustomerProps) {
   return (
     <div className="mb-6">
-      {/* Header */}
       <div className="border-b border-default bg-surface-warm px-6 py-4">
         <h2 className="font-chillax text-xl font-bold text-text-primary">
           Datos del Huésped
         </h2>
+        <p className="mt-1 text-sm text-text-secondary">
+          Completa tus datos para solicitar la reserva. Los campos marcados con
+          * son obligatorios.
+        </p>
       </div>
 
-      {/* Form */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-        {/* Nombre */}
-        <InputForm
+      {errors._form ? (
+        <div
+          className="mx-4 mt-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+          role="alert"
+        >
+          {errors._form}
+        </div>
+      ) : null}
+
+      <div className="grid grid-cols-1 gap-4 p-4 md:grid-cols-2">
+        <Field
+          label="Nombre *"
           name="firstName"
           placeholder="Nombre"
           value={formData.firstName}
-          onChange={handleChange}
+          onChange={onChange}
+          error={errors.firstName}
+          disabled={disabled}
         />
-
-        {/* Apellido */}
-        <InputForm
+        <Field
+          label="Apellido *"
           name="lastName"
           placeholder="Apellido"
           value={formData.lastName}
-          onChange={handleChange}
+          onChange={onChange}
+          error={errors.lastName}
+          disabled={disabled}
         />
-
-        {/* Tipo documento */}
-        <SelectForm
+        <SelectField
+          label="Tipo de documento *"
           name="documentType"
           value={formData.documentType}
-          onChange={handleChange}
+          onChange={onChange}
+          disabled={disabled}
           options={[
             { label: "RUT (Chile)", value: "rut" },
             { label: "Pasaporte", value: "passport" },
             { label: "DNI", value: "dni" },
           ]}
         />
-
-        {/* Número documento */}
-        <InputForm
+        <Field
+          label="Número de documento *"
           name="documentNumber"
           placeholder={
             formData.documentType === "rut"
@@ -67,34 +82,38 @@ export default function FormCustomer() {
               : "Número de documento"
           }
           value={formData.documentNumber}
-          onChange={handleChange}
+          onChange={onChange}
+          error={errors.documentNumber}
+          disabled={disabled}
         />
-
-        {/* Email */}
-        <InputForm
+        <Field
+          label="Correo electrónico *"
           name="email"
           type="email"
-          placeholder="Correo electrónico"
+          placeholder="correo@ejemplo.com"
           value={formData.email}
-          onChange={handleChange}
+          onChange={onChange}
+          error={errors.email}
+          disabled={disabled}
         />
-
-        {/* Teléfono */}
-        <InputForm
+        <Field
+          label="Teléfono *"
           name="phone"
           type="tel"
-          placeholder="Teléfono"
+          placeholder="+56 9 1234 5678"
           value={formData.phone}
-          onChange={handleChange}
+          onChange={onChange}
+          error={errors.phone}
+          disabled={disabled}
         />
-
-        {/* Comentario (full width) */}
         <div className="md:col-span-2">
-          <InputForm
+          <Field
+            label="Comentario (opcional)"
             name="comment"
-            placeholder="Comentario (opcional)"
+            placeholder="Solicitudes especiales, horario de llegada, etc."
             value={formData.comment}
-            onChange={handleChange}
+            onChange={onChange}
+            disabled={disabled}
           />
         </div>
       </div>
@@ -102,54 +121,89 @@ export default function FormCustomer() {
   );
 }
 
-const InputForm = ({
+function Field({
+  label,
   name,
   placeholder,
   value,
   onChange,
+  error,
   type = "text",
+  disabled,
 }: {
-  name: string;
+  label: string;
+  name: GuestFormField;
   placeholder: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  error?: string;
   type?: string;
-}) => {
+  disabled?: boolean;
+}) {
   return (
-    <input
-      name={name}
-      type={type}
-      placeholder={placeholder}
-      value={value}
-      onChange={onChange}
-      className="w-full rounded-xl border border-default bg-white px-4 py-3 text-sm outline-none transition-all focus:border-primary focus:shadow-[0_0_0_3px_rgba(47,93,80,0.1)]"
-    />
+    <div>
+      <label htmlFor={name} className="mb-1.5 block text-xs font-semibold text-text-secondary">
+        {label}
+      </label>
+      <input
+        id={name}
+        name={name}
+        type={type}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+        disabled={disabled}
+        aria-invalid={Boolean(error)}
+        aria-describedby={error ? `${name}-error` : undefined}
+        className={`w-full rounded-xl border bg-white px-4 py-3 text-sm outline-none transition-all focus:shadow-[0_0_0_3px_rgba(47,93,80,0.1)] disabled:cursor-not-allowed disabled:opacity-60 ${
+          error
+            ? "border-red-400 focus:border-red-500"
+            : "border-default focus:border-primary"
+        }`}
+      />
+      {error ? (
+        <p id={`${name}-error`} className="mt-1.5 text-xs text-red-600" role="alert">
+          {error}
+        </p>
+      ) : null}
+    </div>
   );
-};
+}
 
-const SelectForm = ({
+function SelectField({
+  label,
   name,
   value,
   onChange,
   options,
+  disabled,
 }: {
-  name: string;
+  label: string;
+  name: GuestFormField;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   options: { label: string; value: string }[];
-}) => {
+  disabled?: boolean;
+}) {
   return (
-    <select
-      name={name}
-      value={value}
-      onChange={onChange}
-      className="w-full rounded-xl border border-default bg-white px-4 py-3 text-sm outline-none transition-all focus:border-primary focus:shadow-[0_0_0_3px_rgba(47,93,80,0.1)]"
-    >
-      {options.map((opt) => (
-        <option key={opt.value} value={opt.value}>
-          {opt.label}
-        </option>
-      ))}
-    </select>
+    <div>
+      <label htmlFor={name} className="mb-1.5 block text-xs font-semibold text-text-secondary">
+        {label}
+      </label>
+      <select
+        id={name}
+        name={name}
+        value={value}
+        onChange={onChange}
+        disabled={disabled}
+        className="w-full rounded-xl border border-default bg-white px-4 py-3 text-sm outline-none transition-all focus:border-primary focus:shadow-[0_0_0_3px_rgba(47,93,80,0.1)] disabled:cursor-not-allowed disabled:opacity-60"
+      >
+        {options.map((opt) => (
+          <option key={opt.value} value={opt.value}>
+            {opt.label}
+          </option>
+        ))}
+      </select>
+    </div>
   );
-};
+}
