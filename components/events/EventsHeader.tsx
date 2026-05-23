@@ -44,20 +44,20 @@ export default function EventsHeader() {
             Eventos & Celebraciones
           </motion.span>
 
-          {/* Title */}
+          {/* Title 
           <h2 className="mt-5 font-chillax text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-[3.5rem] lg:leading-[1.1]">
             Tu evento,{" "}
             <br className="hidden lg:block" />
             <span className="bg-gradient-to-r from-[#c8a97e] to-[#d4bb96] bg-clip-text text-transparent">
               nuestra escena
             </span>
-          </h2>
+          </h2>*/}
 
           {/* Subtitle */}
           <p className="mt-5 max-w-xl font-inter text-[15px] leading-[1.8] text-white/60">
-            Nuestro auditorio premium se transforma para albergar desde
-            reuniones corporativas de alto nivel hasta las celebraciones más
-            memorables. Diseñado para impresionar.
+            Nuestro auditorio se transforma para albergar desde reuniones
+            corporativas de alto nivel hasta las celebraciones más memorables.
+            Diseñado para impresionar.
           </p>
 
           {/* Decorative animated line */}

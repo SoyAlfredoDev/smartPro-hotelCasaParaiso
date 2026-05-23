@@ -7,7 +7,7 @@ import BookingsAdmin from "@/components/admin/BookingsAdmin";
 import { AnimatePresence, motion } from "framer-motion";
 
 export default function AdminPage() {
-  const [activeTab, setActiveTab] = useState<"rooms" | "bookings">("rooms");
+  const [activeTab, setActiveTab] = useState<"rooms" | "bookings">("bookings");
 
   return (
     <div className="min-h-screen bg-[#1a1a1a]">

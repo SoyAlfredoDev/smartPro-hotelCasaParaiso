@@ -189,6 +189,7 @@ export default function BookingsAdmin() {
     const matchSearch =
       b.guestName.toLowerCase().includes(search.toLowerCase()) ||
       b.guestEmail.toLowerCase().includes(search.toLowerCase()) ||
+      b.id.toLowerCase().includes(search.toLowerCase()) ||
       b.room?.name?.toLowerCase().includes(search.toLowerCase());
     const matchStatus = statusFilter === "todas" || b.status === statusFilter;
     return matchSearch && matchStatus;
@@ -364,6 +365,14 @@ export default function BookingsAdmin() {
                   >
                     <StatusIcon size={12} /> {sc.label}
                   </div>
+                  {/* ID */}
+                  <p className="text-md text-center text-red-500 truncate min-w-[100px]">
+                    {booking.id}
+                  </p>
+                  {/* Hotel */}
+                  <p className="text-lg text-center text-white/30 truncate min-w-[100px]">
+                    hotel
+                  </p>
                   {/* Guest */}
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold text-white truncate">

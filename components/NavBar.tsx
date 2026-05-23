@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect, useCallback, useRef } from "react";
-import { Menu, X, ArrowRight } from "lucide-react";
+import { Menu, X, Calendar } from "lucide-react";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -162,6 +162,13 @@ export default function Navbar() {
               </Link>
             );
           })}
+          <Link
+            href="/reservaciones"
+            className="btn-accent group flex items-center justify-between rounded-xl px-3 py-3.5 font-inter text-[15px] font-medium transition-all duration-300"
+          >
+            <Calendar size={16} />
+            <span className="text-white ml-2">Ver Reservas</span>
+          </Link>
         </nav>
 
         {/* Mobile toggle */}
@@ -233,6 +240,13 @@ export default function Navbar() {
                 </Link>
               );
             })}
+            <Link
+              href="/reservaciones"
+              className="btn-accent group flex items-center justify-between rounded-xl px-4 py-3.5 font-inter text-[15px] font-medium transition-all duration-300"
+            >
+              <Calendar size={16} />
+              <span className="text-white ml-2">Ver Reservas</span>
+            </Link>
           </nav>
         </div>
       </div>

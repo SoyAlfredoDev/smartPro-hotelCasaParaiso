@@ -49,10 +49,24 @@ export default function Footer() {
     whatsapp: "56955103829",
   };
 
+  const hotelRepublica = {
+    address: "Avenida República #19, Santiago, RM, código postal 8320000",
+    email: "contacto@hotelcasaparaiso.cl",
+    phone: "+56 9 2258 3522",
+    whatsapp: "56922583522",
+  };
+
+  const hotelSanMiguel = {
+    address: "Salesiano #1130, San Miguel, RM, código postal 8900000",
+    email: "contacto@hotelcasaparaiso.cl",
+    phone: "+56 9 2006 0548",
+    whatsapp: "56920060548",
+  };
+
   /* ── Smooth scroll ── */
   const scrollToSection = (
     e: React.MouseEvent<HTMLAnchorElement>,
-    href: string
+    href: string,
   ) => {
     if (pathname === "/") {
       e.preventDefault();
@@ -70,249 +84,296 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <> 
-    <footer className="relative overflow-hidden bg-primary">
-      {/* Decorative accent line at top */}
-      <div className="h-px w-full bg-gradient-to-r from-transparent via-[#c8a97e]/40 to-transparent" />
+    <>
+      <footer className="relative overflow-hidden bg-primary">
+        {/* Decorative accent line at top */}
+        <div className="h-px w-full bg-gradient-to-r from-transparent via-[#c8a97e]/40 to-transparent" />
 
-      {/* Subtle background glows */}
-      <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-        <div className="absolute -left-[10%] top-[20%] h-[400px] w-[400px] rounded-full bg-[#2f5d50] opacity-[0.06] blur-[150px]" />
-        <div className="absolute -right-[5%] bottom-[10%] h-[300px] w-[300px] rounded-full bg-[#c8a97e] opacity-[0.05] blur-[120px]" />
-      </div>
+        {/* Subtle background glows */}
+        <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+          <div className="absolute -left-[10%] top-[20%] h-[400px] w-[400px] rounded-full bg-[#2f5d50] opacity-[0.06] blur-[150px]" />
+          <div className="absolute -right-[5%] bottom-[10%] h-[300px] w-[300px] rounded-full bg-[#c8a97e] opacity-[0.05] blur-[120px]" />
+        </div>
 
-      <div className="relative z-10 mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-16 lg:px-8">
-        {/* Top Section: Brand & Newsletter */}
+        <div className="relative z-10 mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-16 lg:px-8">
+          {/* Top Section: Brand & Newsletter */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, margin: "-60px" }}
+            transition={{ duration: 0.7 }}
+            className="mb-14 flex flex-col gap-8 border-b border-white/[0.06] pb-14 lg:flex-row lg:items-end lg:justify-between"
+          >
+            <div className="flex items-center gap-4 my-auto">
+              <Image
+                src="/images/logo-hotel-casa-paraiso.png"
+                alt="Logo"
+                width={100}
+                height={100}
+                className="bg-surface rounded-lg my-[-20px] p-2 w-[200px]"
+              />
+              <p className="mt-3 max-w-md font-inter text-[18px] leading-relaxed text-white/90">
+                Hotel boutique con enfoque en comodidad, ubicación y
+                experiencia. Tu hogar lejos de casa en Santiago.
+              </p>
+            </div>
+
+            {/* Social links */}
+            <div className="flex items-center gap-3 my-auto">
+              <span className="mr-2 font-inter text-[18px] font-bold uppercase tracking-[0.2em] text-white/90">
+                Síguenos
+              </span>
+              <Link
+                href="#"
+                aria-label="Instagram"
+                className="flex h-10 w-10 items-center justify-center rounded-sm border border-white/[0.08] bg-white/[0.04] text-white/90 transition-all duration-300 hover:border-[#c8a97e]/30 hover:bg-[#c8a97e]/10 hover:text-[#c8a97e]"
+              >
+                <FaInstagram className="text-[24px]" />
+              </Link>
+              <Link
+                href="#"
+                aria-label="Facebook"
+                className="flex h-10 w-10 items-center justify-center rounded-sm border border-white/[0.08] bg-white/[0.04] text-white/90 transition-all duration-300 hover:border-[#c8a97e]/30 hover:bg-[#c8a97e]/10 hover:text-[#c8a97e]"
+              >
+                <FaFacebook className="text-[24px]" />
+              </Link>
+              <Link
+                href="#"
+                aria-label="Tiktok"
+                className="flex h-10 w-10 items-center justify-center rounded-sm border border-white/[0.08] bg-white/[0.04] text-white/90 transition-all duration-300 hover:border-[#c8a97e]/30 hover:bg-[#c8a97e]/10 hover:text-[#c8a97e]"
+              >
+                <FaTiktok className="text-[24px]" />
+              </Link>
+            </div>
+          </motion.div>
+
+          {/* Main Grid */}
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: false, margin: "-60px" }}
+            className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-5"
+          >
+            {/* Quick Links / Menu */}
+            <motion.div variants={itemVariants}>
+              <h3 className="font-inter text-[16px] font-bold uppercase tracking-[0.2em] text-[#c8a97e]">
+                Menú
+              </h3>
+              <nav className="mt-5 flex flex-col items-start gap-2">
+                {navItems.map((item) => (
+                  <Link
+                    key={item.label}
+                    href={pathname === "/" ? item.href : `/${item.href}`}
+                    onClick={(e) => scrollToSection(e, item.href)}
+                    className="group relative px-2 py-1 font-inter text-[16px] font-medium text-white/80 transition-colors duration-300 hover:text-white"
+                  >
+                    {item.label}
+                    <span className="absolute bottom-0 left-2 h-[2px] w-0 bg-[#c8a97e] transition-all duration-300 group-hover:w-[calc(100%-16px)]" />
+                  </Link>
+                ))}
+              </nav>
+            </motion.div>
+            {/* Legal Info */}
+            <motion.div variants={itemVariants}>
+              <h3 className="font-inter text-[16px] font-bold uppercase tracking-[0.2em] text-[#c8a97e]">
+                Información Legal
+              </h3>
+              <div className="mt-5 space-y-3">
+                <div className="rounded-xl border border-white/[0.06] bg-white/[0.03] p-4">
+                  <p className="font-inter text-[16px] font-bold uppercase tracking-wider text-white/80">
+                    Razón Social
+                  </p>
+                  <p className="mt-1 font-inter text-[16px] font-semibold text-white/80">
+                    {company.name}
+                  </p>
+                </div>
+                <div className="rounded-xl border border-white/[0.06] bg-white/[0.03] p-4">
+                  <p className="font-inter text-[16px] font-bold uppercase tracking-wider text-white/80">
+                    RUT
+                  </p>
+                  <p className="mt-1 font-inter text-[16px] font-semibold text-white/80">
+                    {company.rut}
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+            {/* Contact Casa Paraiso Republica */}
+            <motion.div variants={itemVariants}>
+              <h3 className="font-inter text-[16px] font-bold uppercase tracking-[0.2em] text-[#c8a97e]">
+                Casa Paraiso Republica
+              </h3>
+
+              <ul className="mt-5 space-y-4">
+                <li className="flex items-start gap-3">
+                  <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/20">
+                    <MapPin className="h-3.5 w-3.5 text-white/80" />
+                  </div>
+                  <span className="font-inter text-[16px] leading-relaxed text-white/80">
+                    {hotelRepublica.address}
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/20">
+                    <MapPin className="h-3.5 w-3.5 text-white/80" />
+                  </div>
+                  <span className="font-inter text-[16px] leading-relaxed text-white/80">
+                    {hotelSanMiguel.address}
+                  </span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/20">
+                    <Phone className="h-3.5 w-3.5 text-white/80" />
+                  </div>
+                  <a
+                    href={`https://wa.me/${hotelSanMiguel.whatsapp}`}
+                    className="font-inter text-[16px] text-white/80 transition-colors duration-300 hover:text-[#c8a97e]"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {hotelSanMiguel.phone}
+                  </a>
+                </li>
+                <li className="flex items-center gap-3">
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/20">
+                    <Mail className="h-3.5 w-3.5 text-white/80" />
+                  </div>
+                  <Link
+                    href={`mailto:${hotelSanMiguel.email}`}
+                    className="font-inter text-[13px] text-white/80 transition-colors duration-300 hover:text-[#c8a97e]"
+                  >
+                    {hotelSanMiguel.email}
+                  </Link>
+                </li>
+              </ul>
+            </motion.div>
+
+            {/* Contact Casa Paraiso San Miguel */}
+            <motion.div variants={itemVariants}>
+              <h3 className="font-inter text-[16px] font-bold uppercase tracking-[0.2em] text-[#c8a97e]">
+                Casa Paraiso San Miguel
+              </h3>
+
+              <ul className="mt-5 space-y-4">
+                <li className="flex items-start gap-3">
+                  <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/20">
+                    <MapPin className="h-3.5 w-3.5 text-white/80" />
+                  </div>
+                  <span className="font-inter text-[16px] leading-relaxed text-white/80">
+                    {hotelSanMiguel.address}
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/20">
+                    <MapPin className="h-3.5 w-3.5 text-white/80" />
+                  </div>
+                  <span className="font-inter text-[16px] leading-relaxed text-white/80">
+                    {hotelSanMiguel.address}
+                  </span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/20">
+                    <Phone className="h-3.5 w-3.5 text-white/80" />
+                  </div>
+                  <a
+                    href={`https://wa.me/${hotelSanMiguel.whatsapp}`}
+                    className="font-inter text-[16px] text-white/80 transition-colors duration-300 hover:text-[#c8a97e]"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {hotelSanMiguel.phone}
+                  </a>
+                </li>
+                <li className="flex items-center gap-3">
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/20">
+                    <Mail className="h-3.5 w-3.5 text-white/80" />
+                  </div>
+                  <Link
+                    href={`mailto:${hotelSanMiguel.email}`}
+                    className="font-inter text-[13px] text-white/80 transition-colors duration-300 hover:text-[#c8a97e]"
+                  >
+                    {hotelSanMiguel.email}
+                  </Link>
+                </li>
+              </ul>
+            </motion.div>
+
+            {/* Payment Methods */}
+            <motion.div variants={itemVariants}>
+              <h3 className="font-inter text-[16px] font-bold uppercase tracking-[0.2em] text-[#c8a97e]">
+                Métodos de pago
+              </h3>
+              <div className="mt-5 flex items-center justify-center rounded-2xl border border-white/[0.06] bg-white/[0.03] p-6">
+                <Image
+                  src="/images/webpay-2048x979.png"
+                  alt="Métodos de pago - Webpay"
+                  width={200}
+                  height={96}
+                  className="h-auto w-full max-w-[200px] opacity-70 transition-opacity duration-300 hover:opacity-100"
+                />
+              </div>
+            </motion.div>
+          </motion.div>
+        </div>
+      </footer>
+
+      {/* Bottom Bar */}
+      <div className="mx-auto w-full max-w-7xl px-4 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, margin: "-60px" }}
-          transition={{ duration: 0.7 }}
-          className="mb-14 flex flex-col gap-8 border-b border-white/[0.06] pb-14 lg:flex-row lg:items-end lg:justify-between"
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="my-8 flex flex-col items-center justify-between gap-6   text-center md:flex-row md:text-left"
         >
-          <div className="flex items-center gap-4 my-auto">
-            <Image
-              src="/images/logo-hotel-casa-paraiso.png"
-              alt="Logo"
-              width={100}
-              height={100}
-              className="bg-surface rounded-lg my-[-20px] p-2 w-[200px]"
-            />
-            <p className="mt-3 max-w-md font-inter text-[18px] leading-relaxed text-white/90">
-              Hotel boutique con enfoque en comodidad, ubicación y experiencia.
-              Tu hogar lejos de casa en Santiago.
+          {/* 1. Copyright (Izquierda en PC, Abajo en Móvil) */}
+          <div className="order-3 flex-1 md:order-1">
+            <p className="font-inter text-[14px] leading-relaxed text-black/60">
+              © {currentYear} {company.name}.{" "}
+              <span className="block sm:inline">
+                Todos los derechos reservados.
+              </span>
             </p>
           </div>
 
-          {/* Social links */}
-          <div className="flex items-center gap-3 my-auto">
-            <span className="mr-2 font-inter text-[18px] font-bold uppercase tracking-[0.2em] text-white/90">
-              Síguenos
+          {/* 2. Creado por SmartPro (Centro) */}
+          <div className="order-1 flex flex-1 items-center justify-center gap-2 md:order-2">
+            <span className="font-inter text-[14px] text-black/60">
+              creado por:
             </span>
-            <Link
-              href="#"
-              aria-label="Instagram"
-              className="flex h-10 w-10 items-center justify-center rounded-sm border border-white/[0.08] bg-white/[0.04] text-white/90 transition-all duration-300 hover:border-[#c8a97e]/30 hover:bg-[#c8a97e]/10 hover:text-[#c8a97e]"
+            <a
+              href="https://smartpro.cl"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group transition-transform hover:scale-105"
             >
-              <FaInstagram className="text-[24px]" />
+              <Image
+                src="/images/logo-smartpro.png"
+                alt="Logo SmartPro"
+                width={130}
+                height={40}
+                className="h-auto w-auto max-w-[100px]  transition-all duration-300 group-hover:opacity-100 group-hover:grayscale-0"
+              />
+            </a>
+          </div>
+
+          {/* 3. Enlaces Legales (Derecha en PC, Medio en Móvil) */}
+          <div className="order-2 flex flex-1 flex-wrap items-center justify-center gap-x-6 gap-y-2 md:order-3 md:justify-end">
+            <Link
+              className="font-inter text-[14px] text-black/60 transition-colors duration-300 hover:text-black hover:underline underline-offset-4"
+              href="#"
+            >
+              Política de privacidad
             </Link>
             <Link
+              className="font-inter text-[14px] text-black/60 transition-colors duration-300 hover:text-black hover:underline underline-offset-4"
               href="#"
-              aria-label="Facebook"
-              className="flex h-10 w-10 items-center justify-center rounded-sm border border-white/[0.08] bg-white/[0.04] text-white/90 transition-all duration-300 hover:border-[#c8a97e]/30 hover:bg-[#c8a97e]/10 hover:text-[#c8a97e]"
             >
-              <FaFacebook className="text-[24px]" />
-            </Link>
-            <Link
-              href="#"
-              aria-label="Tiktok"
-              className="flex h-10 w-10 items-center justify-center rounded-sm border border-white/[0.08] bg-white/[0.04] text-white/90 transition-all duration-300 hover:border-[#c8a97e]/30 hover:bg-[#c8a97e]/10 hover:text-[#c8a97e]"
-            >
-              <FaTiktok className="text-[24px]" />
+              Términos y condiciones
             </Link>
           </div>
         </motion.div>
-
-        {/* Main Grid */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: false, margin: "-60px" }}
-          className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4"
-        >
-          {/* Contact */}
-          <motion.div variants={itemVariants}>
-            <h3 className="font-inter text-[16px] font-bold uppercase tracking-[0.2em] text-[#c8a97e]">
-              Contacto
-            </h3>
-
-            <ul className="mt-5 space-y-4">
-              <li className="flex items-start gap-3">
-                <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/20">
-                  <MapPin className="h-3.5 w-3.5 text-white/80" />
-                </div>
-                <span className="font-inter text-[16px] leading-relaxed text-white/80">
-                  {company.address}
-                </span>
-              </li>
-              <li className="flex items-start gap-3">
-                <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/20">
-                  <MapPin className="h-3.5 w-3.5 text-white/80" />
-                </div>
-                <span className="font-inter text-[16px] leading-relaxed text-white/80">
-                  {company.address2}
-                </span>
-              </li>
-              <li className="flex items-center gap-3">
-                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/20">
-                  <Phone className="h-3.5 w-3.5 text-white/80" />
-                </div>
-                <a
-                  href={`https://wa.me/${company.whatsapp}`}
-                  className="font-inter text-[16px] text-white/80 transition-colors duration-300 hover:text-[#c8a97e]"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {company.phone}
-                </a>
-              </li>
-              <li className="flex items-center gap-3">
-                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/20">
-                  <Mail className="h-3.5 w-3.5 text-white/80" />
-                </div>
-                <Link
-                  href={`mailto:${company.email}`}
-                  className="font-inter text-[13px] text-white/80 transition-colors duration-300 hover:text-[#c8a97e]"
-                >
-                  {company.email}
-                </Link>
-              </li>
-            </ul>
-          </motion.div>
-
-          {/* Quick Links / Menu */}
-          <motion.div variants={itemVariants}>
-            <h3 className="font-inter text-[16px] font-bold uppercase tracking-[0.2em] text-[#c8a97e]">
-              Menú
-            </h3>
-            <nav className="mt-5 flex flex-col items-start gap-2">
-              {navItems.map((item) => (
-                <Link
-                  key={item.label}
-                  href={pathname === "/" ? item.href : `/${item.href}`}
-                  onClick={(e) => scrollToSection(e, item.href)}
-                  className="group relative px-2 py-1 font-inter text-[16px] font-medium text-white/80 transition-colors duration-300 hover:text-white"
-                >
-                  {item.label}
-                  <span className="absolute bottom-0 left-2 h-[2px] w-0 bg-[#c8a97e] transition-all duration-300 group-hover:w-[calc(100%-16px)]" />
-                </Link>
-              ))}
-            </nav>
-          </motion.div>
-
-          {/* Legal Info */}
-          <motion.div variants={itemVariants}>
-            <h3 className="font-inter text-[16px] font-bold uppercase tracking-[0.2em] text-[#c8a97e]">
-              Información Legal
-            </h3>
-            <div className="mt-5 space-y-3">
-              <div className="rounded-xl border border-white/[0.06] bg-white/[0.03] p-4">
-                <p className="font-inter text-[16px] font-bold uppercase tracking-wider text-white/80">
-                  Razón Social
-                </p>
-                <p className="mt-1 font-inter text-[16px] font-semibold text-white/80">
-                  {company.name}
-                </p>
-              </div>
-              <div className="rounded-xl border border-white/[0.06] bg-white/[0.03] p-4">
-                <p className="font-inter text-[16px] font-bold uppercase tracking-wider text-white/80">
-                  RUT
-                </p>
-                <p className="mt-1 font-inter text-[16px] font-semibold text-white/80">
-                  {company.rut}
-                </p>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Payment Methods */}
-          <motion.div variants={itemVariants}>
-            <h3 className="font-inter text-[16px] font-bold uppercase tracking-[0.2em] text-[#c8a97e]">
-              Métodos de pago
-            </h3>
-            <div className="mt-5 flex items-center justify-center rounded-2xl border border-white/[0.06] bg-white/[0.03] p-6">
-              <Image
-                src="/images/webpay-2048x979.png"
-                alt="Métodos de pago - Webpay"
-                width={200}
-                height={96}
-                className="h-auto w-full max-w-[200px] opacity-70 transition-opacity duration-300 hover:opacity-100"
-              />
-            </div>
-          </motion.div>
-        </motion.div>
-
-       
       </div>
-      
-    </footer>
-
-     {/* Bottom Bar */}
-     <div className="mx-auto w-full max-w-7xl px-4 lg:px-8">
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6, delay: 0.2 }}
-      className="my-8 flex flex-col items-center justify-between gap-6   text-center md:flex-row md:text-left"
-    >
-      {/* 1. Copyright (Izquierda en PC, Abajo en Móvil) */}
-      <div className="order-3 flex-1 md:order-1">
-        <p className="font-inter text-[14px] leading-relaxed text-black/60">
-          © {currentYear} {company.name}.{" "}
-          <span className="block sm:inline">Todos los derechos reservados.</span>
-        </p>
-      </div>
-
-      {/* 2. Creado por SmartPro (Centro) */}
-      <div className="order-1 flex flex-1 items-center justify-center gap-2 md:order-2">
-        <span className="font-inter text-[14px] text-black/60">
-          creado por:
-        </span>
-        <a
-          href="https://smartpro.cl"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group transition-transform hover:scale-105"
-        >
-          <Image
-            src="/images/logo-smartpro.png"
-            alt="Logo SmartPro"
-            width={130}
-            height={40}
-            className="h-auto w-auto max-w-[100px]  transition-all duration-300 group-hover:opacity-100 group-hover:grayscale-0"
-          />
-        </a>
-      </div>
-
-      {/* 3. Enlaces Legales (Derecha en PC, Medio en Móvil) */}
-      <div className="order-2 flex flex-1 flex-wrap items-center justify-center gap-x-6 gap-y-2 md:order-3 md:justify-end">
-        <Link
-          className="font-inter text-[14px] text-black/60 transition-colors duration-300 hover:text-black hover:underline underline-offset-4"
-          href="#"
-        >
-          Política de privacidad
-        </Link>
-        <Link
-          className="font-inter text-[14px] text-black/60 transition-colors duration-300 hover:text-black hover:underline underline-offset-4"
-          href="#"
-        >
-          Términos y condiciones
-        </Link>
-      </div>
-    </motion.div>
-</div>
-   </>
+    </>
   );
 }

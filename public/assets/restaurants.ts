@@ -6,8 +6,7 @@ export const restaurants = [
     address: "Republica 19 Santiago, Santiago, Santiago, 8340000",
     title: "Restobar Republica",
     subtitle: "Gastronomía Chilena de Autor",
-    description:
-      "Disfruta de una experiencia culinaria única con platos tradicionales reinventados con ingredientes locales en un ambiente natural.",
+    description: "",
     image: "/images/republica/restaurants/restaurant-01.jpg",
     video:
       "https://res.cloudinary.com/dtg53cua9/video/upload/v1779320806/restobar-republica_q6emp4.mp4",
@@ -20,8 +19,7 @@ export const restaurants = [
     title: "Restaurante Republica",
     address: "Republica 19 Santiago, Santiago, Santiago, 8340000",
     subtitle: "Sabores del Pacífico",
-    description:
-      "Pescados frescos y mariscos capturados diariamente con vistas privilegiadas.",
+    description: "",
     image: "/images/republica/restaurants/restaurant-06.jpg",
     video:
       "https://res.cloudinary.com/dtg53cua9/video/upload/v1779321691/restaurant-republica_h0v23b.mp4",
@@ -34,12 +32,11 @@ export const restaurants = [
     title: "Restaurante San Miguel",
     address: "Av Salesianos 1130, San Miguel, Santiago, San Miguel, 8930000",
     subtitle: "Tapas y Vinos Premium",
-    description:
-      "Una selección única de cepas nacionales acompañada de las mejores tapas de Santiago.",
+    description: "",
     image: "/images/san-miguel/restaurants/restaurant-03.jpg",
     video:
       "https://res.cloudinary.com/dtg53cua9/video/upload/v1779320300/restaurant-san-miguel_qgsc7w.mp4",
-    features: ["Bodega Privada", "Degustaciones", "Eventos"],
+    features: ["Ambiente Acogedor", "Coctelería", "Eventos"],
     icon: Wine,
     color: "#c8a97e",
   },
