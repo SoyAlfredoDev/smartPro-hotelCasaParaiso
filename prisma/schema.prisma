@@ -5,7 +5,6 @@
 // To push the schema to the database: npx prisma db push
 // To seed the database: npx prisma db seed
 
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -28,18 +27,32 @@ model Room {
 }
 
 model Booking {
-  id            String   @id
-  guestName     String
-  guestEmail    String
-  guestPhone    String
-  checkIn       DateTime
-  checkOut      DateTime
-  guests        Int
-  totalPrice    Int
-  status        String   @default("pendiente") // pendiente, confirmada, finalizada, cancelada
-  notes         String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  roomId        String
-  room          Room     @relation(fields: [roomId], references: [id])
+  id         String   @id
+  guestName  String
+  guestEmail String
+  guestPhone String
+  checkIn    DateTime
+  checkOut   DateTime
+  guests     Int
+  totalPrice Int
+  status     String   @default("pendiente") // pendiente, confirmada, finalizada, cancelada
+  notes      String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  roomId     String
+  room       Room     @relation(fields: [roomId], references: [id])
+}
+
+model SpecialRequest {
+  id              String   @id @default(uuid())
+  requestSequence Int      @unique @default(autoincrement())
+  applicantName   String
+  applicantEmail  String
+  applicantPhone  String
+  eventDate       DateTime
+  eventType       String
+  details         String
+  status          String   @default("pendiente")
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
