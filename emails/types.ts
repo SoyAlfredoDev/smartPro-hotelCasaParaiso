@@ -24,3 +24,19 @@ export interface BookingAdminNotificationEmailProps {
   notes?: string | null;
   adminPanelUrl?: string;
 }
+
+export interface SpecialRequestConfirmationEmailProps {
+  requestNumber: string;
+  applicantName: string;
+  eventDate: string;
+  eventType: string;
+  details: string;
+}
+
+export interface SpecialRequestAdminNotificationEmailProps
+  extends SpecialRequestConfirmationEmailProps {
+  applicantEmail: string;
+  applicantPhone: string;
+  status?: string;
+  adminPanelUrl?: string;
+}

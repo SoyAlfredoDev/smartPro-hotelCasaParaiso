@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { handleNewSpecialRequest } from "@/lib/resend/handleNewSpecialRequest";
 
 const allowedEventTypes = new Set([
   "Eventos corporativos",
@@ -83,10 +84,27 @@ export async function POST(request: Request) {
     const requestNumber = formatSpecialRequestNumber(
       specialRequest.requestSequence,
     );
+    let emailsSent = false;
+
+    try {
+      emailsSent = await handleNewSpecialRequest({
+        requestNumber,
+        applicantName: specialRequest.applicantName,
+        applicantEmail: specialRequest.applicantEmail,
+        applicantPhone: specialRequest.applicantPhone,
+        eventDate: specialRequest.eventDate,
+        eventType: specialRequest.eventType,
+        details: specialRequest.details,
+        status: specialRequest.status,
+      });
+    } catch (error) {
+      console.error("Error enviando correos:", error);
+    }
 
     return Response.json(
       {
         requestNumber,
+        emailsSent,
         specialRequest: {
           ...specialRequest,
           requestNumber,
