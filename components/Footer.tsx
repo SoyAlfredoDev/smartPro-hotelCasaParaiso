@@ -108,8 +108,8 @@ export default function Footer() {
               <Image
                 src="/images/logo-hotel-casa-paraiso.png"
                 alt="Logo"
-                width={100}
-                height={100}
+                width={90}
+                height={90}
                 className="bg-surface rounded-lg my-[-20px] p-2 w-[200px]"
               />
               <p className="mt-3 max-w-md font-inter text-[18px] leading-relaxed text-white/90">
@@ -118,7 +118,7 @@ export default function Footer() {
               </p>
             </div>
 
-            {/* Social links */}
+            {/* Social links 
             <div className="flex items-center gap-3 my-auto">
               <span className="mr-2 font-inter text-[18px] font-bold uppercase tracking-[0.2em] text-white/90">
                 Síguenos
@@ -144,7 +144,7 @@ export default function Footer() {
               >
                 <FaTiktok className="text-[24px]" />
               </Link>
-            </div>
+            </div>*/}
           </motion.div>
 
           {/* Main Grid */}
