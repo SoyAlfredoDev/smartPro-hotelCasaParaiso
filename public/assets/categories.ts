@@ -16,7 +16,7 @@ export default [
   },
   {
     id: "cuadruple",
-    name: "Cuadruple",
+    name: "Cuádruple",
     image: "/images/assest/categoryRoom/cuadruple.jpg",
   },
   {

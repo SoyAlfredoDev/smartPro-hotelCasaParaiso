@@ -14,7 +14,7 @@ import AdditionalServicesSection from "@/section/AdditionalServicesSection";
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "LodgingBusiness",
-  name: "Hotel Casa Paraiso",
+  name: "Hotel Casa Paraíso",
   image: "https://casaparaisohotel.cl/images/logo-hotel-casa-paraiso.png",
   description:
     "Hotel boutique con enfoque en comodidad, ubicación y experiencia. Tu hogar lejos de casa en Santiago.",

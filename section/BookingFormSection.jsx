@@ -485,10 +485,10 @@ function RoomReservationForm() {
               required
             >
               <option value="hotel-san-miguel">
-                Hotel Casa Paraiso San Miguel
+                Hotel Casa Paraíso San Miguel
               </option>
               <option value="hotel-republica">
-                Hotel Casa Paraiso Republica
+                Hotel Casa Paraíso República
               </option>
             </select>
           </motion.div>

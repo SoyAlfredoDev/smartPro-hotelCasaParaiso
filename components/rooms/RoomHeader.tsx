@@ -27,11 +27,11 @@ export default function RoomHeader({ title, hotelId, stars }: HeaderProps) {
           <MapPin size={16} className="text-primary" />
           <span>
             {hotelId == "hotel-san-miguel"
-              ? "Hotel Casa Paraiso San Miguel, Av Salesianos 1130 San Miguel"
-              : "Hotel Casa Paraiso Republica, Republica 19 Santiago"}
+              ? "Hotel Casa Paraíso San Miguel, Av. Salesianos 1130, San Miguel"
+              : "Hotel Casa Paraíso República, República 19, Santiago"}
           </span>
           <button className="text-primary hover:underline">
-            {}- Excelente ubicación
+            - Excelente ubicación
           </button>
         </div>
       </div>

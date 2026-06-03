@@ -135,7 +135,7 @@ export default function LoginPage() {
             <Lock size={28} className="text-white" />
           </div>
           <h1 className="text-2xl font-bold text-white font-['AQ_Chillax',sans-serif] tracking-wide">
-            Casa Paraiso
+            Casa Paraíso
           </h1>
           <p className="text-white/40 text-sm mt-1 font-['Inter',sans-serif]">
             Panel de Administración

@@ -95,7 +95,7 @@ const HotelDetailHeroSection = ({
     {
       id: 5,
       title: "Ubicación",
-      description: "En el corazon de la ciudad.",
+      description: "En el corazón de la ciudad.",
       icon: Building2,
       img: image5,
       gridClass: "md:col-span-1 md:row-span-1 h-[250px] md:h-full",

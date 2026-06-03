@@ -1,9 +1,9 @@
 export default [
   {
     id: "hotel-san-miguel",
-    name: "Hotel Casa Paraiso San Miguel",
+    name: "Hotel Casa Paraíso San Miguel",
     description: "",
-    address: "Av Salesianos 1130, San Miguel",
+    address: "Av. Salesianos 1130, San Miguel",
     city: "Santiago",
     commune: "San Miguel",
     codePostal: "8930000",
@@ -20,8 +20,8 @@ export default [
       },
       {
         id: "3",
-        name: "Cocina equipada",
-        image: "/images/assest/amenities/kitchen.png",
+        name: "Restobar",
+        image: "/images/assest/amenities/restobar.png",
       },
       {
         id: "4",
@@ -98,9 +98,9 @@ export default [
   },
   {
     id: "hotel-republica",
-    name: "Hotel Casa Paraiso Republica",
+    name: "Hotel Casa Paraíso República",
     description: "",
-    address: "Republica 19 Santiago",
+    address: "República 19, Santiago",
     city: "Santiago",
     commune: "Santiago",
     codePostal: "8340000",
@@ -117,7 +117,7 @@ export default [
       },
       {
         id: "3",
-        name: "Cocina equipada",
+        name: "Restobar",
         image: "/images/assest/amenities/kitchen.png",
       },
       {

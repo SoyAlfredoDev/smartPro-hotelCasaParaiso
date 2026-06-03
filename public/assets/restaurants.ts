@@ -3,8 +3,8 @@ import { Utensils, GlassWater, Wine } from "lucide-react";
 export const restaurants = [
   {
     id: "resto-bar-republica",
-    address: "Republica 19 Santiago, Santiago, Santiago, 8340000",
-    title: "Restobar Republica",
+    address: "República 19, Santiago, Santiago, Santiago, 8340000",
+    title: "Restobar República",
     subtitle: "Gastronomía Chilena de Autor",
     description: "",
     image: "/images/republica/restaurants/restaurant-01.jpg",
@@ -16,8 +16,8 @@ export const restaurants = [
   },
   {
     id: "restaurante-republica-2",
-    title: "Restaurante Republica",
-    address: "Republica 19 Santiago, Santiago, Santiago, 8340000",
+    title: "Restaurante República",
+    address: "República 19, Santiago, Santiago, Santiago, 8340000",
     subtitle: "Sabores del Pacífico",
     description: "",
     image: "/images/republica/restaurants/restaurant-06.jpg",
@@ -30,7 +30,7 @@ export const restaurants = [
   {
     id: "restarurante-san-miguel",
     title: "Restaurante San Miguel",
-    address: "Av Salesianos 1130, San Miguel, Santiago, San Miguel, 8930000",
+    address: "Av. Salesianos 1130, San Miguel, Santiago, San Miguel, 8930000",
     subtitle: "Tapas y Vinos Premium",
     description: "",
     image: "/images/san-miguel/restaurants/restaurant-03.jpg",

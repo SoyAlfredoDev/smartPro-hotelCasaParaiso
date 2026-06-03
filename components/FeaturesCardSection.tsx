@@ -23,7 +23,7 @@ const features = [
   {
     id: 3,
     icon: Utensils,
-    title: "Restaurant en el hotel",
+    title: "Restaurante en el hotel",
     description: "Disfruta de nuestra cocina turca e internacional.",
   },
   {
@@ -107,7 +107,7 @@ export default function FeaturesCardSection() {
             variants={headerItemVariants}
             className="mx-auto mt-6 max-w-xl font-inter text-[16px] leading-[1.8] text-[#6f6f6f]"
           >
-            Ubicación estratégica, habitaciones cómodas, restaurant y atención
+            Ubicación estratégica, habitaciones cómodas, restaurante y atención
             personalizada en un solo lugar.
           </motion.p>
         </motion.header>

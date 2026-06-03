@@ -6,8 +6,8 @@ import categories from "./categories";
 export default [
   {
     id: "room1",
-    name: "Habitacion Standard",
-    description: "Habitacion Standard  ideal para  2 personas",
+    name: "Habitación Standard",
+    description: "Habitación Standard ideal para 2 personas",
     hotelId: "hotel-san-miguel",
     category: categories[0].id, //its a reference to category
     capacity: 2,
@@ -28,9 +28,9 @@ export default [
   },
   {
     id: "room2",
-    name: "Habitacion Vip",
+    name: "Habitación VIP",
     hotelId: "hotel-san-miguel",
-    description: "Habitacion Vip  ideal para  2 personas",
+    description: "Habitación VIP ideal para 2 personas",
     category: categories[1].id, //its a reference to category
     capacity: 2,
     price: 90000,
@@ -47,8 +47,8 @@ export default [
   {
     id: "room3",
     hotelId: "hotel-republica",
-    name: "Habitacion Familiar",
-    description: "Habitacion Familiar  ideal para  4 personas",
+    name: "Habitación Familiar",
+    description: "Habitación Familiar ideal para 4 personas",
     capacity: 4,
     category: categories[2].id, //its a reference to category
     price: 120000,

@@ -82,7 +82,7 @@ function SearchResults() {
         ) : roomsAvailable.length === 0 && !isLoading ? (
           <div className="flex flex-col h-full min-h-[400px] items-center justify-center">
             <h2 className="text-xl font-bold text-primary md:text-2xl text-center">
-              lo sentimos no encontramos habitaciones disponibles.
+              Lo sentimos, no encontramos habitaciones disponibles.
             </h2>
             <Link
               href="/#"

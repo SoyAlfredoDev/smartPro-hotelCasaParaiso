@@ -42,7 +42,7 @@ export default function NavBarAdmin({ activeTab, onTabChange }: NavBarAdminProps
             </div>
             <div className="flex flex-col">
               <span className="text-sm font-bold text-white tracking-wide font-['AQ_Chillax',sans-serif]">
-                Casa Paraiso
+                Casa Paraíso
               </span>
               <span className="text-[10px] text-white/40 uppercase tracking-widest">
                 Panel Admin

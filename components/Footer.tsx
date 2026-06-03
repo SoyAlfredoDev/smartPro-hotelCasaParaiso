@@ -198,10 +198,10 @@ export default function Footer() {
                 </div>
               </div>
             </motion.div>
-            {/* Contact Casa Paraiso Republica */}
+            {/* Contact Casa Paraíso República */}
             <motion.div variants={itemVariants}>
               <h3 className="font-inter text-[16px] font-bold uppercase tracking-[0.2em] text-[#c8a97e]">
-                Casa Paraiso Republica
+                Casa Paraíso República
               </h3>
 
               <ul className="mt-5 space-y-4">
@@ -248,10 +248,10 @@ export default function Footer() {
               </ul>
             </motion.div>
 
-            {/* Contact Casa Paraiso San Miguel */}
+            {/* Contact Casa Paraíso San Miguel */}
             <motion.div variants={itemVariants}>
               <h3 className="font-inter text-[16px] font-bold uppercase tracking-[0.2em] text-[#c8a97e]">
-                Casa Paraiso San Miguel
+                Casa Paraíso San Miguel
               </h3>
 
               <ul className="mt-5 space-y-4">

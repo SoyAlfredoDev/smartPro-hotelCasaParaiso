@@ -13,7 +13,7 @@ const navItems = [
   { label: "Habitaciones", href: "#habitaciones" },
   { label: "Entorno", href: "#entorno" },
   { label: "Traslados", href: "#traslados" },
-  { label: "Solicitud Especiales", href: "#contact" },
+  { label: "Solicitudes Especiales", href: "#contact" },
 ];
 
 export default function Navbar() {
