@@ -6,12 +6,16 @@ interface BookingButtonProps {
   onReserve: () => void;
   isLoading: boolean;
   disabled?: boolean;
+  label?: string;
+  loadingLabel?: string;
 }
 
 export default function BookingButton({
   onReserve,
   isLoading,
   disabled = false,
+  label = "Reservar",
+  loadingLabel = "Procesando reserva...",
 }: BookingButtonProps) {
   const isDisabled = disabled || isLoading;
 
@@ -26,10 +30,10 @@ export default function BookingButton({
       {isLoading ? (
         <span className="inline-flex items-center justify-center gap-2">
           <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
-          Preparando pago...
+          {loadingLabel}
         </span>
       ) : (
-        "Continuar al pago"
+        label
       )}
     </button>
   );

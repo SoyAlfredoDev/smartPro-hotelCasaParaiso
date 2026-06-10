@@ -9,12 +9,14 @@ interface ResumeCheckoutViewProps {
   onReserve: () => void;
   isSubmitting: boolean;
   disableReserve?: boolean;
+  paymentsEnabled?: boolean;
 }
 
 export default function ResumeCheckoutView({
   onReserve,
   isSubmitting,
   disableReserve = false,
+  paymentsEnabled = false,
 }: ResumeCheckoutViewProps) {
   const nights = useBookingStore((state) => state.nights);
   const totalPrice = useBookingStore((state) => state.totalPrice) ?? 0;
@@ -28,8 +30,9 @@ export default function ResumeCheckoutView({
         Resumen de reserva
       </h2>
       <p className="mt-1 text-sm text-text-secondary">
-        Pago seguro con tarjeta vía Klap. La reserva se confirma al aprobar el
-        pago.
+        {paymentsEnabled
+          ? "Pago seguro con tarjeta vía Klap. La reserva se confirma al aprobar el pago."
+          : "Revisa los datos y confirma tu solicitud de reserva."}
       </p>
 
       <div className="mt-6 space-y-4 text-sm">
@@ -86,8 +89,9 @@ export default function ResumeCheckoutView({
         </div>
 
         <p className="text-xs leading-relaxed text-text-secondary">
-          Al continuar, crearás tu reserva y pasarás al pago con tarjeta. El
-          cobro es inmediato y seguro a través de Klap.
+          {paymentsEnabled
+            ? "Al continuar, pasarás al pago con tarjeta. El cobro es inmediato y seguro a través de Klap."
+            : "Al continuar, enviaremos tu solicitud de reserva al hotel. Te contactaremos para confirmar disponibilidad y pago."}
         </p>
 
         <div className="pt-2">
@@ -95,6 +99,10 @@ export default function ResumeCheckoutView({
             onReserve={onReserve}
             isLoading={isSubmitting}
             disabled={disableReserve}
+            label={paymentsEnabled ? "Continuar al pago" : "Reservar"}
+            loadingLabel={
+              paymentsEnabled ? "Preparando pago..." : "Procesando reserva..."
+            }
           />
         </div>
       </div>

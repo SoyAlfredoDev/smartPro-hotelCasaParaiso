@@ -9,6 +9,7 @@ import ReservationResultModal, {
   type ReservationModalState,
 } from "@/components/checkout/ReservationResultModal";
 import KlapPaymentForm from "@/components/klap/KlapPaymentForm";
+import { handleNewBooking } from "@/lib/resend/handleNewBooking";
 import { useBookingStore } from "@/store/useBookingStore";
 import {
   EMPTY_GUEST_FORM,
@@ -27,7 +28,13 @@ interface PaymentSession {
   redirectUrl?: string;
 }
 
-export default function DetailCheckoutView() {
+interface DetailCheckoutViewProps {
+  paymentsEnabled?: boolean;
+}
+
+export default function DetailCheckoutView({
+  paymentsEnabled = false,
+}: DetailCheckoutViewProps) {
   const [mounted, setMounted] = useState(false);
   const [step, setStep] = useState<CheckoutStep>("guest");
   const [formData, setFormData] = useState<GuestFormData>(EMPTY_GUEST_FORM);
@@ -147,6 +154,38 @@ export default function DetailCheckoutView() {
       .join("\n");
 
     try {
+      if (!paymentsEnabled) {
+        const bookingResult = await handleNewBooking({
+          firstName: formData.firstName.trim(),
+          lastName: formData.lastName.trim(),
+          email: formData.email.trim(),
+          phone: formData.phone.trim(),
+          checkIn: checkIn!,
+          checkOut: checkOut!,
+          guests: peopleQuantity!,
+          totalPrice: totalPrice ?? 0,
+          roomId: roomsSelected!.id,
+          comment: notes,
+          status: "pendiente",
+        });
+
+        if (!bookingResult.success) {
+          setModalState({
+            type: "error",
+            message:
+              bookingResult.error ??
+              "Ocurrió un error al registrar tu reserva. Por favor, inténtalo de nuevo.",
+          });
+          return;
+        }
+
+        finalizeSuccess(
+          bookingResult.booking.id,
+          formData.email.trim(),
+        );
+        return;
+      }
+
       const orderResponse = await fetch("/api/klap/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -295,6 +334,7 @@ export default function DetailCheckoutView() {
               onReserve={handleReserve}
               isSubmitting={isSubmitting}
               disableReserve={!hasRoom}
+              paymentsEnabled={paymentsEnabled}
             />
           ) : null}
         </div>

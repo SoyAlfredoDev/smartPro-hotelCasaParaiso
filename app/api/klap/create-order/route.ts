@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createKlapOrder } from "@/lib/klap/createOrder";
+import { isKlapPaymentsEnabled } from "@/lib/klap/isKlapPaymentsEnabled";
 import { normalizePhoneForKlap } from "@/lib/klap/normalizePhone";
 import {
   attachKlapOrderToPending,
@@ -8,6 +9,13 @@ import {
 import type { SaveBookingInput } from "@/lib/db/saveBookingToDatabase";
 
 export async function POST(req: Request) {
+  if (!isKlapPaymentsEnabled()) {
+    return NextResponse.json(
+      { error: "El pago en línea no está habilitado" },
+      { status: 403 },
+    );
+  }
+
   try {
     const body = await req.json();
     const {
