@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import DetailCheckoutView from "@/components/checkout/DetailCheckoutView";
 
 export const dynamic = "force-dynamic";
-
+// .
 export const metadata: Metadata = {
   title: "Checkout de Reserva",
   robots: {
