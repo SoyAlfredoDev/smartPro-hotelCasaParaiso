@@ -15,7 +15,7 @@ export type GuestFormField = keyof GuestFormData;
 export type GuestFormErrors = Partial<Record<GuestFormField | "_form", string>>;
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const PHONE_REGEX = /^[\d\s+()-]{8,20}$/;
+const PHONE_REGEX = /^[\d\s+()-]{8,30}$/;
 
 export const EMPTY_GUEST_FORM: GuestFormData = {
   firstName: "",
@@ -42,7 +42,12 @@ export function validateGuestForm(form: GuestFormData): GuestFormErrors {
   if (!form.email.trim() || !EMAIL_REGEX.test(form.email.trim())) {
     errors.email = "Ingresa un correo electrónico válido.";
   }
-  if (!form.phone.trim() || !PHONE_REGEX.test(form.phone.trim())) {
+  const phoneDigits = form.phone.replace(/\D/g, "");
+  if (
+    !form.phone.trim() ||
+    !PHONE_REGEX.test(form.phone.trim()) ||
+    phoneDigits.length < 8
+  ) {
     errors.phone = "Ingresa un teléfono válido (mínimo 8 dígitos).";
   }
 
@@ -106,12 +111,19 @@ export function validateSaveBookingInput(
   if (!guestEmail || !EMAIL_REGEX.test(guestEmail)) {
     return "El correo electrónico no es válido.";
   }
+  const phoneDigits = guestPhone.replace(/\D/g, "");
   if (requirePhone) {
-    if (!guestPhone || !PHONE_REGEX.test(guestPhone)) {
+    if (
+      !guestPhone ||
+      !PHONE_REGEX.test(guestPhone) ||
+      phoneDigits.length < 8
+    ) {
       return "El teléfono no es válido.";
     }
-  } else if (guestPhone && !PHONE_REGEX.test(guestPhone)) {
-    return "El teléfono no es válido.";
+  } else if (guestPhone) {
+    if (!PHONE_REGEX.test(guestPhone) || phoneDigits.length < 8) {
+      return "El teléfono no es válido.";
+    }
   }
   if (!input.checkIn || !input.checkOut) {
     return "Las fechas de check-in y check-out son obligatorias.";

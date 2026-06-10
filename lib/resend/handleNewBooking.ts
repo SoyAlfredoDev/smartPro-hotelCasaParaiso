@@ -75,6 +75,7 @@ function getErrorMessage(error: unknown): string {
 
 export async function handleNewBooking(
   formData: SaveBookingInput,
+  options?: { skipNotifications?: boolean },
 ): Promise<HandleNewBookingResult> {
   const validationError = validateSaveBookingInput(formData);
   if (validationError) {
@@ -83,6 +84,10 @@ export async function handleNewBooking(
 
   try {
     const booking = await saveBookingToDatabase(formData);
+
+    if (options?.skipNotifications) {
+      return { success: true, booking, emailsSent: false };
+    }
 
     const emailsSent = await sendBookingNotifications({
       clientEmailData: {

@@ -26,10 +26,10 @@ export default function BookingButton({
       {isLoading ? (
         <span className="inline-flex items-center justify-center gap-2">
           <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
-          Procesando solicitud...
+          Preparando pago...
         </span>
       ) : (
-        "Confirmar reserva"
+        "Continuar al pago"
       )}
     </button>
   );

@@ -26,6 +26,14 @@ model Room {
   bookings    Booking[]
 }
 
+model PendingCheckout {
+  id          String   @id
+  klapOrderId String?
+  payload     Json
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+}
+
 model Booking {
   id         String   @id
   guestName  String
@@ -34,9 +42,11 @@ model Booking {
   checkIn    DateTime
   checkOut   DateTime
   guests     Int
-  totalPrice Int
-  status     String   @default("pendiente") // pendiente, confirmada, finalizada, cancelada
-  notes      String?
+  totalPrice    Int
+  status        String   @default("pendiente") // pendiente, pendiente_pago, confirmada, finalizada, cancelada
+  paymentStatus String?  // pending, paid, rejected
+  klapOrderId   String?
+  notes         String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   roomId     String

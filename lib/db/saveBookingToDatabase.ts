@@ -17,6 +17,9 @@ export interface SaveBookingInput {
   roomId: string | string[];
   notes?: string | null;
   comment?: string;
+  status?: string;
+  paymentStatus?: string;
+  id?: string;
 }
 
 function resolveGuestName(input: SaveBookingInput): string {
@@ -55,11 +58,11 @@ export async function saveBookingToDatabase(formData: SaveBookingInput) {
   const guestName = resolveGuestName(formData);
   const guestEmail = resolveGuestEmail(formData);
   const roomId = resolveRoomId(formData.roomId);
-  const id = await generateReservationNumber();
+  const id = formData.id ?? String(await generateReservationNumber());
 
   return prisma.booking.create({
     data: {
-      id: id.toString(),
+      id,
       guestName,
       guestEmail,
       guestPhone: resolveGuestPhone(formData),
@@ -69,7 +72,8 @@ export async function saveBookingToDatabase(formData: SaveBookingInput) {
       totalPrice: formData.totalPrice ?? 0,
       roomId,
       notes: resolveNotes(formData),
-      status: "pendiente",
+      status: formData.status ?? "pendiente",
+      paymentStatus: formData.paymentStatus ?? null,
     },
     include: {
       room: {

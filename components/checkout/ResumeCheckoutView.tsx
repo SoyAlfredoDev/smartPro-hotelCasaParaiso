@@ -28,7 +28,8 @@ export default function ResumeCheckoutView({
         Resumen de reserva
       </h2>
       <p className="mt-1 text-sm text-text-secondary">
-        Solicitud sin pago en línea. El hotel confirmará disponibilidad.
+        Pago seguro con tarjeta vía Klap. La reserva se confirma al aprobar el
+        pago.
       </p>
 
       <div className="mt-6 space-y-4 text-sm">
@@ -85,8 +86,8 @@ export default function ResumeCheckoutView({
         </div>
 
         <p className="text-xs leading-relaxed text-text-secondary">
-          Al confirmar, envías una solicitud de reserva. No se realizará ningún
-          cargo hasta que el hotel valide tu estadía.
+          Al continuar, crearás tu reserva y pasarás al pago con tarjeta. El
+          cobro es inmediato y seguro a través de Klap.
         </p>
 
         <div className="pt-2">
