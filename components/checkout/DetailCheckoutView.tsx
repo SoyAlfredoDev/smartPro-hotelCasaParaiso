@@ -9,6 +9,11 @@ import ReservationResultModal, {
   type ReservationModalState,
 } from "@/components/checkout/ReservationResultModal";
 import KlapPaymentForm from "@/components/klap/KlapPaymentForm";
+import {
+  shouldFallbackToDirectBooking,
+  toUserFacingBookingError,
+  toUserFacingPaymentError,
+} from "@/lib/errors/userFacingMessage";
 import { handleNewBooking } from "@/lib/resend/handleNewBooking";
 import { useBookingStore } from "@/store/useBookingStore";
 import {
@@ -28,14 +33,10 @@ interface PaymentSession {
   redirectUrl?: string;
 }
 
-interface DetailCheckoutViewProps {
-  paymentsEnabled?: boolean;
-}
-
-export default function DetailCheckoutView({
-  paymentsEnabled = false,
-}: DetailCheckoutViewProps) {
+export default function DetailCheckoutView() {
   const [mounted, setMounted] = useState(false);
+  const [paymentsEnabled, setPaymentsEnabled] = useState(false);
+  const [configLoaded, setConfigLoaded] = useState(false);
   const [step, setStep] = useState<CheckoutStep>("guest");
   const [formData, setFormData] = useState<GuestFormData>(EMPTY_GUEST_FORM);
   const [fieldErrors, setFieldErrors] = useState<GuestFormErrors>({});
@@ -57,6 +58,18 @@ export default function DetailCheckoutView({
 
   useEffect(() => {
     setMounted(true);
+
+    void fetch("/api/checkout/config", { cache: "no-store" })
+      .then((response) => response.json())
+      .then((data: { paymentsEnabled?: boolean }) => {
+        setPaymentsEnabled(Boolean(data.paymentsEnabled));
+      })
+      .catch(() => {
+        setPaymentsEnabled(false);
+      })
+      .finally(() => {
+        setConfigLoaded(true);
+      });
   }, []);
 
   const handleFormChange = useCallback(
@@ -105,7 +118,7 @@ export default function DetailCheckoutView({
         if (!response.ok) {
           setModalState({
             type: "error",
-            message: data.error ?? "No se pudo confirmar el pago.",
+            message: toUserFacingPaymentError(),
           });
           return;
         }
@@ -119,6 +132,47 @@ export default function DetailCheckoutView({
       }
     },
     [finalizeSuccess, formData.email, paymentSession?.bookingId],
+  );
+
+  const submitDirectReservation = useCallback(
+    async (notes: string) => {
+      const bookingResult = await handleNewBooking({
+        firstName: formData.firstName.trim(),
+        lastName: formData.lastName.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        checkIn: checkIn!,
+        checkOut: checkOut!,
+        guests: peopleQuantity!,
+        totalPrice: totalPrice ?? 0,
+        roomId: roomsSelected!.id,
+        comment: notes,
+        status: "pendiente",
+      });
+
+      if (!bookingResult.success) {
+        setModalState({
+          type: "error",
+          message: toUserFacingBookingError(bookingResult.error),
+        });
+        return false;
+      }
+
+      finalizeSuccess(bookingResult.booking.id, formData.email.trim());
+      return true;
+    },
+    [
+      checkIn,
+      checkOut,
+      finalizeSuccess,
+      formData.email,
+      formData.firstName,
+      formData.lastName,
+      formData.phone,
+      peopleQuantity,
+      roomsSelected,
+      totalPrice,
+    ],
   );
 
   const handleReserve = async () => {
@@ -154,35 +208,8 @@ export default function DetailCheckoutView({
       .join("\n");
 
     try {
-      if (!paymentsEnabled) {
-        const bookingResult = await handleNewBooking({
-          firstName: formData.firstName.trim(),
-          lastName: formData.lastName.trim(),
-          email: formData.email.trim(),
-          phone: formData.phone.trim(),
-          checkIn: checkIn!,
-          checkOut: checkOut!,
-          guests: peopleQuantity!,
-          totalPrice: totalPrice ?? 0,
-          roomId: roomsSelected!.id,
-          comment: notes,
-          status: "pendiente",
-        });
-
-        if (!bookingResult.success) {
-          setModalState({
-            type: "error",
-            message:
-              bookingResult.error ??
-              "Ocurrió un error al registrar tu reserva. Por favor, inténtalo de nuevo.",
-          });
-          return;
-        }
-
-        finalizeSuccess(
-          bookingResult.booking.id,
-          formData.email.trim(),
-        );
+      if (!configLoaded || !paymentsEnabled) {
+        await submitDirectReservation(notes);
         return;
       }
 
@@ -211,14 +238,31 @@ export default function DetailCheckoutView({
         }),
       });
 
-      const orderData = await orderResponse.json();
+      const orderData = (await orderResponse.json()) as {
+        error?: string;
+        orderId?: string;
+        referenceId?: string;
+        redirectUrl?: string;
+      };
+
       if (!orderResponse.ok) {
+        if (
+          orderResponse.status === 403 ||
+          shouldFallbackToDirectBooking(orderData.error)
+        ) {
+          await submitDirectReservation(notes);
+          return;
+        }
+
         setModalState({
           type: "error",
-          message:
-            orderData.error ??
-            "No se pudo iniciar el pago. Intenta nuevamente.",
+          message: toUserFacingPaymentError(),
         });
+        return;
+      }
+
+      if (!orderData.orderId || !orderData.referenceId) {
+        await submitDirectReservation(notes);
         return;
       }
 
@@ -244,7 +288,7 @@ export default function DetailCheckoutView({
     }
   };
 
-  if (!mounted) {
+  if (!mounted || !configLoaded) {
     return (
       <div className="flex h-[50vh] items-center justify-center">
         <div className="h-12 w-12 animate-spin rounded-full border-b-4 border-primary" />

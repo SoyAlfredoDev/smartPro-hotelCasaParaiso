@@ -6,6 +6,7 @@ import {
   attachKlapOrderToPending,
   createPendingCheckout,
 } from "@/lib/klap/pendingCheckout";
+import { toUserFacingPaymentError } from "@/lib/errors/userFacingMessage";
 import type { SaveBookingInput } from "@/lib/db/saveBookingToDatabase";
 
 export async function POST(req: Request) {
@@ -81,12 +82,7 @@ export async function POST(req: Request) {
   } catch (error) {
     console.error("[klap/create-order]", error);
     return NextResponse.json(
-      {
-        error:
-          error instanceof Error
-            ? error.message
-            : "No se pudo crear la orden de pago",
-      },
+      { error: toUserFacingPaymentError() },
       { status: 500 },
     );
   }
