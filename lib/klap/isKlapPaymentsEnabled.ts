@@ -10,16 +10,31 @@ function isSandboxKlapUrl(url: string | undefined): boolean {
 }
 
 /**
- * Pagos Klap solo con activación explícita + credenciales productivas reales.
- * Si falta algo, el checkout usa reserva directa (modo seguro para producción).
+ * Permite flujo de pago en sandbox solo en desarrollo (certificación Klap).
+ * Nunca activo en producción.
+ */
+export function isKlapSandboxTestingEnabled(): boolean {
+  if (process.env.NODE_ENV === "production") {
+    return false;
+  }
+  return process.env.KLAP_SANDBOX_TESTING === "true";
+}
+
+/**
+ * Pagos Klap en producción: solo credenciales productivas reales.
+ * En desarrollo con KLAP_SANDBOX_TESTING=true: permite sandbox para certificación.
  */
 export function isKlapPaymentsEnabled(): boolean {
-  if (process.env.KLAP_PAYMENTS_ENABLED !== "true") {
+  const apiKey = process.env.KLAP_API_KEY?.trim();
+  if (!apiKey) {
     return false;
   }
 
-  const apiKey = process.env.KLAP_API_KEY?.trim();
-  if (!apiKey) {
+  if (isKlapSandboxTestingEnabled()) {
+    return process.env.KLAP_PAYMENTS_ENABLED === "true";
+  }
+
+  if (process.env.KLAP_PAYMENTS_ENABLED !== "true") {
     return false;
   }
 

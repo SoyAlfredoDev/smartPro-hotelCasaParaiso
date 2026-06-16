@@ -40,4 +40,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# klap certification output (local only)
+scripts/last-klap-certification.json
+
 /lib/generated/prisma
